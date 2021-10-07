@@ -8,18 +8,18 @@ import '../constants/constants.dart';
 import 'AuthModel.dart';
 
 class ProductModel extends ChangeNotifier {
-  ProductModel({
-    this.id,
-    this.stockCount,
-    this.price,
-    this.descriptionRu,
-    this.descriptionTm,
-    this.dateOfExpire,
-    this.productName,
-    this.categoryName,
-    this.countryName,
-    this.images,
-  });
+  ProductModel(
+      {this.id,
+      this.stockCount,
+      this.price,
+      this.descriptionRu,
+      this.descriptionTm,
+      this.dateOfExpire,
+      this.productName,
+      this.categoryName,
+      this.countryName,
+      this.images,
+      this.quantity});
 
   factory ProductModel.fromJson(Map<String, dynamic> json) {
     return ProductModel(
@@ -32,7 +32,8 @@ class ProductModel extends ChangeNotifier {
         dateOfExpire: json["date_of_expire"],
         descriptionRu: json["description_ru"],
         descriptionTm: json["description_tm"],
-        images: json["image"]);
+        images: json["image"],
+        quantity: json['quantity']);
   }
 
   final String categoryName;
@@ -45,6 +46,7 @@ class ProductModel extends ChangeNotifier {
   final String price;
   final String productName;
   final int stockCount;
+  final int quantity;
 
   Future<ProductModel> getProductById(int id) async {
     final token = await Auth().getToken();

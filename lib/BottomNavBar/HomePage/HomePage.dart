@@ -43,18 +43,26 @@ class _HomePageState extends State<HomePage> {
     _refreshController.refreshCompleted();
   }
 
+  bool load = false;
+
   getData() {
     Product()
         .getProducts(parametrs: {"page": '$page', "limit": '20'}).then((value) {
-      for (final element in value) {
-        setState(() {
-          loading = true;
-          list.add({
-            "id": element.id,
-            "name": element.productName,
-            "price": element.price,
-            "image": element.images
+      if (value != null) {
+        for (final element in value) {
+          setState(() {
+            loading = true;
+            list.add({
+              "id": element.id,
+              "name": element.productName,
+              "price": element.price,
+              "image": element.images
+            });
           });
+        }
+      } else {
+        setState(() {
+          load = true;
         });
       }
     });
@@ -62,7 +70,7 @@ class _HomePageState extends State<HomePage> {
 
   void _onLoading() {
     Future.delayed(const Duration(milliseconds: 1000));
-    if (mounted) {
+    if (mounted && load == false) {
       setState(() {
         page += 1;
         getData();
@@ -113,7 +121,7 @@ class _HomePageState extends State<HomePage> {
           header: const MaterialClassicHeader(
             color: kPrimaryColor,
           ),
-          footer: loadMore(),
+          footer: loadMore(load ? "" : "pull_up_to_load"),
           controller: _refreshController,
           onRefresh: _onRefresh,
           onLoading: _onLoading,

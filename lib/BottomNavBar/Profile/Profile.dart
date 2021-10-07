@@ -1,4 +1,4 @@
-// ignore_for_file: deprecated_member_use, prefer_const_constructors, unnecessary_await_in_return, implementation_imports, non_constant_identifier_names, file_names, type_annotate_public_apis, use_build_context_synchronously, always_declare_return_types
+// ignore_for_file: deprecated_member_use, prefer_const_constructors, unnecessary_await_in_return, implementation_imports, non_constant_identifier_names, file_names, type_annotate_public_apis, use_build_context_synchronously, always_declare_return_types, avoid_positional_boolean_parameters
 
 import 'package:easy_localization/src/public_ext.dart';
 import 'package:flutter/cupertino.dart';
@@ -47,6 +47,11 @@ class _ProfileState extends State<Profile> {
         phoneNumber = value;
       });
     });
+  }
+
+  Future<bool> saveDataFirstTime(bool value) async {
+    final SharedPreferences pref = await SharedPreferences.getInstance();
+    return pref.setBool("firstTime", value);
   }
 
   Future<dynamic> log_out(BuildContext context, Size size) {
@@ -106,6 +111,7 @@ class _ProfileState extends State<Profile> {
                     await Auth().logout();
                     await Auth().removeToken();
                     await Auth().removeRefreshToken();
+                    saveDataFirstTime(false);
                     Navigator.of(context).pop();
                   },
                   child: Container(
@@ -152,11 +158,16 @@ class _ProfileState extends State<Profile> {
 
   Container logoPart() {
     return Container(
-      height: 115,
-      width: 115,
+      height: 150,
+      width: 150,
       margin: EdgeInsets.only(top: 40, bottom: 25),
-      decoration:
-          BoxDecoration(borderRadius: borderRadius30, color: kPrimaryColor),
+      decoration: BoxDecoration(
+        borderRadius: borderRadius30,
+      ),
+      child: Image.asset(
+        "assets/images/diller/logo.png",
+        fit: BoxFit.fill,
+      ),
     );
   }
 

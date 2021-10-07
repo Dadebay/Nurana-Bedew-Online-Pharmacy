@@ -3,6 +3,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_iconly/flutter_iconly.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../Others/constants/constants.dart';
 import '../Others/constants/widgets.dart';
@@ -19,11 +20,16 @@ class BottomNavBar extends StatefulWidget {
 class _BottomNavBarState extends State<BottomNavBar> {
   PageController pageController = PageController();
   int selectedIndex;
-
   List<Widget> _pages;
+  // ignore: avoid_positional_boolean_parameters
+  Future<bool> saveData(bool value) async {
+    final SharedPreferences pref = await SharedPreferences.getInstance();
+    return pref.setBool("firstTime", value);
+  }
 
   @override
   void initState() {
+    saveData(true);
     super.initState();
     selectedIndex = 0;
     _pages = <Widget>[HomePage(), CategoryPage(), CartPage(), Profile()];

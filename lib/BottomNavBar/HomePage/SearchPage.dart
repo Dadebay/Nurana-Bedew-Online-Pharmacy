@@ -1,4 +1,4 @@
-// ignore_for_file: type_annotate_public_apis, always_declare_return_types, file_names, deprecated_member_use, avoid_bool_literals_in_conditional_expressions
+// ignore_for_file: type_annotate_public_apis, always_declare_return_types, file_names, deprecated_member_use, avoid_bool_literals_in_conditional_expressions, prefer_const_constructors
 
 import 'dart:convert';
 
@@ -91,15 +91,21 @@ class _SearchState extends State<Search> {
       "category_id":
           widget.categoryId == -1 ? [] : jsonEncode([widget.categoryId])
     }).then((value) {
-      setState(() {
-        loading = true;
-      });
-      for (final element in value) {
-        list.add({
-          "id": element.id,
-          "name": element.productName,
-          "price": element.price,
-          "image": element.images
+      if (value != null) {
+        for (final element in value) {
+          setState(() {
+            loading = true;
+            list.add({
+              "id": element.id,
+              "name": element.productName,
+              "price": element.price,
+              "image": element.images
+            });
+          });
+        }
+      } else {
+        setState(() {
+          load = true;
         });
       }
     });
@@ -121,7 +127,7 @@ class _SearchState extends State<Search> {
 
   void _onLoading() {
     Future.delayed(const Duration(milliseconds: 1000));
-    if (mounted) {
+    if (mounted && load == false) {
       setState(() {
         page += 1;
         getData();
@@ -230,13 +236,13 @@ class _SearchState extends State<Search> {
     );
   }
 
-  Drawer endDrawer() {
+  Drawer endDrawer(Size size) {
     return Drawer(
-      child: SingleChildScrollView(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Column(
+      child: Stack(
+        children: [
+          SingleChildScrollView(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 Padding(
                   padding: const EdgeInsets.fromLTRB(0, 20, 0, 20),
@@ -335,70 +341,95 @@ class _SearchState extends State<Search> {
                 dividerr(),
               ],
             ),
-            RaisedButton(onPressed: () {
-              final List countryId = [];
-              for (final element in locationName) {
-                if (element["isSelected"] == true) countryId.add(element["id"]);
-              }
-              final List category = [];
-              for (final element in categoryName) {
-                if (element["isSelected"] == true) category.add(element["id"]);
-              }
-              String abc;
-              for (final element in minSany) {
-                if (element["isSelected"] == true) abc = element["name"];
-              }
-              bool priceSendValue;
-              setState(() {
-                if (priceValue == -1) {
-                  priceSendValue = null;
-                } else {
-                  priceSendValue = priceName[priceValue]["isSelected"];
-                }
-                list.clear();
-              });
-              Product().getProducts(parametrs: {
-                "page": '$page',
-                "limit": '20',
-                "product_name": textEditingController.text,
-                "country_id": countryId.isEmpty ? null : jsonEncode(countryId),
-                "stock_min": abc,
-                "price": priceSendValue,
-                "category_id": category.isEmpty
-                    ? widget.categoryId == -1
-                        ? []
-                        : jsonEncode([widget.categoryId])
-                    : jsonEncode(category)
-              }).then((value) {
-                if (value.isNotEmpty) {
-                  setState(() {
-                    for (final element in value) {
-                      list.add({
-                        "id": element.id,
-                        "name": element.productName,
-                        "price": element.price,
-                        "image": element.images
-                      });
+          ),
+          Positioned(
+            bottom: 15,
+            left: 15,
+            right: 15,
+            child: SizedBox(
+              width: size.width,
+              child: RaisedButton(
+                  padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                  color: kPrimaryColor,
+                  elevation: 1,
+                  shape:
+                      const RoundedRectangleBorder(borderRadius: borderRadius5),
+                  onPressed: () {
+                    final List countryId = [];
+                    for (final element in locationName) {
+                      if (element["isSelected"] == true)
+                        countryId.add(element["id"]);
                     }
-                  });
-                } else {
-                  showMessage("noProduct", context);
-                }
-              });
-            })
-          ],
-        ),
+                    final List category = [];
+                    for (final element in categoryName) {
+                      if (element["isSelected"] == true)
+                        category.add(element["id"]);
+                    }
+                    String abc;
+                    for (final element in minSany) {
+                      if (element["isSelected"] == true) abc = element["name"];
+                    }
+                    bool priceSendValue;
+                    setState(() {
+                      if (priceValue == -1) {
+                        priceSendValue = null;
+                      } else {
+                        priceSendValue = priceName[priceValue]["isSelected"];
+                      }
+                      list.clear();
+                    });
+                    Product().getProducts(parametrs: {
+                      "page": '$page',
+                      "limit": '20',
+                      "product_name": textEditingController.text,
+                      "country_id":
+                          countryId.isEmpty ? null : jsonEncode(countryId),
+                      "stock_min": abc,
+                      "price": priceSendValue,
+                      "category_id": category.isEmpty
+                          ? widget.categoryId == -1
+                              ? []
+                              : jsonEncode([widget.categoryId])
+                          : jsonEncode(category)
+                    }).then((value) {
+                      if (value.isNotEmpty) {
+                        setState(() {
+                          for (final element in value) {
+                            list.add({
+                              "id": element.id,
+                              "name": element.productName,
+                              "price": element.price,
+                              "image": element.images
+                            });
+                          }
+                        });
+                      } else {
+                        showMessage("noProduct", context);
+                      }
+                    });
+                  },
+                  child: Text(
+                    "search",
+                    style: TextStyle(
+                        fontFamily: popPinsMedium,
+                        fontSize: 18,
+                        color: Colors.white),
+                  ).tr()),
+            ),
+          ),
+        ],
       ),
     );
   }
 
+  bool load = false;
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
     return SafeArea(
         child: Scaffold(
       key: _scaffoldKey,
-      endDrawer: endDrawer(),
+      endDrawer: endDrawer(size),
       endDrawerEnableOpenDragGesture: false,
       appBar: appBar(context),
       body: Column(
@@ -412,7 +443,7 @@ class _SearchState extends State<Search> {
             header: const MaterialClassicHeader(
               color: kPrimaryColor,
             ),
-            footer: loadMore(),
+            footer: loadMore(load ? "" : "pull_up_to_load"),
             controller: _refreshController,
             onRefresh: _onRefresh,
             onLoading: _onLoading,
@@ -471,7 +502,7 @@ class CheckBoxListBuilderState extends State<CheckBoxListBuilder> {
       title: Text(widget.name,
           style: const TextStyle(
             fontFamily: popPinsMedium,
-          )),
+          )).tr(),
       collapsedIconColor: Colors.grey,
       iconColor: kPrimaryColor,
       textColor: kPrimaryColor,

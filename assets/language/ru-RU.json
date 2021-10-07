@@ -30,15 +30,15 @@
     "noProduct":"Товара нет",
     "noProductTitle":"Хотите получать SMS-уведомление о поступлении товара на склад?",
     "notification":"Добавить уведомление",
-    "descriptionRu":"Описание RU",
-    "descriptionTm":"Описание TM",
+    "descriptionRu":"Описание",
+    "descriptionTm":"Описание",
     "category":"Категория : ",
     "categoryName":"Категория",
     "country":"Страна выпуска : ",
     "dateOfExpire":"Дата истечения :  ",
     "price":"Цена : ",
     "priceName":"Цена",
-    "notificationName":"Мои уведомления",
+    "notificationName":"Ожидающие лекарства",
     "profil":"Пользователь",
     "new":"Новое добавлено",
     "all":"Все",
@@ -46,5 +46,6 @@
     "lowtohigh":"Дешево -> Дорого",
     "search":"Поиск",
     "location":"Место нахождения",
-    "minSany":"Минимальное количество"
+    "minSany":"Минимальное количество",
+    "quantity":"Количество в коробке"
 }

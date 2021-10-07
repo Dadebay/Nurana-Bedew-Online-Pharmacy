@@ -37,6 +37,7 @@ class _LoginState extends State<Login> {
                     password: controllerLogin2.text.toString())
                 .then((value) {
               if (value == false) {
+                animation = false;
                 controllerLogin1.clear();
                 controllerLogin2.clear();
               } else {
@@ -225,7 +226,6 @@ class _LoginState extends State<Login> {
         body: GestureDetector(
           onTap: () {
             FocusScope.of(context).unfocus();
-            controllerLogin1.clear();
           },
           child: SingleChildScrollView(
             child: Padding(
@@ -235,7 +235,8 @@ class _LoginState extends State<Login> {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   Padding(
-                    padding: const EdgeInsets.all(40.0),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 40, vertical: 20),
                     child: Image.asset('assets/images/diller/logo.png',
                         fit: BoxFit.fill),
                   ),

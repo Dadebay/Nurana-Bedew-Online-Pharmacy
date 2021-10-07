@@ -44,7 +44,9 @@ class ProductCard extends StatelessWidget {
                     color: Colors.grey[200], borderRadius: borderRadius10),
                 child: ClipRRect(
                     borderRadius: borderRadius5,
-                    child: image("$serverImage/$image-mini.webp", size)),
+                    child: image(
+                      "$serverImage/$imagePath-mini.webp",
+                    )),
               )),
               Padding(
                 padding: const EdgeInsets.symmetric(
@@ -66,7 +68,7 @@ class ProductCard extends StatelessWidget {
                     const Text(
                       "price",
                       style: TextStyle(
-                          color: Colors.red,
+                          color: Colors.grey,
                           fontFamily: popPinsRegular,
                           fontSize: 14),
                     ).tr(),

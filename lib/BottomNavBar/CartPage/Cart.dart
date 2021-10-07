@@ -12,6 +12,7 @@ import 'package:http/http.dart' as http;
 import 'package:medicine_app/BottomNavBar/HomePage/ProductProfil/ProductProfil.dart';
 import 'package:medicine_app/Others/Models/AuthModel.dart';
 import 'package:medicine_app/Others/Models/CartModel.dart';
+import 'package:medicine_app/Others/constants/NavService.dart';
 import 'package:medicine_app/Others/constants/widgets.dart';
 
 import '../../Others/constants/constants.dart';
@@ -85,6 +86,7 @@ class _CartPageState extends State<CartPage>
     }
   }
 
+  // ignore: missing_return
   Future<List<CartModel>> getCartProducts() async {
     final token = await Auth().getToken();
     final List<CartModel> products = [];
@@ -116,8 +118,40 @@ class _CartPageState extends State<CartPage>
       cartId = int.parse(jsonDecode(response.body)["rows"][0]["cart_id"]);
 
       return products;
+    } else if (response.statusCode == 402) {
+      Auth().refreshToken().then((value) async {
+        final token = await Auth().getToken();
+        final response = await http.get(
+            Uri.http(serverURL, "/api/user/get-cart-products"),
+            headers: <String, String>{
+              HttpHeaders.contentTypeHeader: 'application/json; charset=UTF-8',
+              HttpHeaders.authorizationHeader: 'Bearer $token',
+            });
+        final responseJson =
+            jsonDecode(response.body)["rows"][0]["cart_products"];
+        cartProducts.clear();
+        for (final Map product in responseJson) {
+          products.add(CartModel.fromJson(product));
+          cartProducts.add({
+            "id": CartModel.fromJson(product).id,
+            "name": CartModel.fromJson(product).productName,
+            "quantity": CartModel.fromJson(product).quantity,
+            "image": CartModel.fromJson(product).images,
+            "price": CartModel.fromJson(product).price,
+            "stockMin": CartModel.fromJson(product).stockCount
+          });
+        }
+
+        cartId = int.parse(jsonDecode(response.body)["rows"][0]["cart_id"]);
+      });
+
+      return Future.delayed(const Duration(milliseconds: 1000), () {
+        return products;
+      });
     } else {
-      return null;
+      Future.delayed(const Duration(milliseconds: 200), () {
+        NavigationService.instance.navigateToReplacement("login");
+      });
     }
   }
 
@@ -140,6 +174,9 @@ class _CartPageState extends State<CartPage>
                     );
                   },
                 );
+              } else if (snapshot.data == null) {
+                return const Center(
+                    child: Icon(Icons.add, color: kPrimaryColor, size: 35));
               } else if (snapshot.hasError) {
                 return const Center(
                     child: Icon(Icons.refresh, color: kPrimaryColor, size: 35));
@@ -229,8 +266,8 @@ class _CartPageState extends State<CartPage>
                         child: ClipRRect(
                           borderRadius: borderRadius15,
                           child: image(
-                              "$serverImage/${cartProducts[index]["image"]}-mini.webp",
-                              size),
+                            "$serverImage/${cartProducts[index]["image"]}-mini.webp",
+                          ),
                         ),
                       )),
                   Expanded(
@@ -241,17 +278,38 @@ class _CartPageState extends State<CartPage>
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          SizedBox(
-                            width: double.infinity,
-                            child: Text(
-                              cartProducts[index]["name"],
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                              style: const TextStyle(
-                                  color: Colors.black,
-                                  fontFamily: popPinsMedium,
-                                  fontSize: 18),
-                            ),
+                          Row(
+                            children: [
+                              Expanded(
+                                child: Text(
+                                  cartProducts[index]["name"],
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: const TextStyle(
+                                      color: Colors.black,
+                                      fontFamily: popPinsMedium,
+                                      fontSize: 18),
+                                ),
+                              ),
+                              GestureDetector(
+                                onTap: () {
+                                  CartModel()
+                                      .deleteCartProduct(
+                                          cartID: cartId,
+                                          productId: cartProducts[index]["id"])
+                                      .then((value) {
+                                    if (value == true) {
+                                      setState(() {});
+                                      showMessage("removeCart", context);
+                                    }
+                                  });
+                                },
+                                child: const Icon(
+                                  IconlyLight.delete,
+                                  color: kPrimaryColor,
+                                ),
+                              )
+                            ],
                           ),
                           SizedBox(
                             width: double.infinity,

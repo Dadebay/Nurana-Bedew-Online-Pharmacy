@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:http/http.dart' as http;
+import 'package:medicine_app/Others/constants/NavService.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Auth {
@@ -42,7 +43,6 @@ class Auth {
             body: jsonEncode({
               "refresh_token": refreshToken,
             }));
-    print(response.body);
     if (response.statusCode == 200) {
       final responseJson = jsonDecode(response.body)["data"];
       Auth().setToken(jsonDecode(response.body)["access_token"]);
@@ -53,8 +53,10 @@ class Auth {
           phone: responseJson["user"],
           gmail: responseJson["email"]);
       return true;
-    } else if(response.statusCode ==403) {
-      return false;
+    } else {
+      Future.delayed(const Duration(milliseconds: 200), () {
+        NavigationService.instance.navigateToReplacement("login");
+      });
     }
   }
 

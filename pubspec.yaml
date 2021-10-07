@@ -27,7 +27,7 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-
+ 
 flutter:
   uses-material-design: true
   generate: true
@@ -39,7 +39,7 @@ flutter:
 
   fonts:
     - family: Poppins_Bold
-      fonts:
+      fonts: 
         - asset: assets/fonts/Poppins-Bold.ttf
     - family: Poppins_SemiBold
       fonts:

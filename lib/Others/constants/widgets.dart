@@ -12,15 +12,15 @@ import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 import 'constants.dart';
 
-CustomFooter loadMore() {
+CustomFooter loadMore(String name) {
   return CustomFooter(
     builder: (BuildContext context, LoadStatus mode) {
       Widget body;
       if (mode == LoadStatus.idle) {
-        body = const Text("pull_up_to_load",
+        body = Text(name,
             maxLines: 2,
             textAlign: TextAlign.center,
-            style: TextStyle(
+            style: const TextStyle(
               color: Colors.black,
               fontFamily: popPinsMedium,
             )).tr();
@@ -147,22 +147,25 @@ AppBar appBar(String name) {
   );
 }
 
-CachedNetworkImage image(String name, Size size) {
+CachedNetworkImage image(String name) {
   return CachedNetworkImage(
-    width: size.width,
-    colorBlendMode: BlendMode.difference,
-    imageUrl: name,
-    imageBuilder: (context, imageProvider) => Container(
-      decoration: BoxDecoration(
-        image: DecorationImage(
-          image: imageProvider,
-          fit: BoxFit.fill,
-        ),
-      ),
-    ),
-    placeholder: (context, url) => Center(child: spinKit()),
-    errorWidget: (context, url, error) => const Icon(Icons.error_outline),
-  );
+      width: double.infinity,
+      colorBlendMode: BlendMode.difference,
+      imageUrl: name,
+      imageBuilder: (context, imageProvider) => Container(
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                image: imageProvider,
+                fit: BoxFit.fill,
+              ),
+            ),
+          ),
+      placeholder: (context, url) => Center(child: spinKit()),
+      errorWidget: (context, url, error) => Image.asset(
+            "assets/images/diller/logo.png",
+            color: Colors.grey,
+            cacheWidth: 70,
+          ));
 }
 
 AppBar appBarBackButton(BuildContext context, String name) {

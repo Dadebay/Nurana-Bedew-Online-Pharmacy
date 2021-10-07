@@ -3,6 +3,7 @@
 import 'package:easy_localization/src/public_ext.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_iconly/flutter_iconly.dart';
 import 'package:medicine_app/Others/Models/CartModel.dart';
 import 'package:medicine_app/Others/constants/constants.dart';
 import 'package:medicine_app/Others/constants/widgets.dart';
@@ -139,7 +140,9 @@ class _OrderPageState extends State<OrderPage> {
             width: 50,
             child: ClipRRect(
               borderRadius: borderRadius5,
-              child: image("$serverImage/${cart.images}-mini.webp", size),
+              child: image(
+                "$serverImage/${cart.images}-mini.webp",
+              ),
             ),
           ),
           minLeadingWidth: 50,
@@ -157,7 +160,7 @@ class _OrderPageState extends State<OrderPage> {
                 }
               });
             },
-            child: const Icon(CupertinoIcons.xmark_circle, color: Colors.grey),
+            child: const Icon(IconlyLight.delete, color: kPrimaryColor),
           ),
           title: Text(cart.productName,
               style: const TextStyle(fontFamily: popPinsMedium)),

@@ -29,16 +29,16 @@
     "addCartTitle":"Sebede goş",
     "noProduct":"Haryt ýok",
     "noProductTitle":"Haryt ammara gelende sms arkaly ýatladylmak isleýarsiňizmi ?",
-    "notification":"Bildiriş goş",
-    "descriptionRu":"Düşündirilişi RU",
-    "descriptionTm":"Düşündirilişi TM",
+    "notification":"Habar Et",
+    "descriptionRu":"Düşündirilişi",
+    "descriptionTm":"Düşündirilişi",
     "category":"Kategoriýa : ",
     "categoryName":"Kategoriýa",
     "country":"Öndürülinen Ýurdy : ",
     "dateOfExpire":"Ýaramlylyk möhleti :  ",
     "price":"Bahasy : ",
     "priceName":"Bahasy",
-    "notificationName":"Bildirişlerim",
+    "notificationName":"Garaşýanlarym",
     "profil":"Ulanyjy",
     "new":"Täze goşulanlar",
     "all":"Hemmesi",
@@ -46,6 +46,7 @@
     "lowtohigh":"Arzandan -> Gymmada",
     "search":"Gözleg",
     "location":"Ýerleşýän ýeri",
-    "minSany":"Minimum sany"
+    "minSany":"Minimum sany",
+    "quantity":"Gutudaky sany"
     
 }

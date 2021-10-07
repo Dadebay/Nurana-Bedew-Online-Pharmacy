@@ -2,9 +2,11 @@
 
 import 'dart:convert';
 import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:medicine_app/Auth/Login.dart';
+import 'package:medicine_app/Others/constants/NavService.dart';
+
 import '../constants/constants.dart';
 import 'AuthModel.dart';
 
@@ -31,7 +33,6 @@ class Product extends ChangeNotifier {
   final int price;
   final String productName;
   final int stockCount;
-
   // ignore: missing_return
   Future<List<Product>> getProducts({
     Map<String, dynamic> parametrs,
@@ -44,34 +45,39 @@ class Product extends ChangeNotifier {
           HttpHeaders.contentTypeHeader: 'application/json; charset=UTF-8',
           HttpHeaders.authorizationHeader: 'Bearer $token',
         });
-    print(response.statusCode);
+
     if (response.statusCode == 200) {
       final responseJson = jsonDecode(response.body)["rows"][0]["products"];
-      for (final Map product in responseJson) {
-        products.add(Product.fromJson(product));
+      if (responseJson != null) {
+        for (final Map product in responseJson) {
+          products.add(Product.fromJson(product));
+        }
+        return products;
+      } else {
+        return null;
       }
-      return products;
     } else if (response.statusCode == 402) {
-      Auth().refreshToken().then((value) {
-        if(value==true){
-   final responseJson = jsonDecode(response.body)["rows"][0]["products"];
-      for (final Map product in responseJson) {
-        products.add(Product.fromJson(product));
-      }
-      return products;
-        }else{
-          
+      Auth().refreshToken().then((value) async {
+        final token = await Auth().getToken();
+        final response = await http.get(
+            Uri.http(serverURL, "/api/user/get-products", parametrs),
+            headers: <String, String>{
+              HttpHeaders.contentTypeHeader: 'application/json; charset=UTF-8',
+              HttpHeaders.authorizationHeader: 'Bearer $token',
+            });
+        final responseJson = jsonDecode(response.body)["rows"][0]["products"];
+        for (final Map product in responseJson) {
+          products.add(Product.fromJson(product));
         }
       });
-    
-    } else if (response.statusCode == 403) {
-      print("casca");
-      //login sahypa gidirmeli
-      // Future.delayed(const Duration(milliseconds: 200), () {
-      //   Navigator.of(context).push(MaterialPageRoute(builder: (_) => Login()));
-      // });
+
+      return Future.delayed(const Duration(milliseconds: 1000), () {
+        return products;
+      });
     } else {
-      return null;
+      Future.delayed(const Duration(milliseconds: 200), () {
+        NavigationService.instance.navigateToReplacement("login");
+      });
     }
   }
 }

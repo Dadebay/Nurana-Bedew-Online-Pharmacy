@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:medicine_app/BottomNavBar/BottomNavBar.dart';
 
 import 'Auth/Login.dart';
+import 'Others/constants/NavService.dart';
 import 'Others/constants/constants.dart';
 
 Future<void> main() async {
@@ -43,7 +44,12 @@ class MyApp extends StatelessWidget {
       supportedLocales: context.supportedLocales,
       locale: context.locale,
       debugShowCheckedModeBanner: false,
-      home: Login(),
+      navigatorKey: NavigationService.instance.navigationKey,
+      // initialRoute: "login",
+      routes: {
+        "login": (BuildContext context) => Login(),
+      },
+      home: BottomNavBar(),
       theme: ThemeData(
         bottomSheetTheme: BottomSheetThemeData(
             backgroundColor: Colors.black.withOpacity(0.0)),

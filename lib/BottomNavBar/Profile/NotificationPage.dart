@@ -82,7 +82,8 @@ class _NotificationPageState extends State<NotificationPage> {
                         child: ClipRRect(
                           borderRadius: borderRadius15,
                           child: image(
-                              "$serverImage/${product.image}-mini.webp", size),
+                            "$serverImage/${product.image}-mini.webp",
+                          ),
                         ),
                       )),
                   Expanded(

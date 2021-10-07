@@ -11,6 +11,7 @@ import 'package:medicine_app/Others/Models/NotificationModel.dart';
 import 'package:medicine_app/Others/Models/ProductProfilModel.dart';
 import 'package:medicine_app/Others/constants/constants.dart';
 import 'package:medicine_app/Others/constants/widgets.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'PhotoView.dart';
 
@@ -27,6 +28,12 @@ class _ProductProfilState extends State<ProductProfil> {
   int selectedIndex = 1;
   int twoButton = 0;
 
+  @override
+  void initState() {
+    super.initState();
+    setData();
+  }
+
   Widget hasData(Size size, BuildContext context, ProductModel product) {
     return CustomScrollView(
       physics: const BouncingScrollPhysics(),
@@ -35,10 +42,8 @@ class _ProductProfilState extends State<ProductProfil> {
             "${product.productName}"),
         SliverList(
             delegate: SliverChildListDelegate([
-          dividerr(),
-          dividerr(),
           Padding(
-            padding: const EdgeInsets.fromLTRB(15, 15, 15, 0),
+            padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
             child: Text(
               "${product.productName}",
               maxLines: 2,
@@ -51,13 +56,13 @@ class _ProductProfilState extends State<ProductProfil> {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
             child: Row(
               children: [
                 const Text(
                   "price",
                   style: TextStyle(
-                      color: Colors.red,
+                      color: Colors.grey,
                       fontFamily: popPinsMedium,
                       fontSize: 18),
                 ).tr(),
@@ -84,7 +89,7 @@ class _ProductProfilState extends State<ProductProfil> {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -92,7 +97,7 @@ class _ProductProfilState extends State<ProductProfil> {
                   "dateOfExpire",
                   style: TextStyle(
                       color: Colors.black38,
-                      fontFamily: popPinsSemiBold,
+                      fontFamily: popPinsMedium,
                       fontSize: 16),
                 ).tr(),
                 Expanded(
@@ -109,7 +114,32 @@ class _ProductProfilState extends State<ProductProfil> {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  "quantity",
+                  style: TextStyle(
+                      color: Colors.black38,
+                      fontFamily: popPinsMedium,
+                      fontSize: 16),
+                ).tr(),
+                Expanded(
+                  child: Text(
+                    "${product.quantity}",
+                    maxLines: 2,
+                    style: const TextStyle(
+                        color: Colors.black,
+                        fontFamily: popPinsMedium,
+                        fontSize: 16),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -117,7 +147,7 @@ class _ProductProfilState extends State<ProductProfil> {
                   "country",
                   style: TextStyle(
                       color: Colors.black38,
-                      fontFamily: popPinsSemiBold,
+                      fontFamily: popPinsMedium,
                       fontSize: 16),
                 ).tr(),
                 Expanded(
@@ -134,7 +164,7 @@ class _ProductProfilState extends State<ProductProfil> {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -142,7 +172,7 @@ class _ProductProfilState extends State<ProductProfil> {
                   "category",
                   style: TextStyle(
                       color: Colors.black38,
-                      fontFamily: popPinsSemiBold,
+                      fontFamily: popPinsMedium,
                       fontSize: 16),
                 ).tr(),
                 Expanded(
@@ -158,40 +188,42 @@ class _ProductProfilState extends State<ProductProfil> {
               ],
             ),
           ),
-          ExpansionTile(
-            title: const Text("descriptionTm",
-                    style: TextStyle(fontFamily: popPinsMedium, fontSize: 17))
-                .tr(),
-            textColor: kPrimaryColor,
-            collapsedTextColor: Colors.grey,
-            iconColor: kPrimaryColor,
-            childrenPadding:
-                const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-            children: [
-              Text(
-                "${product.descriptionTm}",
-                style: const TextStyle(
-                    color: Colors.black, fontFamily: popPinsRegular),
-              )
-            ],
-          ),
-          ExpansionTile(
-            title: const Text("descriptionRu",
-                    style: TextStyle(fontFamily: popPinsMedium, fontSize: 17))
-                .tr(),
-            textColor: kPrimaryColor,
-            collapsedTextColor: Colors.grey,
-            iconColor: kPrimaryColor,
-            childrenPadding:
-                const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-            children: [
-              Text(
-                "${product.descriptionRu}",
-                style: const TextStyle(
-                    color: Colors.black, fontFamily: popPinsRegular),
-              )
-            ],
-          ),
+          if (lang == "tm")
+            ExpansionTile(
+              title: const Text("descriptionTm",
+                      style: TextStyle(fontFamily: popPinsMedium, fontSize: 17))
+                  .tr(),
+              textColor: kPrimaryColor,
+              collapsedTextColor: Colors.grey,
+              iconColor: kPrimaryColor,
+              childrenPadding:
+                  const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+              children: [
+                Text(
+                  "${product.descriptionTm}",
+                  style: const TextStyle(
+                      color: Colors.black, fontFamily: popPinsRegular),
+                )
+              ],
+            )
+          else
+            ExpansionTile(
+              title: const Text("descriptionRu",
+                      style: TextStyle(fontFamily: popPinsMedium, fontSize: 17))
+                  .tr(),
+              textColor: kPrimaryColor,
+              collapsedTextColor: Colors.grey,
+              iconColor: kPrimaryColor,
+              childrenPadding:
+                  const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+              children: [
+                Text(
+                  "${product.descriptionRu}",
+                  style: const TextStyle(
+                      color: Colors.black, fontFamily: popPinsRegular),
+                )
+              ],
+            ),
           const SizedBox(
             height: 80,
           )
@@ -230,7 +262,9 @@ class _ProductProfilState extends State<ProductProfil> {
                               image: imageString,
                             )));
                   },
-                  child: image(imageString, size))),
+                  child: image(
+                    imageString,
+                  ))),
         );
       }),
       expandedHeight: 400,
@@ -256,24 +290,7 @@ class _ProductProfilState extends State<ProductProfil> {
     );
   }
 
-  Positioned counter(int length) {
-    return Positioned(
-      right: 20.0,
-      bottom: 20.0,
-      child: Container(
-        alignment: Alignment.center,
-        padding: const EdgeInsets.all(10),
-        decoration: BoxDecoration(
-            borderRadius: borderRadius10, color: Colors.grey[100]),
-        child: Text(
-          "$selectedIndex / $length",
-          style:
-              const TextStyle(color: Colors.black, fontFamily: popPinsMedium),
-        ),
-      ),
-    );
-  }
-
+  bool orderButtonChange = false;
   ontap1() {
     CartModel().addToCart(
         id: widget.drugID,
@@ -284,6 +301,8 @@ class _ProductProfilState extends State<ProductProfil> {
         showMessage("tryagain", context);
       }
     });
+    orderButtonChange = true;
+    print(orderButtonChange);
   }
 
   ontap2() {
@@ -362,39 +381,160 @@ class _ProductProfilState extends State<ProductProfil> {
     );
   }
 
-  Widget orderButton({String name, bool icon}) {
+  Future<String> getData() async {
+    final SharedPreferences pref = await SharedPreferences.getInstance();
+    return pref.getString(langKey);
+  }
+
+  String lang = "tm";
+  setData() {
+    setState(() {
+      getData().then((value) {
+        lang = value ?? "tm";
+      });
+    });
+  }
+
+  removeQuantity(int index, ProductModel product) {
+    // CartModel().updateCartProduct(
+    //     cartID: cartId,
+    //     productId: cartProducts[index]["id"],
+    //     parametrs: {
+    //       "quantity": jsonEncode(cartProducts[index]["quantity"] - 1)
+    //     }).then((value) {
+    //   if (value == true) {
+    //     setState(() {
+    //       cartProducts[index]["quantity"] -= 1;
+
+    //       if (cartProducts[index]["quantity"] == 0) {
+    //         CartModel()
+    //             .deleteCartProduct(
+    //                 cartID: cartId, productId: cartProducts[index]["id"])
+    //             .then((value) {
+    //           if (value == true) {
+    //             showMessage(removeCart, context);
+
+    //             cartProducts.removeAt(index);
+    //           }
+    //         });
+    //       }
+    //     });
+    //   } else {
+    //     showMessage("tryagain", context);
+    //   }
+    // });
+  }
+
+  addQuantity(int index, ProductModel product) {
+    // final int a = cartProducts[index]["stockMin"];
+    // final int b = cartProducts[index]["quantity"] + 1;
+    // if (a > b) {
+    //   CartModel().updateCartProduct(
+    //       cartID: cartId,
+    //       productId: cartProducts[index]["id"],
+    //       parametrs: {
+    //         "quantity": jsonEncode(cartProducts[index]["quantity"] + 1)
+    //       }).then((value) {
+    //     if (value == true) {
+    //       setState(() {
+    //         cartProducts[index]["quantity"] + 1;
+    //       });
+    //     } else {
+    //       showMessage("tryagain", context);
+    //     }
+    //   });
+    // } else {
+    //   showMessage("emptyStockMin", context);
+    // }
+  }
+
+  Widget orderButton({String name, bool icon, ProductModel product}) {
     final Size size = MediaQuery.of(context).size;
     return Container(
       width: size.width,
       margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-      child: RaisedButton(
-          onPressed: () {
-            icon ? ontap1() : ontap2();
-          },
-          padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-          shape: const RoundedRectangleBorder(
-            borderRadius: borderRadius15,
-          ),
-          color: icon ? kPrimaryColor : Colors.red,
-          elevation: 5,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10),
-                child: Icon(icon ? IconlyLight.bag : IconlyLight.infoSquare,
-                    color: Colors.white, size: 25),
+      child: orderButtonChange
+          ? RaisedButton(
+              onPressed: () {
+                icon ? ontap1() : ontap2();
+              },
+              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+              shape: const RoundedRectangleBorder(
+                borderRadius: borderRadius15,
               ),
-              Text(
-                name,
-                textAlign: TextAlign.center,
-                style: const TextStyle(
-                    color: Colors.white, //kPrimaryColor,
-                    fontFamily: popPinsMedium,
-                    fontSize: 18),
-              ).tr(),
-            ],
-          )),
+              color: icon ? kPrimaryColor : Colors.red,
+              elevation: 5,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                    child: Icon(icon ? IconlyLight.bag : IconlyLight.infoSquare,
+                        color: Colors.white, size: 25),
+                  ),
+                  Text(
+                    name,
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(
+                        color: Colors.white, //kPrimaryColor,
+                        fontFamily: popPinsMedium,
+                        fontSize: 18),
+                  ).tr(),
+                ],
+              ))
+          : Row(
+              children: [
+                GestureDetector(
+                  onTap: () {
+                    // removeQuantity(index);
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.all(3),
+                    margin: const EdgeInsets.all(3),
+                    decoration: BoxDecoration(
+                        color: Colors.grey[200], shape: BoxShape.circle),
+                    child: const FittedBox(
+                      child: Icon(
+                        Icons.remove,
+                        color: kPrimaryColor,
+                        size: 22,
+                      ),
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 15),
+                  child: Text(
+                    "${product.quantity}",
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 1,
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(
+                        fontSize: 18,
+                        color: Colors.black,
+                        fontFamily: popPinsMedium),
+                  ),
+                ),
+                GestureDetector(
+                  onTap: () {
+                    // addQuantity(index);
+                  },
+                  child: Container(
+                    margin: const EdgeInsets.all(3),
+                    padding: const EdgeInsets.all(3),
+                    decoration: BoxDecoration(
+                        color: Colors.grey[200], shape: BoxShape.circle),
+                    child: const FittedBox(
+                      child: Icon(
+                        Icons.add,
+                        color: kPrimaryColor,
+                        size: 22,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
     );
   }
 
@@ -412,7 +552,7 @@ class _ProductProfilState extends State<ProductProfil> {
                       icon: snapshot.data.stockCount == 0 ? false : true,
                       name: snapshot.data.stockCount == 0
                           ? "notification"
-                          : "cart",
+                          : "addCartTitle",
                     ),
                     body: hasData(size, context, snapshot.data));
               } else if (snapshot.hasError) {
