@@ -11,13 +11,14 @@ import '../constants/constants.dart';
 import 'AuthModel.dart';
 
 class Product extends ChangeNotifier {
-  Product({
-    this.id,
-    this.stockCount,
-    this.price,
-    this.productName,
-    this.images,
-  });
+  Product(
+      {this.id,
+      this.stockCount,
+      this.price,
+      this.productName,
+      this.images,
+      this.cartQuantity,
+      this.cartId});
 
   factory Product.fromJson(Map<String, dynamic> json) {
     return Product(
@@ -25,14 +26,18 @@ class Product extends ChangeNotifier {
         productName: json["product_name"],
         stockCount: json["stock_count"],
         price: json["price"],
-        images: json["image"]);
+        images: json["image"],
+        cartQuantity: json['cart_quantity'],
+        cartId: json["cart_id"]);
   }
 
   final int id;
+  final int cartId;
   final String images;
   final int price;
   final String productName;
   final int stockCount;
+  final int cartQuantity;
   // ignore: missing_return
   Future<List<Product>> getProducts({
     Map<String, dynamic> parametrs,
@@ -45,7 +50,7 @@ class Product extends ChangeNotifier {
           HttpHeaders.contentTypeHeader: 'application/json; charset=UTF-8',
           HttpHeaders.authorizationHeader: 'Bearer $token',
         });
-
+    print(response.body);
     if (response.statusCode == 200) {
       final responseJson = jsonDecode(response.body)["rows"][0]["products"];
       if (responseJson != null) {

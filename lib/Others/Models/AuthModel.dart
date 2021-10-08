@@ -4,19 +4,19 @@ import 'dart:io';
 
 import 'package:http/http.dart' as http;
 import 'package:medicine_app/Others/constants/NavService.dart';
+import 'package:medicine_app/Others/constants/constants.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Auth {
   Future loginUser({String phone, String password}) async {
-    final response =
-        await http.post(Uri.http('192.168.31.138:8000', "/api/user/login"),
-            headers: <String, String>{
-              HttpHeaders.contentTypeHeader: 'application/json; charset=UTF-8',
-            },
-            body: jsonEncode(<String, String>{
-              "phone": phone,
-              "password": password,
-            }));
+    final response = await http.post(Uri.http(authServerUrl, "/api/user/login"),
+        headers: <String, String>{
+          HttpHeaders.contentTypeHeader: 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode(<String, String>{
+          "phone": phone,
+          "password": password,
+        }));
 
     if (response.statusCode == 200) {
       final responseJson = jsonDecode(response.body)["data"];
@@ -36,7 +36,7 @@ class Auth {
   Future refreshToken() async {
     final refreshToken = await Auth().getRefreshToken();
     final response =
-        await http.post(Uri.http('192.168.31.138:8000', "/api/user/refresh"),
+        await http.post(Uri.http(authServerUrl, "/api/user/refresh"),
             headers: <String, String>{
               HttpHeaders.contentTypeHeader: 'application/json; charset=UTF-8',
             },

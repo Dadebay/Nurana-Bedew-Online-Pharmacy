@@ -8,6 +8,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_iconly/flutter_iconly.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 import 'constants.dart';
@@ -161,10 +162,12 @@ CachedNetworkImage image(String name) {
             ),
           ),
       placeholder: (context, url) => Center(child: spinKit()),
-      errorWidget: (context, url, error) => Image.asset(
-            "assets/images/diller/logo.png",
-            color: Colors.grey,
-            cacheWidth: 70,
+      errorWidget: (context, url, error) => Padding(
+            padding: const EdgeInsets.all(30.0),
+            child: SvgPicture.asset(
+              "assets/icons/logo.svg",
+              color: Colors.grey,
+            ),
           ));
 }
 
@@ -191,11 +194,13 @@ AppBar appBarBackButton(BuildContext context, String name) {
 }
 
 void showMessage(String text, BuildContext context) {
+  ScaffoldMessenger.of(context).hideCurrentSnackBar();
+  Scaffold.of(context).removeCurrentSnackBar();
   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
       margin: const EdgeInsets.only(bottom: 20, left: 20, right: 20),
-      backgroundColor: kPrimaryColor,
+      backgroundColor: Colors.green.shade500,
       shape: const RoundedRectangleBorder(borderRadius: borderRadius15),
-      duration: const Duration(milliseconds: 1000),
+      duration: const Duration(milliseconds: 800),
       behavior: SnackBarBehavior.floating,
       content: Text(
         text,

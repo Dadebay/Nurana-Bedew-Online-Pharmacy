@@ -4,6 +4,7 @@ import 'package:easy_localization/src/public_ext.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_iconly/flutter_iconly.dart';
+import 'package:medicine_app/BottomNavBar/CartPage/OrderPage.dart';
 import 'package:medicine_app/Others/Models/AuthModel.dart';
 import 'package:medicine_app/Others/constants/constants.dart';
 import 'package:medicine_app/Others/constants/widgets.dart';
@@ -298,6 +299,13 @@ class _ProfileState extends State<Profile> {
                 onTap: () {
                   Navigator.of(context).push(
                       MaterialPageRoute(builder: (_) => NotificationPage()));
+                }),
+            buttonProfile(
+                name: "orders",
+                icon: IconlyLight.paper,
+                onTap: () {
+                  Navigator.of(context)
+                      .push(MaterialPageRoute(builder: (_) => OrderPage()));
                 }),
             buttonProfile(
                 name: "language",

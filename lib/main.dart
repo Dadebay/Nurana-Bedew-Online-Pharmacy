@@ -45,7 +45,6 @@ class MyApp extends StatelessWidget {
       locale: context.locale,
       debugShowCheckedModeBanner: false,
       navigatorKey: NavigationService.instance.navigationKey,
-      // initialRoute: "login",
       routes: {
         "login": (BuildContext context) => Login(),
       },

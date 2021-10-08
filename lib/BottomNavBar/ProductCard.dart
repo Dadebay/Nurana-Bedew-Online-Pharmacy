@@ -10,14 +10,83 @@ import '../Others/constants/constants.dart';
 import '../Others/constants/widgets.dart';
 import 'HomePage/ProductProfil/ProductProfil.dart';
 
-class ProductCard extends StatelessWidget {
-  const ProductCard({Key key, this.name, this.price, this.imagePath, this.id})
-      : super(key: key);
-
+class ProductCard extends StatefulWidget {
   final int id;
   final String imagePath;
   final String name;
   final int price;
+  final int cartQuantity;
+  final int cardId;
+  final int stockCount;
+
+  const ProductCard(
+      {Key key,
+      this.id,
+      this.imagePath,
+      this.name,
+      this.price,
+      this.cartQuantity,
+      this.cardId,
+      this.stockCount})
+      : super(key: key);
+
+  @override
+  State<ProductCard> createState() => _ProductCardState();
+}
+
+class _ProductCardState extends State<ProductCard> {
+  bool addCart = false;
+  int quantity = 1;
+  @override
+  void initState() {
+    super.initState();
+
+    if (widget.cartQuantity == null) {
+      quantity = 0;
+    } else {
+      quantity = widget.cartQuantity;
+    }
+  }
+
+  removeQuantity() {
+    int a = quantity - 1;
+    CartModel().updateCartProduct(
+        cartID: widget.cardId,
+        productId: widget.id,
+        parametrs: {"quantity": jsonEncode(a)}).then((value) {
+      if (value == true) {
+        setState(() {
+          if (quantity != 0) {
+            quantity -= 1;
+            if (quantity == 0) addCart = false;
+          }
+        });
+      } else {
+        showMessage("tryagain", context);
+      }
+    });
+  }
+
+  addQuantity() {
+    final int a = widget.stockCount;
+    final int b = quantity + 1;
+    if (a > b) {
+      CartModel().updateCartProduct(
+          cartID: widget.cardId,
+          productId: widget.id,
+          parametrs: {"quantity": jsonEncode(b)}).then((value) {
+        if (value == true) {
+          setState(() {
+            quantity += 1;
+          });
+        } else {
+          showMessage("tryagain", context);
+        }
+      });
+    } else {
+      showMessage("emptyStockMin", context);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +95,7 @@ class ProductCard extends StatelessWidget {
       onTap: () {
         Navigator.of(context).push(MaterialPageRoute(
             builder: (_) => ProductProfil(
-                  drugID: id,
+                  drugID: widget.id,
                 )));
       },
       child: Container(
@@ -45,7 +114,7 @@ class ProductCard extends StatelessWidget {
                 child: ClipRRect(
                     borderRadius: borderRadius5,
                     child: image(
-                      "$serverImage/$imagePath-mini.webp",
+                      "$serverImage/${widget.imagePath}-mini.webp",
                     )),
               )),
               Padding(
@@ -53,7 +122,7 @@ class ProductCard extends StatelessWidget {
                   horizontal: 10,
                 ),
                 child: Text(
-                  name,
+                  widget.name,
                   textAlign: TextAlign.center,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
@@ -77,7 +146,7 @@ class ProductCard extends StatelessWidget {
                         overflow: TextOverflow.ellipsis,
                         text: TextSpan(children: <TextSpan>[
                           TextSpan(
-                              text: " $price",
+                              text: " ${widget.price}",
                               style: const TextStyle(
                                   fontFamily: popPinsMedium,
                                   fontSize: 18,
@@ -96,8 +165,11 @@ class ProductCard extends StatelessWidget {
               ),
               GestureDetector(
                 onTap: () {
+                  setState(() {
+                    addCart = true;
+                  });
                   CartModel().addToCart(
-                      id: id,
+                      id: widget.id,
                       parametrs: {"quantity": jsonEncode(1)}).then((value) {
                     if (value == true) {
                       showMessage("addCart", context);
@@ -106,19 +178,80 @@ class ProductCard extends StatelessWidget {
                     }
                   });
                 },
-                child: Container(
-                    width: size.width,
-                    margin:
-                        const EdgeInsets.symmetric(vertical: 5, horizontal: 5),
-                    padding: const EdgeInsets.symmetric(vertical: 8),
-                    decoration: const BoxDecoration(
-                        color: kPrimaryColor, borderRadius: borderRadius10),
-                    child: const Text(
-                      "addCartTitle",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                          color: Colors.white, fontFamily: popPinsMedium),
-                    ).tr()),
+                child: addCart
+                    ? Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 8.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            GestureDetector(
+                              onTap: () {
+                                removeQuantity();
+                              },
+                              child: Container(
+                                padding: const EdgeInsets.all(3),
+                                margin: const EdgeInsets.all(3),
+                                decoration: BoxDecoration(
+                                    color: Colors.grey[200],
+                                    shape: BoxShape.circle),
+                                child: const FittedBox(
+                                  child: Icon(
+                                    Icons.remove,
+                                    color: kPrimaryColor,
+                                    size: 22,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 15),
+                              child: Text(
+                                "${quantity}",
+                                overflow: TextOverflow.ellipsis,
+                                maxLines: 1,
+                                textAlign: TextAlign.center,
+                                style: const TextStyle(
+                                    fontSize: 18,
+                                    color: Colors.black,
+                                    fontFamily: popPinsMedium),
+                              ),
+                            ),
+                            GestureDetector(
+                              onTap: () {
+                                addQuantity();
+                              },
+                              child: Container(
+                                margin: const EdgeInsets.all(3),
+                                padding: const EdgeInsets.all(3),
+                                decoration: BoxDecoration(
+                                    color: Colors.grey[200],
+                                    shape: BoxShape.circle),
+                                child: const FittedBox(
+                                  child: Icon(
+                                    Icons.add,
+                                    color: kPrimaryColor,
+                                    size: 22,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      )
+                    : Container(
+                        width: size.width,
+                        margin: const EdgeInsets.symmetric(
+                            vertical: 5, horizontal: 5),
+                        padding: const EdgeInsets.symmetric(vertical: 8),
+                        decoration: const BoxDecoration(
+                            color: kPrimaryColor, borderRadius: borderRadius10),
+                        child: const Text(
+                          "addCartTitle",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                              color: Colors.white, fontFamily: popPinsMedium),
+                        ).tr()),
               )
             ],
           ),

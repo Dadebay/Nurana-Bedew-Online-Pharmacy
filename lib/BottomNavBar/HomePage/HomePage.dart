@@ -56,7 +56,10 @@ class _HomePageState extends State<HomePage> {
               "id": element.id,
               "name": element.productName,
               "price": element.price,
-              "image": element.images
+              "image": element.images,
+              "cartQuantity": element.cartQuantity,
+              "stockCount": element.stockCount,
+              "cartId": element.cartId
             });
           });
         }
@@ -139,6 +142,9 @@ class _HomePageState extends State<HomePage> {
                       name: list[index]["name"],
                       price: list[index]["price"],
                       imagePath: list[index]["image"],
+                      cartQuantity: list[index]["cartQuantity"],
+                      stockCount: list[index]["stockCount"],
+                      cardId: list[index]["cartId"],
                     );
                   })
               : SizedBox(

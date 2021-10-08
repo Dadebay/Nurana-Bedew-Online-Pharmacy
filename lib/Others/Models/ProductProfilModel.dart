@@ -10,6 +10,7 @@ import 'AuthModel.dart';
 class ProductModel extends ChangeNotifier {
   ProductModel(
       {this.id,
+      this.cartQuantity,
       this.stockCount,
       this.price,
       this.descriptionRu,
@@ -19,21 +20,25 @@ class ProductModel extends ChangeNotifier {
       this.categoryName,
       this.countryName,
       this.images,
+      this.cartId,
       this.quantity});
 
   factory ProductModel.fromJson(Map<String, dynamic> json) {
     return ProductModel(
-        id: json["id"],
-        productName: json["product_name"],
-        countryName: json["country_name"],
-        categoryName: json["category_name"],
-        stockCount: json["stock_count"],
-        price: json["price"],
-        dateOfExpire: json["date_of_expire"],
-        descriptionRu: json["description_ru"],
-        descriptionTm: json["description_tm"],
-        images: json["image"],
-        quantity: json['quantity']);
+      id: json["id"],
+      productName: json["product_name"],
+      price: json["price"],
+      stockCount: json["stock_count"],
+      cartQuantity: json["cart_quantity"],
+      quantity: json['quantity'],
+      categoryName: json["category_name"],
+      countryName: json["country_name"],
+      descriptionTm: json["description_tm"],
+      descriptionRu: json["description_ru"],
+      cartId: json["cart_id"],
+      dateOfExpire: json["date_of_expire"],
+      images: json["image"],
+    );
   }
 
   final String categoryName;
@@ -45,6 +50,8 @@ class ProductModel extends ChangeNotifier {
   final String images;
   final String price;
   final String productName;
+  final int cartQuantity;
+  final int cartId;
   final int stockCount;
   final int quantity;
 
@@ -56,6 +63,7 @@ class ProductModel extends ChangeNotifier {
           HttpHeaders.contentTypeHeader: 'application/json; charset=UTF-8',
           HttpHeaders.authorizationHeader: 'Bearer $token',
         });
+    print(response.body);
     if (response.statusCode == 200) {
       return ProductModel.fromJson(jsonDecode(response.body)["rows"]);
     } else {

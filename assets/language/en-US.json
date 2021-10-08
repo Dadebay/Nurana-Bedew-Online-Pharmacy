@@ -47,6 +47,8 @@
     "search":"Gözleg",
     "location":"Ýerleşýän ýeri",
     "minSany":"Minimum sany",
-    "quantity":"Gutudaky sany"
+    "quantity":"Gutudaky sany :",
+    "orders":"Sargytlarym",
+    "selectCount":"Haryt sany :"
     
 }

@@ -23,16 +23,18 @@ dependencies:
   provider: null
   pull_to_refresh: ^2.0.0
   shared_preferences: null
+  numberpicker: ^2.1.1
   vibration: ^1.7.3
 dev_dependencies:
   flutter_test:
     sdk: flutter
- 
+  
 flutter:
   uses-material-design: true
   generate: true
   assets:
     - assets/images/diller/
+    - assets/images/
     - assets/icons/
     - assets/language/ru-RU.json
     - assets/language/en-US.json

@@ -54,7 +54,7 @@ class _OrderPageState extends State<OrderPage> {
     final Size size = MediaQuery.of(context).size;
     return SafeArea(
       child: Scaffold(
-        backgroundColor: Colors.grey[200],
+        backgroundColor: Colors.white,
         appBar: appBarBackButton(context, "order"),
         body: Column(
           children: [
@@ -81,92 +81,98 @@ class _OrderPageState extends State<OrderPage> {
 
                       return spinKit();
                     })),
-            dividerr(),
-            text("buyer", username),
-            text("drugCount", "$drugCount"),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: Row(
+            Container(
+              color: Colors.white,
+              child: Column(
                 children: [
-                  const Text(
-                    "totalPrice",
-                    style: TextStyle(
-                        color: Colors.black,
-                        fontFamily: popPinsMedium,
-                        fontSize: 16),
-                  ).tr(),
-                  Expanded(
-                    child: RichText(
-                      textAlign: TextAlign.right,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      text: TextSpan(
-                        text: "$drugPrice",
-                        style: const TextStyle(
-                            color: Colors.black,
-                            fontSize: 20,
-                            fontFamily: popPinsMedium),
-                        children: const <TextSpan>[
-                          TextSpan(
-                            text: ' TMT ',
-                            style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 16,
-                                fontFamily: popPinsMedium),
+                  dividerr(),
+                  text("buyer", username),
+                  text("drugCount", "$drugCount"),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: Row(
+                      children: [
+                        const Text(
+                          "totalPrice",
+                          style: TextStyle(
+                              color: Colors.black,
+                              fontFamily: popPinsMedium,
+                              fontSize: 16),
+                        ).tr(),
+                        Expanded(
+                          child: RichText(
+                            textAlign: TextAlign.right,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            text: TextSpan(
+                              text: "$drugPrice",
+                              style: const TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 20,
+                                  fontFamily: popPinsMedium),
+                              children: const <TextSpan>[
+                                TextSpan(
+                                  text: ' TMT ',
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 16,
+                                      fontFamily: popPinsMedium),
+                                ),
+                              ],
+                            ),
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
                   ),
+                  Padding(
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 20, horizontal: 20),
+                      child: agreeButton(context, size)),
                 ],
               ),
             ),
-            Padding(
-                padding:
-                    const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
-                child: agreeButton(context, size)),
           ],
         ),
       ),
     );
   }
 
-  Column card(CartModel cart, Size size, BuildContext context) {
-    return Column(
-      children: [
-        ListTile(
-          leading: SizedBox(
-            height: 50,
-            width: 50,
-            child: ClipRRect(
-              borderRadius: borderRadius5,
-              child: image(
-                "$serverImage/${cart.images}-mini.webp",
-              ),
+  Container card(CartModel cart, Size size, BuildContext context) {
+    return Container(
+      color: Colors.white,
+      margin: const EdgeInsets.only(bottom: 2),
+      child: ListTile(
+        leading: SizedBox(
+          height: 50,
+          width: 50,
+          child: ClipRRect(
+            borderRadius: borderRadius5,
+            child: image(
+              "$serverImage/${cart.images}-mini.webp",
             ),
           ),
-          minLeadingWidth: 50,
-          minVerticalPadding: 20,
-          trailing: GestureDetector(
-            onTap: () {
-              CartModel()
-                  .deleteCartProduct(cartID: widget.cartId, productId: cart.id)
-                  .then((value) {
-                if (value == true) {
-                  drugCount -= 1;
-                  drugPrice -= cart.price;
-                  setState(() {});
-                  showMessage("removeCart", context);
-                }
-              });
-            },
-            child: const Icon(IconlyLight.delete, color: kPrimaryColor),
-          ),
-          title: Text(cart.productName,
-              style: const TextStyle(fontFamily: popPinsMedium)),
         ),
-        dividerr(),
-      ],
+        minLeadingWidth: 50,
+        minVerticalPadding: 20,
+        trailing: GestureDetector(
+          onTap: () {
+            CartModel()
+                .deleteCartProduct(cartID: widget.cartId, productId: cart.id)
+                .then((value) {
+              if (value == true) {
+                drugCount -= 1;
+                drugPrice -= cart.price;
+                setState(() {});
+                showMessage("removeCart", context);
+              }
+            });
+          },
+          child: const Icon(IconlyLight.delete, color: kPrimaryColor),
+        ),
+        title: Text(cart.productName,
+            style: const TextStyle(fontFamily: popPinsMedium)),
+      ),
     );
   }
 

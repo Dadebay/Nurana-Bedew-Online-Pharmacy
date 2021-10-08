@@ -3,6 +3,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:easy_localization/src/public_ext.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -14,6 +15,7 @@ import 'package:medicine_app/Others/Models/AuthModel.dart';
 import 'package:medicine_app/Others/Models/CartModel.dart';
 import 'package:medicine_app/Others/constants/NavService.dart';
 import 'package:medicine_app/Others/constants/widgets.dart';
+import 'package:numberpicker/numberpicker.dart';
 
 import '../../Others/constants/constants.dart';
 import 'OrderPage.dart';
@@ -240,6 +242,8 @@ class _CartPageState extends State<CartPage>
       onTap: () {
         Navigator.of(context).push(MaterialPageRoute(
             builder: (_) => ProductProfil(
+                  inCart: true,
+                  cartQuantity: cartProducts[index]["quantity"],
                   drugID: cartProducts[index]["id"],
                 )));
       },
@@ -318,7 +322,7 @@ class _CartPageState extends State<CartPage>
                                 const Text(
                                   "Bahasy : ",
                                   style: TextStyle(
-                                      color: Colors.red,
+                                      color: Colors.grey,
                                       fontFamily: popPinsRegular,
                                       fontSize: 14),
                                 ),
@@ -363,23 +367,30 @@ class _CartPageState extends State<CartPage>
                                     child: Icon(
                                       Icons.remove,
                                       color: kPrimaryColor,
-                                      size: 22,
+                                      size: 25,
                                     ),
                                   ),
                                 ),
                               ),
-                              Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 15),
-                                child: Text(
-                                  "${cartProducts[index]["quantity"]}",
-                                  overflow: TextOverflow.ellipsis,
-                                  maxLines: 1,
-                                  textAlign: TextAlign.center,
-                                  style: const TextStyle(
-                                      fontSize: 18,
-                                      color: Colors.black,
-                                      fontFamily: popPinsMedium),
+                              GestureDetector(
+                                onTap: () {
+                                  currentValue = 0;
+                                  selectCount2(index, size);
+                                  setState(() {});
+                                },
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 15),
+                                  child: Text(
+                                    "${cartProducts[index]["quantity"]}",
+                                    overflow: TextOverflow.ellipsis,
+                                    maxLines: 1,
+                                    textAlign: TextAlign.center,
+                                    style: const TextStyle(
+                                        fontSize: 20,
+                                        color: Colors.black,
+                                        fontFamily: popPinsMedium),
+                                  ),
                                 ),
                               ),
                               GestureDetector(
@@ -396,7 +407,7 @@ class _CartPageState extends State<CartPage>
                                     child: Icon(
                                       Icons.add,
                                       color: kPrimaryColor,
-                                      size: 22,
+                                      size: 25,
                                     ),
                                   ),
                                 ),
@@ -411,6 +422,113 @@ class _CartPageState extends State<CartPage>
               ),
             ),
           )),
+    );
+  }
+
+  int currentValue = 0;
+  String countProcut = tr('selectCount');
+  selectCount2(int index, Size size) {
+    return showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      builder: (BuildContext context) {
+        return StatefulBuilder(
+          builder:
+              (BuildContext context, void Function(void Function()) setState) {
+            return Container(
+              margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+              decoration: const BoxDecoration(
+                  color: Colors.white, borderRadius: borderRadius10),
+              child: Wrap(
+                alignment: WrapAlignment.center,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 10),
+                    child: RichText(
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      text: TextSpan(
+                        text: countProcut,
+                        style: const TextStyle(
+                            color: Colors.black,
+                            fontSize: 24,
+                            fontFamily: popPinsMedium),
+                        children: <TextSpan>[
+                          TextSpan(
+                            text: " $currentValue",
+                            style: const TextStyle(
+                                color: kPrimaryColor,
+                                fontSize: 24,
+                                fontFamily: popPinsMedium),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  NumberPicker(
+                    infiniteLoop: true,
+                    axis: Axis.horizontal,
+                    value: currentValue,
+                    minValue: 0,
+                    itemHeight: 80,
+                    itemCount: 3,
+                    step: 5,
+                    selectedTextStyle: const TextStyle(
+                        color: kPrimaryColor,
+                        fontSize: 24,
+                        fontFamily: popPinsSemiBold),
+                    maxValue: cartProducts[index]["stockMin"],
+                    onChanged: (value) => setState(() {
+                      currentValue = value;
+                    }),
+                  ),
+                  Container(
+                    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 15),
+                    width: size.width,
+                    child: RaisedButton(
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 10, horizontal: 20),
+                        color: kPrimaryColor,
+                        elevation: 1,
+                        shape: const RoundedRectangleBorder(
+                            borderRadius: borderRadius5),
+                        onPressed: () {
+                          setState(() {
+                            print(cartProducts[index]["quantity"]);
+                            CartModel().updateCartProduct(
+                                cartID: cartId,
+                                productId: cartProducts[index]["id"],
+                                parametrs: {
+                                  "quantity": jsonEncode(currentValue)
+                                }).then((value) {
+                              if (value == true) {
+                                setState(() {
+                                  cartProducts[index]["quantity"] + 1;
+                                });
+                              } else {
+                                showMessage("tryagain", context);
+                              }
+                            });
+
+                            print(cartProducts[index]["quantity"]);
+
+                            Navigator.of(context).pop();
+                          });
+                        },
+                        child: const Text(
+                          "agree",
+                          style: TextStyle(
+                              fontFamily: popPinsMedium,
+                              fontSize: 18,
+                              color: Colors.white),
+                        ).tr()),
+                  ),
+                ],
+              ),
+            );
+          },
+        );
+      },
     );
   }
 }

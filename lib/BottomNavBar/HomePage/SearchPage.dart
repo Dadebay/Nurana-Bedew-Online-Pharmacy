@@ -357,13 +357,15 @@ class _SearchState extends State<Search> {
                   onPressed: () {
                     final List countryId = [];
                     for (final element in locationName) {
-                      if (element["isSelected"] == true)
+                      if (element["isSelected"] == true) {
                         countryId.add(element["id"]);
+                      }
                     }
                     final List category = [];
                     for (final element in categoryName) {
-                      if (element["isSelected"] == true)
+                      if (element["isSelected"] == true) {
                         category.add(element["id"]);
+                      }
                     }
                     String abc;
                     for (final element in minSany) {
@@ -449,12 +451,7 @@ class _SearchState extends State<Search> {
             onLoading: _onLoading,
             child: loading
                 ? list.isEmpty
-                    ? Center(
-                        child: const Text("noProduct",
-                                style: TextStyle(
-                                    fontFamily: popPinsMedium, fontSize: 18))
-                            .tr(),
-                      )
+                    ? Center(child: Image.asset("assets/images/noSearch.png"))
                     : GridView.builder(
                         shrinkWrap: true,
                         itemCount: list.length,
@@ -468,6 +465,7 @@ class _SearchState extends State<Search> {
                             name: list[index]["name"],
                             price: list[index]["price"],
                             imagePath: list[index]["image"],
+                            cartQuantity: 1,
                           );
                         })
                 : SizedBox(
