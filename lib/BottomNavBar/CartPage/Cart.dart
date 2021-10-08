@@ -16,6 +16,7 @@ import 'package:medicine_app/Others/Models/CartModel.dart';
 import 'package:medicine_app/Others/constants/NavService.dart';
 import 'package:medicine_app/Others/constants/widgets.dart';
 import 'package:numberpicker/numberpicker.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../Others/constants/constants.dart';
 import 'OrderPage.dart';
@@ -188,6 +189,29 @@ class _CartPageState extends State<CartPage>
             }));
   }
 
+  loadData() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String encodedMap = prefs.getString('timeData');
+    List decodedMap = json.decode(encodedMap);
+    print(decodedMap);
+    var body = json.encode(decodedMap);
+
+    final token = await Auth().getToken();
+
+    final response =
+        await http.post(Uri.http(serverURL, "/api/user/create-order"),
+            headers: <String, String>{
+              HttpHeaders.contentTypeHeader: 'application/json; charset=UTF-8',
+              HttpHeaders.authorizationHeader: 'Bearer $token',
+            },
+            body: jsonEncode(<String, dynamic>{"qty": body}));
+    if (response.statusCode == 200) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   Widget floatingActionButton() {
     return SizedBox(
       width: 150,
@@ -196,18 +220,19 @@ class _CartPageState extends State<CartPage>
         isExtended: true,
         shape: const RoundedRectangleBorder(borderRadius: borderRadius20),
         onPressed: () {
-          price = 0;
-          for (final element in cartProducts) {
-            price += element["price"] * element["quantity"];
-          }
-          cartProducts.isEmpty
-              ? null
-              : Navigator.of(context).push(MaterialPageRoute(
-                  builder: (_) => OrderPage(
-                        count: cartProducts.length,
-                        price: price,
-                        cartId: cartId,
-                      )));
+          loadData();
+          // price = 0;
+          // for (final element in cartProducts) {
+          //   price += element["price"] * element["quantity"];
+          // }
+          // cartProducts.isEmpty
+          //     ? null
+          //     : Navigator.of(context).push(MaterialPageRoute(
+          //         builder: (_) => OrderPage(
+          //               count: cartProducts.length,
+          //               price: price,
+          //               cartId: cartId,
+          //             )));
         },
         backgroundColor: kPrimaryColor,
         child: Row(

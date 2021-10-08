@@ -34,7 +34,7 @@ class _OrdersState extends State<Orders> {
                             builder: (context, snapshot) {
                               return ListView.builder(
                                 itemBuilder: (BuildContext context, int index) {
-                                  return const ProductCard(cartQuantity: 1);
+                                  return const ProductCard();
                                 },
                               );
                             })

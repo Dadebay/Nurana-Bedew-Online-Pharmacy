@@ -1,5 +1,7 @@
 // ignore_for_file: always_declare_return_types, type_annotate_public_apis, file_names
 
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_iconly/flutter_iconly.dart';
@@ -8,6 +10,7 @@ import 'package:medicine_app/Others/Models/ProductsModel.dart';
 import 'package:medicine_app/Others/constants/constants.dart';
 import 'package:medicine_app/Others/constants/widgets.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'SearchPage.dart';
 
@@ -57,9 +60,7 @@ class _HomePageState extends State<HomePage> {
               "name": element.productName,
               "price": element.price,
               "image": element.images,
-              "cartQuantity": element.cartQuantity,
               "stockCount": element.stockCount,
-              "cartId": element.cartId
             });
           });
         }
@@ -111,6 +112,30 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+  List<Map<String, dynamic>> myList = [];
+
+  loadData() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String encodedMap = prefs.getString('cart');
+    List decodedMap = json.decode(encodedMap);
+    print(decodedMap);
+  }
+
+  saveData() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    String encodedMap = json.encode(myList);
+    print(encodedMap);
+
+    prefs.setString('cart', encodedMap);
+  }
+
+  clearData() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.clear();
+    print("Data Cleared");
+  }
+
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
@@ -137,14 +162,25 @@ class _HomePageState extends State<HomePage> {
                       crossAxisCount: size.width <= 800 ? 2 : 4,
                       childAspectRatio: 3 / 4.5),
                   itemBuilder: (BuildContext context, int index) {
-                    return ProductCard(
-                      id: list[index]["id"],
-                      name: list[index]["name"],
-                      price: list[index]["price"],
-                      imagePath: list[index]["image"],
-                      cartQuantity: list[index]["cartQuantity"],
-                      stockCount: list[index]["stockCount"],
-                      cardId: list[index]["cartId"],
+                    return GestureDetector(
+                      onTap: () {
+                        // setState(() {
+                        //   myList.add(
+                        //       {"id": list[index]["id"], "cartQuantity": 1});
+                        //   print(myList);
+                        // });
+                        saveData();
+                      },
+                      onDoubleTap: () {
+                        loadData();
+                      },
+                      child: ProductCard(
+                        id: list[index]["id"],
+                        name: list[index]["name"],
+                        price: list[index]["price"],
+                        imagePath: list[index]["image"],
+                        stockCount: list[index]["stockCount"],
+                      ),
                     );
                   })
               : SizedBox(

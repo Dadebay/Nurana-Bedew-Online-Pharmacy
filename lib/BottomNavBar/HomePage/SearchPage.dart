@@ -465,7 +465,6 @@ class _SearchState extends State<Search> {
                             name: list[index]["name"],
                             price: list[index]["price"],
                             imagePath: list[index]["image"],
-                            cartQuantity: 1,
                           );
                         })
                 : SizedBox(
