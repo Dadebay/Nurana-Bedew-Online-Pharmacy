@@ -1,7 +1,5 @@
 // ignore_for_file: always_declare_return_types, type_annotate_public_apis, file_names
 
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_iconly/flutter_iconly.dart';
@@ -10,8 +8,8 @@ import 'package:medicine_app/Others/Models/ProductsModel.dart';
 import 'package:medicine_app/Others/constants/constants.dart';
 import 'package:medicine_app/Others/constants/widgets.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
+import 'ProductProfil/ProductProfil.dart';
 import 'SearchPage.dart';
 
 class HomePage extends StatefulWidget {
@@ -47,12 +45,20 @@ class _HomePageState extends State<HomePage> {
   }
 
   bool load = false;
-
+  bool inCartElement = false;
+  int a = 0;
   getData() {
     Product()
         .getProducts(parametrs: {"page": '$page', "limit": '20'}).then((value) {
       if (value != null) {
         for (final element in value) {
+          inCartElement = false;
+          for (final element2 in myList) {
+            if (element.id == element2["id"]) {
+              inCartElement = true;
+            }
+          }
+
           setState(() {
             loading = true;
             list.add({
@@ -61,6 +67,8 @@ class _HomePageState extends State<HomePage> {
               "price": element.price,
               "image": element.images,
               "stockCount": element.stockCount,
+              "addCart": inCartElement,
+              // "cardQuantity":element.cartQuantity
             });
           });
         }
@@ -112,30 +120,6 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  List<Map<String, dynamic>> myList = [];
-
-  loadData() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String encodedMap = prefs.getString('cart');
-    List decodedMap = json.decode(encodedMap);
-    print(decodedMap);
-  }
-
-  saveData() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-
-    String encodedMap = json.encode(myList);
-    print(encodedMap);
-
-    prefs.setString('cart', encodedMap);
-  }
-
-  clearData() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.clear();
-    print("Data Cleared");
-  }
-
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
@@ -164,15 +148,11 @@ class _HomePageState extends State<HomePage> {
                   itemBuilder: (BuildContext context, int index) {
                     return GestureDetector(
                       onTap: () {
-                        // setState(() {
-                        //   myList.add(
-                        //       {"id": list[index]["id"], "cartQuantity": 1});
-                        //   print(myList);
-                        // });
-                        saveData();
-                      },
-                      onDoubleTap: () {
-                        loadData();
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (_) => ProductProfil(
+                                  inCart: list[index]["addCart"],
+                                  drugID: list[index]["id"],
+                                )));
                       },
                       child: ProductCard(
                         id: list[index]["id"],
@@ -180,6 +160,8 @@ class _HomePageState extends State<HomePage> {
                         price: list[index]["price"],
                         imagePath: list[index]["image"],
                         stockCount: list[index]["stockCount"],
+                        addCart: list[index]["addCart"],
+                        // cartQuantity: ,
                       ),
                     );
                   })

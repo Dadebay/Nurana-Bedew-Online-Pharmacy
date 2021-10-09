@@ -6,6 +6,7 @@ import 'package:easy_localization/src/public_ext.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_iconly/flutter_iconly.dart';
+import 'package:medicine_app/BottomNavBar/BottomNavBar.dart';
 import 'package:medicine_app/Others/Models/CartModel.dart';
 import 'package:medicine_app/Others/Models/NotificationModel.dart';
 import 'package:medicine_app/Others/Models/ProductProfilModel.dart';
@@ -16,10 +17,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'PhotoView.dart';
 
 class ProductProfil extends StatefulWidget {
-  const ProductProfil(
-      {Key key, this.drugID, this.cartQuantity, @required this.inCart})
+  const ProductProfil({Key key, this.drugID, @required this.inCart})
       : super(key: key);
-  final int cartQuantity;
+
   final int drugID;
   final bool inCart;
 
@@ -28,17 +28,21 @@ class ProductProfil extends StatefulWidget {
 }
 
 class _ProductProfilState extends State<ProductProfil> {
+  String lang = "tm";
   bool orderButtonChange = false;
+  int quantity = 1;
 
   @override
   void initState() {
     super.initState();
     setData();
-    quantity = widget.cartQuantity ?? 1;
+    for (final element in myList) {
+      if (element["id"] == widget.drugID) {
+        quantity = element["cartQuantity"];
+      }
+    }
 
     orderButtonChange = widget.inCart ?? false;
-    print(orderButtonChange);
-    print(widget.inCart);
   }
 
   Widget hasData(Size size, BuildContext context, ProductModel product) {
@@ -46,22 +50,13 @@ class _ProductProfilState extends State<ProductProfil> {
       slivers: [
         imagePart(size, "$serverImage/${product.images}-big.webp",
             "${product.productName}"),
-        SliverToBoxAdapter(
-          child: Column(
-            children: [
-              Container(
-                transform: Matrix4.translationValues(0, -20, 0),
-                decoration: BoxDecoration(
-                    color: Colors.red, borderRadius: borderRadius15),
-                height: 40,
-              ),
-            ],
-          ),
-        ),
         SliverList(
             delegate: SliverChildListDelegate([
+          dividerr(),
+          dividerr(),
+          dividerr(),
           Padding(
-            padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+            padding: const EdgeInsets.fromLTRB(20, 15, 20, 0),
             child: Text(
               "${product.productName}",
               maxLines: 2,
@@ -258,18 +253,7 @@ class _ProductProfilState extends State<ProductProfil> {
     );
   }
 
-  sebedeGos() {
-    CartModel().addToCart(
-        id: widget.drugID,
-        parametrs: {"quantity": jsonEncode(1)}).then((value) {
-      if (value == true) {
-        showMessage("addCart", context);
-      } else {
-        showMessage("tryagain", context);
-      }
-    });
-    orderButtonChange = true;
-  }
+  sebedeGos() {}
 
   habarET() {
     showDialog(
@@ -323,6 +307,8 @@ class _ProductProfilState extends State<ProductProfil> {
                     ).tr(),
                     onPressed: () {
                       NotificationModel().addNotification(widget.drugID);
+                      showMessage(
+                          "Habar ugradyl", context, Colors.green.shade500);
                     }),
                 RaisedButton(
                     shape: const RoundedRectangleBorder(
@@ -347,47 +333,52 @@ class _ProductProfilState extends State<ProductProfil> {
     );
   }
 
-  removeQuantity(ProductModel product) {
-    CartModel().updateCartProduct(
-        cartID: product.cartId,
-        productId: widget.drugID,
-        parametrs: {"quantity": jsonEncode(quantity - 1)}).then((value) {
-      if (value == true) {
-        setState(() {
-          if (quantity != 0) {
-            quantity -= 1;
-            if (quantity == 0) orderButtonChange = false;
-          }
-        });
-      } else {
-        showMessage("tryagain", context);
-      }
-    });
-  }
-
-  addQuantity(ProductModel product) {
-    final int a = product.stockCount;
-    final int b = quantity + 1;
-
-    if (a > b) {
-      CartModel().updateCartProduct(
-          cartID: product.cartId,
-          productId: widget.drugID,
-          parametrs: {"quantity": jsonEncode(b)}).then((value) {
-        if (value == true) {
-          setState(() {
-            quantity += 1;
-          });
-        } else {
-          showMessage("tryagain", context);
-        }
-      });
+  saveData(int id, int quantity) async {
+    bool value = false;
+    if (quantity == 0) {
+      myList.removeWhere((element) => element["id"] == id);
     } else {
-      showMessage("emptyStockMin", context);
+      for (final element in myList) {
+        if (element["id"] == id) {
+          element["cartQuantity"] = quantity;
+          value = true;
+        }
+      }
+
+      if (value == false) myList.add({"id": id, "cartQuantity": quantity});
+
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
+      final String encodedMap = json.encode(myList);
+      print(myList);
+      prefs.setString('cart', encodedMap);
     }
   }
 
-  int quantity = 1;
+  removeQuantity(ProductModel product) {
+    if (quantity != 0) {
+      setState(() {
+        quantity -= 1;
+        int id = int.parse(product.id);
+
+        saveData(id, quantity);
+
+        if (quantity == 0) orderButtonChange = false;
+      });
+    }
+  }
+
+  addQuantity(ProductModel product, BuildContext context) {
+    if (product.stockCount > (quantity + 1)) {
+      setState(() {
+        quantity += 1;
+        int id = int.parse(product.id);
+        saveData(id, quantity);
+      });
+    } else {
+      print("a");
+      showMessage("Haryt Ammarda Yok", context, Colors.red);
+    }
+  }
 
   Widget orderButton({String name, bool icon, ProductModel product}) {
     final Size size = MediaQuery.of(context).size;
@@ -433,7 +424,7 @@ class _ProductProfilState extends State<ProductProfil> {
                   ),
                   GestureDetector(
                     onTap: () {
-                      addQuantity(product);
+                      addQuantity(product, context);
                     },
                     child: Container(
                       margin: const EdgeInsets.all(3),
@@ -482,35 +473,6 @@ class _ProductProfilState extends State<ProductProfil> {
     );
   }
 
-  @override
-  Widget build(BuildContext context) {
-    final Size size = MediaQuery.of(context).size;
-    return SafeArea(
-        child: FutureBuilder<ProductModel>(
-            future: ProductModel().getProductById(widget.drugID),
-            builder: (context, snapshot) {
-              if (snapshot.hasData) {
-                return Scaffold(
-                    backgroundColor: Colors.white,
-                    bottomSheet: orderButton(
-                        icon: snapshot.data.stockCount == 0 ? false : true,
-                        name: snapshot.data.stockCount == 0
-                            ? "notification"
-                            : "addCartTitle",
-                        product: snapshot.data),
-                    body: hasData(size, context, snapshot.data));
-              } else if (snapshot.hasError) {
-                return const Scaffold(
-                    backgroundColor: Colors.white,
-                    body: Center(
-                        child: Icon(Icons.refresh,
-                            color: kPrimaryColor, size: 35)));
-              }
-
-              return Scaffold(backgroundColor: Colors.white, body: spinKit());
-            }));
-  }
-
   Widget imagePart(Size size, String imageString, String name) {
     return SliverAppBar(
       backgroundColor: Colors.white,
@@ -518,7 +480,9 @@ class _ProductProfilState extends State<ProductProfil> {
         padding: const EdgeInsets.fromLTRB(10, 10, 4, 10),
         child: GestureDetector(
           onTap: () {
-            Navigator.of(context).pop();
+            // Navigator.pop(context);
+            Navigator.push(
+                context, MaterialPageRoute(builder: (_) => BottomNavBar()));
           },
           child: Container(
               decoration: const BoxDecoration(
@@ -570,12 +534,40 @@ class _ProductProfilState extends State<ProductProfil> {
     return pref.getString(langKey);
   }
 
-  String lang = "tm";
   setData() {
     setState(() {
       getData().then((value) {
         lang = value ?? "tm";
       });
     });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final Size size = MediaQuery.of(context).size;
+    return SafeArea(
+        child: FutureBuilder<ProductModel>(
+            future: ProductModel().getProductById(widget.drugID),
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                return Scaffold(
+                    backgroundColor: Colors.white,
+                    bottomSheet: orderButton(
+                        icon: snapshot.data.stockCount == 0 ? false : true,
+                        name: snapshot.data.stockCount == 0
+                            ? "notification"
+                            : "addCartTitle",
+                        product: snapshot.data),
+                    body: hasData(size, context, snapshot.data));
+              } else if (snapshot.hasError) {
+                return const Scaffold(
+                    backgroundColor: Colors.white,
+                    body: Center(
+                        child: Icon(Icons.refresh,
+                            color: kPrimaryColor, size: 35)));
+              }
+
+              return Scaffold(backgroundColor: Colors.white, body: spinKit());
+            }));
   }
 }

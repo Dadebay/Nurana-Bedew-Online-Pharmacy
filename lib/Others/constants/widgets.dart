@@ -193,12 +193,12 @@ AppBar appBarBackButton(BuildContext context, String name) {
   );
 }
 
-void showMessage(String text, BuildContext context) {
+void showMessage(String text, BuildContext context, Color color) {
   ScaffoldMessenger.of(context).hideCurrentSnackBar();
   Scaffold.of(context).removeCurrentSnackBar();
   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
       margin: const EdgeInsets.only(bottom: 20, left: 20, right: 20),
-      backgroundColor: Colors.green.shade500,
+      backgroundColor: color,
       shape: const RoundedRectangleBorder(borderRadius: borderRadius15),
       duration: const Duration(milliseconds: 800),
       behavior: SnackBarBehavior.floating,

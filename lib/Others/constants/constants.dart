@@ -1,6 +1,8 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
+List<Map<String, dynamic>> myList = [];
+
 const String serverURL = "192.168.31.138:8000";
 const String serverImage = "http://192.168.31.138:8000";
 const String authServerUrl = "192.168.31.138:8000";

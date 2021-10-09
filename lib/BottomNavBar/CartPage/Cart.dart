@@ -1,4 +1,4 @@
-// ignore_for_file: unnecessary_statements, file_names, implementation_imports, type_annotate_public_apis, always_declare_return_types
+// ignore_for_file: unnecessary_statements, file_names, implementation_imports, type_annotate_public_apis, always_declare_return_types, deprecated_member_use
 
 import 'dart:convert';
 import 'dart:io';
@@ -16,7 +16,6 @@ import 'package:medicine_app/Others/Models/CartModel.dart';
 import 'package:medicine_app/Others/constants/NavService.dart';
 import 'package:medicine_app/Others/constants/widgets.dart';
 import 'package:numberpicker/numberpicker.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../Others/constants/constants.dart';
 import 'OrderPage.dart';
@@ -53,7 +52,7 @@ class _CartPageState extends State<CartPage>
                     cartID: cartId, productId: cartProducts[index]["id"])
                 .then((value) {
               if (value == true) {
-                showMessage(removeCart, context);
+                showMessage(removeCart, context, Colors.red);
 
                 cartProducts.removeAt(index);
               }
@@ -61,7 +60,7 @@ class _CartPageState extends State<CartPage>
           }
         });
       } else {
-        showMessage("tryagain", context);
+        showMessage("tryagain", context, Colors.red);
       }
     });
   }
@@ -81,11 +80,11 @@ class _CartPageState extends State<CartPage>
             cartProducts[index]["quantity"] + 1;
           });
         } else {
-          showMessage("tryagain", context);
+          showMessage("tryagain", context, Colors.red);
         }
       });
     } else {
-      showMessage("emptyStockMin", context);
+      showMessage("emptyStockMin", context, Colors.red);
     }
   }
 
@@ -189,28 +188,27 @@ class _CartPageState extends State<CartPage>
             }));
   }
 
-  loadData() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String encodedMap = prefs.getString('timeData');
-    List decodedMap = json.decode(encodedMap);
-    print(decodedMap);
-    var body = json.encode(decodedMap);
+  // loadData() async {
+  //   SharedPreferences prefs = await SharedPreferences.getInstance();
+  //   String encodedMap = prefs.getString('cart');
+  //   List decodedMap = json.decode(encodedMap);
+  //   var body = json.encode(decodedMap);
 
-    final token = await Auth().getToken();
+  //   final token = await Auth().getToken();
 
-    final response =
-        await http.post(Uri.http(serverURL, "/api/user/create-order"),
-            headers: <String, String>{
-              HttpHeaders.contentTypeHeader: 'application/json; charset=UTF-8',
-              HttpHeaders.authorizationHeader: 'Bearer $token',
-            },
-            body: jsonEncode(<String, dynamic>{"qty": body}));
-    if (response.statusCode == 200) {
-      return true;
-    } else {
-      return false;
-    }
-  }
+  //   final response =
+  //       await http.post(Uri.http(serverURL, "/api/user/create-order"),
+  //           headers: <String, String>{
+  //             HttpHeaders.contentTypeHeader: 'application/json; charset=UTF-8',
+  //             HttpHeaders.authorizationHeader: 'Bearer $token',
+  //           },
+  //           body: jsonEncode(<String, dynamic>{"qty": body}));
+  //   if (response.statusCode == 200) {
+  //     return true;
+  //   } else {
+  //     return false;
+  //   }
+  // }
 
   Widget floatingActionButton() {
     return SizedBox(
@@ -220,19 +218,19 @@ class _CartPageState extends State<CartPage>
         isExtended: true,
         shape: const RoundedRectangleBorder(borderRadius: borderRadius20),
         onPressed: () {
-          loadData();
-          // price = 0;
-          // for (final element in cartProducts) {
-          //   price += element["price"] * element["quantity"];
-          // }
-          // cartProducts.isEmpty
-          //     ? null
-          //     : Navigator.of(context).push(MaterialPageRoute(
-          //         builder: (_) => OrderPage(
-          //               count: cartProducts.length,
-          //               price: price,
-          //               cartId: cartId,
-          //             )));
+          // loadData();
+          price = 0;
+          for (final element in cartProducts) {
+            price += element["price"] * element["quantity"];
+          }
+          cartProducts.isEmpty
+              ? null
+              : Navigator.of(context).push(MaterialPageRoute(
+                  builder: (_) => OrderPage(
+                        count: cartProducts.length,
+                        price: price,
+                        cartId: cartId,
+                      )));
         },
         backgroundColor: kPrimaryColor,
         child: Row(
@@ -268,7 +266,6 @@ class _CartPageState extends State<CartPage>
         Navigator.of(context).push(MaterialPageRoute(
             builder: (_) => ProductProfil(
                   inCart: true,
-                  cartQuantity: cartProducts[index]["quantity"],
                   drugID: cartProducts[index]["id"],
                 )));
       },
@@ -329,7 +326,8 @@ class _CartPageState extends State<CartPage>
                                       .then((value) {
                                     if (value == true) {
                                       setState(() {});
-                                      showMessage("removeCart", context);
+                                      showMessage("removeCart", context,
+                                          Colors.green.shade500);
                                     }
                                   });
                                 },
@@ -496,7 +494,6 @@ class _CartPageState extends State<CartPage>
                     value: currentValue,
                     minValue: 0,
                     itemHeight: 80,
-                    itemCount: 3,
                     step: 5,
                     selectedTextStyle: const TextStyle(
                         color: kPrimaryColor,
@@ -508,7 +505,8 @@ class _CartPageState extends State<CartPage>
                     }),
                   ),
                   Container(
-                    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 15),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 10, vertical: 15),
                     width: size.width,
                     child: RaisedButton(
                         padding: const EdgeInsets.symmetric(
@@ -519,7 +517,6 @@ class _CartPageState extends State<CartPage>
                             borderRadius: borderRadius5),
                         onPressed: () {
                           setState(() {
-                            print(cartProducts[index]["quantity"]);
                             CartModel().updateCartProduct(
                                 cartID: cartId,
                                 productId: cartProducts[index]["id"],
@@ -531,11 +528,9 @@ class _CartPageState extends State<CartPage>
                                   cartProducts[index]["quantity"] + 1;
                                 });
                               } else {
-                                showMessage("tryagain", context);
+                                showMessage("tryagain", context, Colors.red);
                               }
                             });
-
-                            print(cartProducts[index]["quantity"]);
 
                             Navigator.of(context).pop();
                           });

@@ -57,6 +57,7 @@ class _NotificationPageState extends State<NotificationPage> {
         Navigator.of(context).push(MaterialPageRoute(
             builder: (_) => ProductProfil(
                   drugID: product.productId,
+                  inCart: false,
                 )));
       },
       child: Padding(
@@ -168,9 +169,11 @@ class _NotificationPageState extends State<NotificationPage> {
                                         "quantity": jsonEncode(1)
                                       }).then((value) {
                                     if (value == true) {
-                                      showMessage("addCart", context);
+                                      showMessage("addCart", context,
+                                          Colors.green.shade500);
                                     } else {
-                                      showMessage("tryagain", context);
+                                      showMessage("tryagain", context,
+                                          Colors.green.shade500);
                                     }
                                   });
                                 },

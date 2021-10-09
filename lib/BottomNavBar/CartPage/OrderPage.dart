@@ -164,7 +164,7 @@ class _OrderPageState extends State<OrderPage> {
                 drugCount -= 1;
                 drugPrice -= cart.price;
                 setState(() {});
-                showMessage("removeCart", context);
+                showMessage("removeCart", context, Colors.green.shade500);
               }
             });
           },
@@ -181,11 +181,11 @@ class _OrderPageState extends State<OrderPage> {
       onTap: () {
         CartModel().order().then((value) {
           if (value == true) {
-            showMessage("orderCompleted", context);
+            showMessage("orderCompleted", context, Colors.green.shade500);
             Navigator.of(context)
                 .push(MaterialPageRoute(builder: (_) => BottomNavBar()));
           } else {
-            showMessage("tryagain", context);
+            showMessage("tryagain", context, Colors.red);
           }
         });
       },

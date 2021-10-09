@@ -63,7 +63,6 @@ class ProductModel extends ChangeNotifier {
           HttpHeaders.contentTypeHeader: 'application/json; charset=UTF-8',
           HttpHeaders.authorizationHeader: 'Bearer $token',
         });
-    print(response.body);
     if (response.statusCode == 200) {
       return ProductModel.fromJson(jsonDecode(response.body)["rows"]);
     } else {

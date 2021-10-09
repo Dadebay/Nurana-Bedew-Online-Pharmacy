@@ -173,6 +173,8 @@ class _SearchState extends State<Search> {
         ).tr());
   }
 
+  bool inCartElement = false;
+
   Padding searchTextField() {
     return Padding(
       padding: const EdgeInsets.all(10.0),
@@ -199,11 +201,18 @@ class _SearchState extends State<Search> {
               if (value.isEmpty) list.clear();
             });
             for (final element in value) {
+              inCartElement = false;
+              for (final element2 in myList) {
+                if (element.id == element2["id"]) {
+                  inCartElement = true;
+                }
+              }
               list.add({
                 "id": element.id,
                 "name": element.productName,
                 "price": element.price,
-                "image": element.images
+                "image": element.images,
+                "addCart": inCartElement,
               });
             }
           });
@@ -406,7 +415,7 @@ class _SearchState extends State<Search> {
                           }
                         });
                       } else {
-                        showMessage("noProduct", context);
+                        showMessage("noProduct", context, Colors.red);
                       }
                     });
                   },
@@ -461,11 +470,11 @@ class _SearchState extends State<Search> {
                             childAspectRatio: 3 / 4.5),
                         itemBuilder: (BuildContext context, int index) {
                           return ProductCard(
-                            id: list[index]["id"],
-                            name: list[index]["name"],
-                            price: list[index]["price"],
-                            imagePath: list[index]["image"],
-                          );
+                              id: list[index]["id"],
+                              name: list[index]["name"],
+                              price: list[index]["price"],
+                              imagePath: list[index]["image"],
+                              addCart: list[index]["addCart"]);
                         })
                 : SizedBox(
                     height: size.height / 1.5,
