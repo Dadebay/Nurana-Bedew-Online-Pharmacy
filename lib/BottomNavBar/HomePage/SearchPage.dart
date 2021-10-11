@@ -1,4 +1,4 @@
-// ignore_for_file: type_annotate_public_apis, always_declare_return_types, file_names, deprecated_member_use, avoid_bool_literals_in_conditional_expressions, prefer_const_constructors
+// ignore_for_file: type_annotate_public_apis, always_declare_return_types, file_names, deprecated_member_use, avoid_bool_literals_in_conditional_expressions, prefer_const_constructors, avoid_print
 
 import 'dart:convert';
 
@@ -16,8 +16,9 @@ import '../../Others/constants/widgets.dart';
 import '../ProductCard.dart';
 
 class Search extends StatefulWidget {
-  const Search({Key key, this.categoryId}) : super(key: key);
-
+  const Search({Key key, this.categoryId, @required this.newInCome})
+      : super(key: key);
+  final int newInCome;
   final int categoryId;
 
   @override
@@ -81,25 +82,45 @@ class _SearchState extends State<Search> {
     getData();
   }
 
+  int a = 0;
   getData() {
+    a = widget.newInCome;
     Product().getProducts(parametrs: {
       "page": '$page', "limit": '20',
       "product_name": textEditingController.text,
       "country_id": null, //jsonEncode([3]),
       "stock_min": null,
       "price": null,
+      "new_in_come": "1",
       "category_id":
           widget.categoryId == -1 ? [] : jsonEncode([widget.categoryId])
     }).then((value) {
-      if (value != null) {
+      if (value == null) {
+        setState(() {
+          list.clear();
+          loading = true;
+        });
+      } else if (value != null) {
         for (final element in value) {
+          inCartElement = false;
+          a = 0;
+          for (final element2 in myList) {
+            if (element.id == element2["id"]) {
+              inCartElement = true;
+              a = element2["cartQuantity"];
+            }
+          }
+
           setState(() {
             loading = true;
             list.add({
               "id": element.id,
               "name": element.productName,
               "price": element.price,
-              "image": element.images
+              "image": element.images,
+              "stockCount": element.stockCount,
+              "addCart": inCartElement,
+              "cartQuantity": a
             });
           });
         }
@@ -460,7 +481,11 @@ class _SearchState extends State<Search> {
             onLoading: _onLoading,
             child: loading
                 ? list.isEmpty
-                    ? Center(child: Image.asset("assets/images/noSearch.png"))
+                    ? Center(
+                        child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 15),
+                        child: Image.asset("assets/images/noSearch.png"),
+                      ))
                     : GridView.builder(
                         shrinkWrap: true,
                         itemCount: list.length,
@@ -470,11 +495,14 @@ class _SearchState extends State<Search> {
                             childAspectRatio: 3 / 4.5),
                         itemBuilder: (BuildContext context, int index) {
                           return ProductCard(
-                              id: list[index]["id"],
-                              name: list[index]["name"],
-                              price: list[index]["price"],
-                              imagePath: list[index]["image"],
-                              addCart: list[index]["addCart"]);
+                            id: list[index]["id"],
+                            name: list[index]["name"],
+                            price: list[index]["price"],
+                            imagePath: list[index]["image"],
+                            stockCount: list[index]["stockCount"],
+                            addCart: list[index]["addCart"],
+                            cartQuantity: list[index]["cartQuantity"],
+                          );
                         })
                 : SizedBox(
                     height: size.height / 1.5,

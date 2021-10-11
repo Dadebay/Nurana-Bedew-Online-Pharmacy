@@ -1,14 +1,17 @@
-// ignore_for_file: avoid_positional_boolean_parameters, implementation_imports, prefer_const_constructors, deprecated_member_use
+// ignore_for_file: avoid_positional_boolean_parameters, implementation_imports, prefer_const_constructors, deprecated_member_use, avoid_void_async
 
 import 'dart:io';
 
 import 'package:connectivity/connectivity.dart';
+import 'package:easy_localization/src/public_ext.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:medicine_app/BottomNavBar/BottomNavBar.dart';
+import 'package:medicine_app/Others/constants/widgets.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../Others/constants/constants.dart';
+import 'Login.dart';
 
 class ConnectionCheck extends StatefulWidget {
   @override
@@ -27,48 +30,133 @@ class _ConnectionCheckState extends State<ConnectionCheck> {
 
   bool firsttime = false;
 
-  Future<bool> loadData() async {
+  Future<bool> loadDataFirstTime() async {
     final SharedPreferences pref = await SharedPreferences.getInstance();
     return pref.getBool("firstTime");
   }
 
+  Future<bool> saveData(String value) async {
+    final SharedPreferences pref = await SharedPreferences.getInstance();
+    return pref.setString(langKey, value);
+  }
+
+  Future<String> loadData() async {
+    final SharedPreferences pref = await SharedPreferences.getInstance();
+    return pref.getString(langKey);
+  }
+
   void setData() {
     setState(() {
-      loadData().then((value) {
+      loadDataFirstTime().then((value) {
         firsttime = value ?? false;
       });
     });
   }
 
-  void checkConnection() {
+  Future langSelect() => showGeneralDialog(
+      barrierColor: Colors.black.withOpacity(0.5),
+      transitionBuilder: (BuildContext context, a1, a2, widget) {
+        return Transform.scale(
+          scale: a1.value,
+          child: Opacity(
+            opacity: a1.value,
+            child: AlertDialog(
+              shape: OutlineInputBorder(
+                  borderSide: BorderSide.none, borderRadius: borderRadius10),
+              title: const Text(
+                "select_language",
+                style: TextStyle(
+                    color: Colors.black,
+                    fontFamily: popPinsSemiBold,
+                    fontSize: 20),
+              ).tr(),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  ListTile(
+                      onTap: () {
+                        Navigator.of(context).pushReplacement(
+                            CupertinoPageRoute(builder: (_) => BottomNavBar()));
+                        saveData("tm");
+                        setState(() {
+                          context.locale = Locale("en", "US");
+                        });
+                      },
+                      leading: CircleAvatar(
+                        backgroundImage: AssetImage(
+                          'assets/images/diller/tm.png',
+                        ),
+                        radius: 20,
+                      ),
+                      title: textBlck(text: 'Türkmen')),
+                  SizedBox(
+                    height: 15,
+                  ),
+                  ListTile(
+                      onTap: () {
+                        Navigator.of(context).pushReplacement(
+                            CupertinoPageRoute(builder: (_) => BottomNavBar()));
+                        saveData("ru");
+                        setState(() {
+                          context.locale = Locale("ru", "RU");
+                        });
+                      },
+                      leading: CircleAvatar(
+                        backgroundImage: AssetImage(
+                          'assets/images/diller/ru.png',
+                        ),
+                        radius: 20,
+                      ),
+                      title: textBlck(text: 'Русский')),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+      transitionDuration: Duration(milliseconds: 500),
+      barrierDismissible: false,
+      barrierLabel: '',
+      context: context,
+      pageBuilder: (context, animation1, animation2) {
+        return null;
+      });
+
+  void checkConnection() async {
     try {
-      InternetAddress.lookup('google.com').then((result) {
-        if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+      final result = await InternetAddress.lookup('google.com');
+
+      if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+        if (firsttime == false) {
+          langSelect();
+          Future.delayed(Duration(milliseconds: 2000), () {
+            Navigator.of(context)
+                .pushReplacement(CupertinoPageRoute(builder: (_) => Login()));
+          });
+        } else {
           Future.delayed(Duration(milliseconds: 2000), () {
             Navigator.of(context).pushReplacement(
                 CupertinoPageRoute(builder: (_) => BottomNavBar()));
           });
-        } else {
-          _showDialog();
         }
-      }).catchError((error) {
-        _showDialog();
-      });
+
+        Connectivity()
+            .onConnectivityChanged
+            .listen((ConnectivityResult connrresult) {
+          if (connrresult == ConnectivityResult.none) {
+            _showDialog();
+          } else if (connrresult == ConnectivityResult.mobile ||
+              _connectivityResult == ConnectivityResult.wifi) {
+            Future.delayed(Duration(milliseconds: 2000), () {
+              Navigator.of(context).pushReplacement(
+                  CupertinoPageRoute(builder: (_) => BottomNavBar()));
+            });
+          }
+        });
+      }
     } on SocketException catch (_) {
       _showDialog();
     }
-    Connectivity()
-        .onConnectivityChanged
-        .listen((ConnectivityResult connrresult) {
-      if (connrresult == ConnectivityResult.none) {
-      } else if (_connectivityResult == ConnectivityResult.none) {
-        Future.delayed(Duration(milliseconds: 2000), () {
-          Navigator.of(context).pushReplacement(
-              CupertinoPageRoute(builder: (_) => BottomNavBar()));
-        });
-      }
-      _connectivityResult = connrresult;
-    });
   }
 
   void _showDialog() {
@@ -125,6 +213,7 @@ class _ConnectionCheckState extends State<ConnectionCheck> {
                             child: Text(
                               "Täzeden barla",
                               style: TextStyle(
+                                  fontSize: 18,
                                   color: Colors.white,
                                   fontFamily: popPinsSemiBold),
                             ),
@@ -168,9 +257,17 @@ class _ConnectionCheckState extends State<ConnectionCheck> {
         body: Stack(
           children: [
             Center(
-                child: FlutterLogo(
-              size: 300,
-            )),
+              child: GestureDetector(
+                onTap: () {
+                  checkConnection();
+                },
+                child: Padding(
+                  padding: const EdgeInsets.all(20.0),
+                  child: Image.asset('assets/images/diller/logo.png',
+                      fit: BoxFit.fill),
+                ),
+              ),
+            ),
             Align(
               alignment: Alignment.bottomCenter,
               child: LinearProgressIndicator(

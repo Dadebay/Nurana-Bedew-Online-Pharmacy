@@ -3,11 +3,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_iconly/flutter_iconly.dart';
+import 'package:medicine_app/BottomNavBar/CartPage/CartPage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../Others/constants/constants.dart';
 import '../Others/constants/widgets.dart';
-import 'CartPage/Cart.dart';
 import 'CategoryPage.dart';
 import 'HomePage/HomePage.dart';
 import 'Profile/Profile.dart';

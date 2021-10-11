@@ -50,6 +50,8 @@
     "quantity":"Количество в коробке :",
     "orders":"Мои заказы",
     "selectCount":"Выберите количество :",
-    "sendNotification":"Ваше сообщение отправлено"
+    "sendNotification":"Ваше сообщение отправлено",
+    "orderHistory":"Заказ",
+    "notificationSend":"Ваше сообщение отправлено"
 
 }

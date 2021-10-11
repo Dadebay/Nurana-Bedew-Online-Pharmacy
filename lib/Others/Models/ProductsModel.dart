@@ -1,4 +1,4 @@
-// ignore_for_file: type_annotate_public_apis, prefer_typing_uninitialized_variables, file_names
+// ignore_for_file: type_annotate_public_apis, prefer_typing_uninitialized_variables, file_names, avoid_print, noop_primitive_operations
 
 import 'dart:convert';
 import 'dart:io';
@@ -11,26 +11,25 @@ import '../constants/constants.dart';
 import 'AuthModel.dart';
 
 class Product extends ChangeNotifier {
-  Product(
-      {this.id,
-      this.stockCount,
-      this.price,
-      this.productName,
-      this.images,
-      this.cartId});
+  Product({
+    this.id,
+    this.stockCount,
+    this.price,
+    this.productName,
+    this.images,
+  });
 
   factory Product.fromJson(Map<String, dynamic> json) {
     return Product(
-        id: json["id"],
-        productName: json["product_name"],
-        stockCount: json["stock_count"],
-        price: json["price"],
-        images: json["image"],
-        cartId: json["cart_id"]);
+      id: json["id"],
+      productName: json["product_name"],
+      stockCount: json["stock_count"],
+      price: json["price"],
+      images: json["image"],
+    );
   }
 
   final int id;
-  final int cartId;
   final String images;
   final int price;
   final String productName;
@@ -39,6 +38,7 @@ class Product extends ChangeNotifier {
   Future<List<Product>> getProducts({
     Map<String, dynamic> parametrs,
   }) async {
+    print(parametrs);
     final token = await Auth().getToken();
     final List<Product> products = [];
     final response = await http.get(
@@ -47,6 +47,7 @@ class Product extends ChangeNotifier {
           HttpHeaders.contentTypeHeader: 'application/json; charset=UTF-8',
           HttpHeaders.authorizationHeader: 'Bearer $token',
         });
+    print(response.body.toString());
     if (response.statusCode == 200) {
       final responseJson = jsonDecode(response.body)["rows"][0]["products"];
       if (responseJson != null) {
@@ -79,6 +80,32 @@ class Product extends ChangeNotifier {
       Future.delayed(const Duration(milliseconds: 200), () {
         NavigationService.instance.navigateToReplacement("login");
       });
+    }
+  }
+
+  Future<List<Product>> getOrderedProducts(int id) async {
+    final token = await Auth().getToken();
+    final List<Product> orders = [];
+    print(id);
+    final response = await http.get(
+        Uri.http(
+          serverURL,
+          "/api/user/get-order/$id",
+        ),
+        headers: <String, String>{
+          HttpHeaders.contentTypeHeader: 'application/json; charset=UTF-8',
+          HttpHeaders.authorizationHeader: 'Bearer $token',
+        });
+    print(response.body);
+    if (response.statusCode == 200) {
+      final responseJson = jsonDecode(response.body)["rows"]["products"];
+      print(responseJson);
+      for (final Map product in responseJson) {
+        orders.add(Product.fromJson(product));
+      }
+      return orders;
+    } else {
+      return null;
     }
   }
 }

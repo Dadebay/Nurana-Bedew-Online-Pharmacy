@@ -1,4 +1,4 @@
-// ignore_for_file: file_names
+// ignore_for_file: file_names, avoid_print
 
 import 'dart:convert';
 import 'dart:io';
@@ -11,12 +11,17 @@ import 'package:medicine_app/Others/constants/constants.dart';
 
 class OrdersModel extends ChangeNotifier {
   final int id;
-  final String name;
 
-  OrdersModel({this.id, this.name});
+  final String createdAt;
+  final int totalPrice;
+
+  OrdersModel({this.id, this.createdAt, this.totalPrice});
 
   factory OrdersModel.fromJson(Map<String, dynamic> json) {
-    return OrdersModel(id: json["id"], name: json["country_name"]);
+    return OrdersModel(
+        id: json["id"],
+        createdAt: json["created_at"],
+        totalPrice: json["total_price"]);
   }
 
   Future<List<OrdersModel>> getorders() async {
@@ -33,6 +38,7 @@ class OrdersModel extends ChangeNotifier {
         });
     if (response.statusCode == 200) {
       final responseJson = jsonDecode(response.body)["rows"]["orders"];
+      print(responseJson);
       for (final Map product in responseJson) {
         orders.add(OrdersModel.fromJson(product));
       }

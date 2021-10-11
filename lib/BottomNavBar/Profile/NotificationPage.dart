@@ -57,7 +57,7 @@ class _NotificationPageState extends State<NotificationPage> {
         Navigator.of(context).push(MaterialPageRoute(
             builder: (_) => ProductProfil(
                   drugID: product.productId,
-                  inCart: false,
+                  quantity: null,
                 )));
       },
       child: Padding(

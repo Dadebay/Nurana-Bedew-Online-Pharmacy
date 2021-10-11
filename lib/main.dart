@@ -3,7 +3,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:medicine_app/BottomNavBar/BottomNavBar.dart';
+import 'package:medicine_app/Auth/connection_check.dart';
 
 import 'Auth/Login.dart';
 import 'Others/constants/NavService.dart';
@@ -48,7 +48,7 @@ class MyApp extends StatelessWidget {
       routes: {
         "login": (BuildContext context) => Login(),
       },
-      home: BottomNavBar(),
+      home: ConnectionCheck(),
       theme: ThemeData(
         bottomSheetTheme: BottomSheetThemeData(
             backgroundColor: Colors.black.withOpacity(0.0)),

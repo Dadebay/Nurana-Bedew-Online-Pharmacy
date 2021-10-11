@@ -1,4 +1,4 @@
-// ignore_for_file: avoid_redundant_argument_values, implementation_imports, file_names, noop_primitive_operations
+// ignore_for_file: avoid_redundant_argument_values, implementation_imports, file_names, noop_primitive_operations, avoid_positional_boolean_parameters
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:easy_localization/src/public_ext.dart';
@@ -7,6 +7,7 @@ import 'package:flutter/services.dart';
 import 'package:medicine_app/BottomNavBar/BottomNavBar.dart';
 import 'package:medicine_app/Others/Models/AuthModel.dart';
 import 'package:medicine_app/Others/constants/constants.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vibration/vibration.dart';
 
 class Login extends StatefulWidget {
@@ -23,6 +24,10 @@ class _LoginState extends State<Login> {
   bool loginObscure = true;
 
   final GlobalKey<FormState> _form1Key = GlobalKey();
+  Future<bool> firsttimeSaveData(bool value) async {
+    final SharedPreferences pref = await SharedPreferences.getInstance();
+    return pref.setBool("firstTime", value);
+  }
 
   GestureDetector agreeButton(BuildContext context, Size size) {
     return GestureDetector(
@@ -41,6 +46,7 @@ class _LoginState extends State<Login> {
                 controllerLogin1.clear();
                 controllerLogin2.clear();
               } else {
+                firsttimeSaveData(true);
                 Navigator.of(context).pushReplacement(
                     MaterialPageRoute(builder: (context) => BottomNavBar()));
               }

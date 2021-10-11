@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 
 List<Map<String, dynamic>> myList = [];
 
-const String serverURL = "192.168.31.138:8000";
-const String serverImage = "http://192.168.31.138:8000";
-const String authServerUrl = "192.168.31.138:8000";
+const String serverURL = "192.168.31.219:8000";
+const String serverImage = "http://192.168.31.219:8000";
+const String authServerUrl = "192.168.31.219:8000";
 const String langKey = "language";
 // const String firsttimeKey = "firsttime";
 ////Colors

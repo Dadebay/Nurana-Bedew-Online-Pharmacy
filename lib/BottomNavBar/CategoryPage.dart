@@ -1,4 +1,4 @@
-// ignore_for_file: file_names
+// ignore_for_file: file_names, avoid_bool_literals_in_conditional_expressions
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -60,8 +60,10 @@ class _CategoryPageState extends State<CategoryPage> {
                     return GestureDetector(
                         onTap: () {
                           Navigator.of(context).push(MaterialPageRoute(
-                              builder: (_) =>
-                                  Search(categoryId: category[index]["id"])));
+                              builder: (_) => Search(
+                                    categoryId: category[index]["id"],
+                                    newInCome: index == 1 ? 0 : 1,
+                                  )));
                         },
                         child: Container(
                           margin: const EdgeInsets.all(8),

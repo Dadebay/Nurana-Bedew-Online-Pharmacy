@@ -1,9 +1,8 @@
-// ignore_for_file: implementation_imports, file_names
+// ignore_for_file: implementation_imports, file_names, always_declare_return_types
 
 import 'package:easy_localization/src/public_ext.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_iconly/flutter_iconly.dart';
 import 'package:medicine_app/Others/Models/CartModel.dart';
 import 'package:medicine_app/Others/constants/constants.dart';
 import 'package:medicine_app/Others/constants/widgets.dart';
@@ -12,10 +11,12 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../BottomNavBar.dart';
 
 class OrderPage extends StatefulWidget {
-  const OrderPage({Key key, this.count, this.price, this.cartId})
-      : super(key: key);
+  const OrderPage({
+    Key key,
+    this.count,
+    this.price,
+  }) : super(key: key);
 
-  final int cartId;
   final int count;
   final int price;
 
@@ -24,8 +25,6 @@ class OrderPage extends StatefulWidget {
 }
 
 class _OrderPageState extends State<OrderPage> {
-  int drugCount = 0;
-  int drugPrice = 0;
   String username = "";
 
   @override
@@ -43,8 +42,6 @@ class _OrderPageState extends State<OrderPage> {
     getUsername().then((value) {
       setState(() {
         username = value;
-        drugCount = widget.count;
-        drugPrice = widget.price;
       });
     });
   }
@@ -87,7 +84,7 @@ class _OrderPageState extends State<OrderPage> {
                 children: [
                   dividerr(),
                   text("buyer", username),
-                  text("drugCount", "$drugCount"),
+                  text("drugCount", "${widget.count}"),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 20),
                     child: Row(
@@ -105,7 +102,7 @@ class _OrderPageState extends State<OrderPage> {
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                             text: TextSpan(
-                              text: "$drugPrice",
+                              text: "${widget.price}",
                               style: const TextStyle(
                                   color: Colors.black,
                                   fontSize: 20,
@@ -140,7 +137,11 @@ class _OrderPageState extends State<OrderPage> {
 
   Container card(CartModel cart, Size size, BuildContext context) {
     return Container(
-      color: Colors.white,
+      decoration: BoxDecoration(
+          color: Colors.white,
+          border: Border(
+            bottom: BorderSide(color: Colors.grey[300]),
+          )),
       margin: const EdgeInsets.only(bottom: 2),
       child: ListTile(
         leading: SizedBox(
@@ -155,20 +156,23 @@ class _OrderPageState extends State<OrderPage> {
         ),
         minLeadingWidth: 50,
         minVerticalPadding: 20,
-        trailing: GestureDetector(
-          onTap: () {
-            CartModel()
-                .deleteCartProduct(cartID: widget.cartId, productId: cart.id)
-                .then((value) {
-              if (value == true) {
-                drugCount -= 1;
-                drugPrice -= cart.price;
-                setState(() {});
-                showMessage("removeCart", context, Colors.green.shade500);
-              }
-            });
-          },
-          child: const Icon(IconlyLight.delete, color: kPrimaryColor),
+        trailing: RichText(
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+          text: TextSpan(
+            text: "${cart.price}",
+            style: const TextStyle(
+                color: Colors.black, fontSize: 20, fontFamily: popPinsMedium),
+            children: const <TextSpan>[
+              TextSpan(
+                text: ' TMT ',
+                style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 14,
+                    fontFamily: popPinsMedium),
+              ),
+            ],
+          ),
         ),
         title: Text(cart.productName,
             style: const TextStyle(fontFamily: popPinsMedium)),
@@ -176,11 +180,18 @@ class _OrderPageState extends State<OrderPage> {
     );
   }
 
+  // ignore: type_annotate_public_apis
+  clearData() async {
+    final SharedPreferences preferences = await SharedPreferences.getInstance();
+    await preferences.remove('cart');
+  }
+
   GestureDetector agreeButton(BuildContext context, Size size) {
     return GestureDetector(
       onTap: () {
-        CartModel().order().then((value) {
+        CartModel().order().then((value) async {
           if (value == true) {
+            clearData();
             showMessage("orderCompleted", context, Colors.green.shade500);
             Navigator.of(context)
                 .push(MaterialPageRoute(builder: (_) => BottomNavBar()));

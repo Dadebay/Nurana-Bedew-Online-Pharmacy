@@ -1,4 +1,4 @@
-// ignore_for_file: implementation_imports, deprecated_member_use, file_names, unnecessary_string_interpolations, avoid_bool_literals_in_conditional_expressions, type_annotate_public_apis, always_declare_return_types
+// ignore_for_file: implementation_imports, deprecated_member_use, file_names, unnecessary_string_interpolations, avoid_bool_literals_in_conditional_expressions, type_annotate_public_apis, always_declare_return_types, unnecessary_statements
 
 import 'dart:convert';
 
@@ -7,7 +7,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_iconly/flutter_iconly.dart';
 import 'package:medicine_app/BottomNavBar/BottomNavBar.dart';
-import 'package:medicine_app/Others/Models/CartModel.dart';
 import 'package:medicine_app/Others/Models/NotificationModel.dart';
 import 'package:medicine_app/Others/Models/ProductProfilModel.dart';
 import 'package:medicine_app/Others/constants/constants.dart';
@@ -17,11 +16,11 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'PhotoView.dart';
 
 class ProductProfil extends StatefulWidget {
-  const ProductProfil({Key key, this.drugID, @required this.inCart})
+  const ProductProfil({Key key, this.drugID, @required this.quantity})
       : super(key: key);
 
   final int drugID;
-  final bool inCart;
+  final int quantity;
 
   @override
   _ProductProfilState createState() => _ProductProfilState();
@@ -36,13 +35,9 @@ class _ProductProfilState extends State<ProductProfil> {
   void initState() {
     super.initState();
     setData();
-    for (final element in myList) {
-      if (element["id"] == widget.drugID) {
-        quantity = element["cartQuantity"];
-      }
-    }
+    quantity = widget.quantity ?? 0;
 
-    orderButtonChange = widget.inCart ?? false;
+    orderButtonChange = widget.quantity == 0 ? false : true;
   }
 
   Widget hasData(Size size, BuildContext context, ProductModel product) {
@@ -253,8 +248,6 @@ class _ProductProfilState extends State<ProductProfil> {
     );
   }
 
-  sebedeGos() {}
-
   habarET() {
     showDialog(
       context: context,
@@ -307,8 +300,10 @@ class _ProductProfilState extends State<ProductProfil> {
                     ).tr(),
                     onPressed: () {
                       NotificationModel().addNotification(widget.drugID);
+                      Navigator.of(context).pop();
+
                       showMessage(
-                          "Habar ugradyl", context, Colors.green.shade500);
+                          "notificationSend", context, Colors.green.shade500);
                     }),
                 RaisedButton(
                     shape: const RoundedRectangleBorder(
@@ -349,7 +344,6 @@ class _ProductProfilState extends State<ProductProfil> {
 
       final SharedPreferences prefs = await SharedPreferences.getInstance();
       final String encodedMap = json.encode(myList);
-      print(myList);
       prefs.setString('cart', encodedMap);
     }
   }
@@ -358,7 +352,7 @@ class _ProductProfilState extends State<ProductProfil> {
     if (quantity != 0) {
       setState(() {
         quantity -= 1;
-        int id = int.parse(product.id);
+        final int id = int.parse(product.id);
 
         saveData(id, quantity);
 
@@ -371,11 +365,10 @@ class _ProductProfilState extends State<ProductProfil> {
     if (product.stockCount > (quantity + 1)) {
       setState(() {
         quantity += 1;
-        int id = int.parse(product.id);
+        final int id = int.parse(product.id);
         saveData(id, quantity);
       });
     } else {
-      print("a");
       showMessage("Haryt Ammarda Yok", context, Colors.red);
     }
   }
@@ -442,9 +435,12 @@ class _ProductProfilState extends State<ProductProfil> {
           : RaisedButton(
               onPressed: () {
                 setState(() {
-                  orderButtonChange = true;
+                  if (icon == false) {
+                  } else {
+                    orderButtonChange = true;
+                  }
                 });
-                icon ? sebedeGos() : habarET();
+                icon ? null : habarET();
               },
               padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
               shape: const RoundedRectangleBorder(

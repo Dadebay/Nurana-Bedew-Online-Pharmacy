@@ -1,4 +1,4 @@
-// ignore_for_file: file_names
+// ignore_for_file: file_names, avoid_print
 
 import 'dart:convert';
 import 'dart:io';
@@ -6,6 +6,7 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 import 'package:medicine_app/Others/constants/constants.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'AuthModel.dart';
 
@@ -37,9 +38,15 @@ class CartModel extends ChangeNotifier {
   final int stockCount;
 
   Future<List<CartModel>> getCartProducts() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final String encodedMap = prefs.getString('cart');
+    final List decodedMap = json.decode(encodedMap);
+    final body = json.encode(decodedMap);
+
     final token = await Auth().getToken();
     final List<CartModel> products = [];
-    final response = await http.get(
+
+    final response = await http.post(
         Uri.http(
           serverURL,
           "/api/user/get-cart-products",
@@ -47,10 +54,11 @@ class CartModel extends ChangeNotifier {
         headers: <String, String>{
           HttpHeaders.contentTypeHeader: 'application/json; charset=UTF-8',
           HttpHeaders.authorizationHeader: 'Bearer $token',
-        });
+        },
+        body: jsonEncode(<String, dynamic>{"qty": body}));
+
     if (response.statusCode == 200) {
-      final responseJson =
-          jsonDecode(response.body)["rows"][0]["cart_products"];
+      final responseJson = jsonDecode(response.body)["rows"]["products"];
       for (final Map product in responseJson) {
         products.add(CartModel.fromJson(product));
       }
@@ -78,14 +86,21 @@ class CartModel extends ChangeNotifier {
   }
 
   Future order() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final String encodedMap = prefs.getString('cart');
+    final List decodedMap = json.decode(encodedMap);
+    final body = json.encode(decodedMap);
+
     final token = await Auth().getToken();
 
-    final response = await http.post(
-        Uri.http(serverURL, "/api/user/create-order"),
-        headers: <String, String>{
-          HttpHeaders.contentTypeHeader: 'application/json; charset=UTF-8',
-          HttpHeaders.authorizationHeader: 'Bearer $token',
-        });
+    final response =
+        await http.post(Uri.http(serverURL, "/api/user/create-order"),
+            headers: <String, String>{
+              HttpHeaders.contentTypeHeader: 'application/json; charset=UTF-8',
+              HttpHeaders.authorizationHeader: 'Bearer $token',
+            },
+            body: jsonEncode(<String, dynamic>{"qty": body}));
+    print(response.body);
     if (response.statusCode == 200) {
       return true;
     } else {

@@ -9,7 +9,6 @@ import 'package:medicine_app/Others/constants/constants.dart';
 import 'package:medicine_app/Others/constants/widgets.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
-import 'ProductProfil/ProductProfil.dart';
 import 'SearchPage.dart';
 
 class HomePage extends StatefulWidget {
@@ -45,17 +44,16 @@ class _HomePageState extends State<HomePage> {
   }
 
   bool load = false;
-  bool inCartElement = false;
   int a = 0;
   getData() {
     Product()
         .getProducts(parametrs: {"page": '$page', "limit": '20'}).then((value) {
       if (value != null) {
         for (final element in value) {
-          inCartElement = false;
+          a = 0;
           for (final element2 in myList) {
             if (element.id == element2["id"]) {
-              inCartElement = true;
+              a = element2["cartQuantity"];
             }
           }
 
@@ -67,8 +65,7 @@ class _HomePageState extends State<HomePage> {
               "price": element.price,
               "image": element.images,
               "stockCount": element.stockCount,
-              "addCart": inCartElement,
-              // "cardQuantity":element.cartQuantity
+              "cartQuantity": a
             });
           });
         }
@@ -108,6 +105,7 @@ class _HomePageState extends State<HomePage> {
             Navigator.of(context).push(MaterialPageRoute(
                 builder: (_) => const Search(
                       categoryId: -1,
+                      newInCome: 0,
                       // categoryId: ,
                     )));
           },
@@ -146,23 +144,13 @@ class _HomePageState extends State<HomePage> {
                       crossAxisCount: size.width <= 800 ? 2 : 4,
                       childAspectRatio: 3 / 4.5),
                   itemBuilder: (BuildContext context, int index) {
-                    return GestureDetector(
-                      onTap: () {
-                        Navigator.of(context).push(MaterialPageRoute(
-                            builder: (_) => ProductProfil(
-                                  inCart: list[index]["addCart"],
-                                  drugID: list[index]["id"],
-                                )));
-                      },
-                      child: ProductCard(
-                        id: list[index]["id"],
-                        name: list[index]["name"],
-                        price: list[index]["price"],
-                        imagePath: list[index]["image"],
-                        stockCount: list[index]["stockCount"],
-                        addCart: list[index]["addCart"],
-                        // cartQuantity: ,
-                      ),
+                    return ProductCard(
+                      id: list[index]["id"],
+                      name: list[index]["name"],
+                      price: list[index]["price"],
+                      imagePath: list[index]["image"],
+                      stockCount: list[index]["stockCount"],
+                      cartQuantity: list[index]["cartQuantity"],
                     );
                   })
               : SizedBox(
