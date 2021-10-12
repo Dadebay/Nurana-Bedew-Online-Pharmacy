@@ -27,7 +27,6 @@ class ProductProfil extends StatefulWidget {
 }
 
 class _ProductProfilState extends State<ProductProfil> {
-  String lang = "tm";
   bool orderButtonChange = false;
   int quantity = 1;
 
@@ -529,6 +528,8 @@ class _ProductProfilState extends State<ProductProfil> {
     final SharedPreferences pref = await SharedPreferences.getInstance();
     return pref.getString(langKey);
   }
+
+  String lang = "tm";
 
   setData() {
     setState(() {

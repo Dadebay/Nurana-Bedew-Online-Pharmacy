@@ -1,4 +1,6 @@
-// ignore_for_file: implementation_imports, file_names, always_declare_return_types
+// ignore_for_file: implementation_imports, file_names, always_declare_return_types, use_build_context_synchronously
+
+import 'dart:convert';
 
 import 'package:easy_localization/src/public_ext.dart';
 import 'package:flutter/cupertino.dart';
@@ -67,9 +69,7 @@ class _OrderPageState extends State<OrderPage> {
                           },
                         );
                       } else if (snapshot.data == null) {
-                        return const Center(
-                            child: Icon(Icons.add,
-                                color: kPrimaryColor, size: 35));
+                        return Center(child: spinKit());
                       } else if (snapshot.hasError) {
                         return const Center(
                             child: Icon(Icons.refresh,
@@ -180,18 +180,16 @@ class _OrderPageState extends State<OrderPage> {
     );
   }
 
-  // ignore: type_annotate_public_apis
-  clearData() async {
-    final SharedPreferences preferences = await SharedPreferences.getInstance();
-    await preferences.remove('cart');
-  }
-
   GestureDetector agreeButton(BuildContext context, Size size) {
     return GestureDetector(
       onTap: () {
         CartModel().order().then((value) async {
           if (value == true) {
-            clearData();
+            final SharedPreferences preferences =
+                await SharedPreferences.getInstance();
+            myList.clear();
+            final String encodedMap = json.encode(myList);
+            preferences.setString('cart', encodedMap);
             showMessage("orderCompleted", context, Colors.green.shade500);
             Navigator.of(context)
                 .push(MaterialPageRoute(builder: (_) => BottomNavBar()));

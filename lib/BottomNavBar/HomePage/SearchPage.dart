@@ -18,7 +18,7 @@ import '../ProductCard.dart';
 class Search extends StatefulWidget {
   const Search({Key key, this.categoryId, @required this.newInCome})
       : super(key: key);
-  final int newInCome;
+  final String newInCome;
   final int categoryId;
 
   @override
@@ -54,6 +54,7 @@ class _SearchState extends State<Search> {
   @override
   void initState() {
     super.initState();
+    b = widget.newInCome ?? "0";
     priceName = [
       {"name": hightolow, "isSelected": true, "number": 0},
       {"name": lowtohigh, "isSelected": false, "number": 1}
@@ -83,15 +84,15 @@ class _SearchState extends State<Search> {
   }
 
   int a = 0;
+  String b = "0";
   getData() {
-    a = widget.newInCome;
     Product().getProducts(parametrs: {
       "page": '$page', "limit": '20',
       "product_name": textEditingController.text,
       "country_id": null, //jsonEncode([3]),
       "stock_min": null,
       "price": null,
-      "new_in_come": "1",
+      "new_in_come": b,
       "category_id":
           widget.categoryId == -1 ? [] : jsonEncode([widget.categoryId])
     }).then((value) {
@@ -483,9 +484,15 @@ class _SearchState extends State<Search> {
                 ? list.isEmpty
                     ? Center(
                         child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 15),
-                        child: Image.asset("assets/images/noSearch.png"),
-                      ))
+                          padding: const EdgeInsets.symmetric(vertical: 20),
+                          child: const Text("noSearch",
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontFamily: popPinsMedium,
+                                fontSize: 24,
+                              )).tr(),
+                        ),
+                      )
                     : GridView.builder(
                         shrinkWrap: true,
                         itemCount: list.length,

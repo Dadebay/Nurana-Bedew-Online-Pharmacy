@@ -52,6 +52,10 @@
     "selectCount":"Выберите количество :",
     "sendNotification":"Ваше сообщение отправлено",
     "orderHistory":"Заказ",
-    "notificationSend":"Ваше сообщение отправлено"
+    "notificationSend":"Ваше сообщение отправлено",
+    "cartEmpty":"Ваша корзина пуста",
+    "log_out_yes":"Да",
+    "log_out_no":"Нет",
+    "noSearch":"Товара нет"
 
 }

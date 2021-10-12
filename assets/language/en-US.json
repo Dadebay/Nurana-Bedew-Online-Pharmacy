@@ -52,6 +52,11 @@
     "selectCount":"Haryt sany :",
     "sendNotification":"Bildirişiňiz ugradyldy",
     "orderHistory":"Sargyt",
-    "notificationSend":"Habaryňyz ugradyldy"
+    "notificationSend":"Habaryňyz ugradyldy",
+    "cartEmpty":"Sebediňiz Boş",
+    "log_out_yes":"Hawwa",
+    "log_out_no":"Ýok",
+    "noSearch":"Haryt Ýok"
+    
     
 }

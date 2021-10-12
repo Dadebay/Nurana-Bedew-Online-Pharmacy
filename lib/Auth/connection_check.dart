@@ -75,8 +75,12 @@ class _ConnectionCheckState extends State<ConnectionCheck> {
                 children: [
                   ListTile(
                       onTap: () {
-                        Navigator.of(context).pushReplacement(
-                            CupertinoPageRoute(builder: (_) => BottomNavBar()));
+                        firsttime
+                            ? Navigator.of(context).pushReplacement(
+                                CupertinoPageRoute(
+                                    builder: (_) => BottomNavBar()))
+                            : Navigator.of(context).pushReplacement(
+                                CupertinoPageRoute(builder: (_) => Login()));
                         saveData("tm");
                         setState(() {
                           context.locale = Locale("en", "US");
@@ -94,8 +98,12 @@ class _ConnectionCheckState extends State<ConnectionCheck> {
                   ),
                   ListTile(
                       onTap: () {
-                        Navigator.of(context).pushReplacement(
-                            CupertinoPageRoute(builder: (_) => BottomNavBar()));
+                        firsttime
+                            ? Navigator.of(context).pushReplacement(
+                                CupertinoPageRoute(
+                                    builder: (_) => BottomNavBar()))
+                            : Navigator.of(context).pushReplacement(
+                                CupertinoPageRoute(builder: (_) => Login()));
                         saveData("ru");
                         setState(() {
                           context.locale = Locale("ru", "RU");
@@ -129,30 +137,12 @@ class _ConnectionCheckState extends State<ConnectionCheck> {
       if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
         if (firsttime == false) {
           langSelect();
-          Future.delayed(Duration(milliseconds: 2000), () {
-            Navigator.of(context)
-                .pushReplacement(CupertinoPageRoute(builder: (_) => Login()));
-          });
         } else {
           Future.delayed(Duration(milliseconds: 2000), () {
             Navigator.of(context).pushReplacement(
                 CupertinoPageRoute(builder: (_) => BottomNavBar()));
           });
         }
-
-        Connectivity()
-            .onConnectivityChanged
-            .listen((ConnectivityResult connrresult) {
-          if (connrresult == ConnectivityResult.none) {
-            _showDialog();
-          } else if (connrresult == ConnectivityResult.mobile ||
-              _connectivityResult == ConnectivityResult.wifi) {
-            Future.delayed(Duration(milliseconds: 2000), () {
-              Navigator.of(context).pushReplacement(
-                  CupertinoPageRoute(builder: (_) => BottomNavBar()));
-            });
-          }
-        });
       }
     } on SocketException catch (_) {
       _showDialog();
@@ -262,7 +252,7 @@ class _ConnectionCheckState extends State<ConnectionCheck> {
                   checkConnection();
                 },
                 child: Padding(
-                  padding: const EdgeInsets.all(20.0),
+                  padding: const EdgeInsets.symmetric(horizontal: 30),
                   child: Image.asset('assets/images/diller/logo.png',
                       fit: BoxFit.fill),
                 ),

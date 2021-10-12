@@ -42,9 +42,11 @@ class _LoginState extends State<Login> {
                     password: controllerLogin2.text.toString())
                 .then((value) {
               if (value == false) {
-                animation = false;
-                controllerLogin1.clear();
-                controllerLogin2.clear();
+                setState(() {
+                  animation = false;
+                  controllerLogin1.clear();
+                  controllerLogin2.clear();
+                });
               } else {
                 firsttimeSaveData(true);
                 Navigator.of(context).pushReplacement(

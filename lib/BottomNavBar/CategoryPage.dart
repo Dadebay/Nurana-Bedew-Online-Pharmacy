@@ -1,10 +1,12 @@
 // ignore_for_file: file_names, avoid_bool_literals_in_conditional_expressions
 
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:medicine_app/Others/Models/CategoryModel.dart';
 import 'package:medicine_app/Others/constants/constants.dart';
 import 'package:medicine_app/Others/constants/widgets.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'HomePage/SearchPage.dart';
 
@@ -41,6 +43,21 @@ class _CategoryPageState extends State<CategoryPage> {
     });
   }
 
+  Future<String> getData() async {
+    final SharedPreferences pref = await SharedPreferences.getInstance();
+    return pref.getString(langKey);
+  }
+
+  String lang = "tm";
+
+  setData() {
+    setState(() {
+      getData().then((value) {
+        lang = value ?? "tm";
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
@@ -62,7 +79,7 @@ class _CategoryPageState extends State<CategoryPage> {
                           Navigator.of(context).push(MaterialPageRoute(
                               builder: (_) => Search(
                                     categoryId: category[index]["id"],
-                                    newInCome: index == 1 ? 0 : 1,
+                                    newInCome: index == 1 ? "1" : "0",
                                   )));
                         },
                         child: Container(
@@ -75,9 +92,13 @@ class _CategoryPageState extends State<CategoryPage> {
                               child: Text(category[index]["name"],
                                   maxLines: 2,
                                   textAlign: TextAlign.center,
-                                  style: const TextStyle(
+                                  style: TextStyle(
                                       color: kPrimaryColor,
-                                      fontFamily: popPinsMedium,
+                                      fontFamily:
+                                          lang == "tm" ? null : popPinsMedium,
+                                      fontWeight: lang == "tm"
+                                          ? FontWeight.bold
+                                          : FontWeight.normal,
                                       fontSize: 15)),
                             ),
                           ),

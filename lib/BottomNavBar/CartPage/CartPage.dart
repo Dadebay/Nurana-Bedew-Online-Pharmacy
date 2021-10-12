@@ -3,6 +3,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:easy_localization/src/public_ext.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_iconly/flutter_iconly.dart';
@@ -12,6 +13,7 @@ import 'package:medicine_app/Others/Models/AuthModel.dart';
 import 'package:medicine_app/Others/Models/CartModel.dart';
 import 'package:medicine_app/Others/constants/constants.dart';
 import 'package:medicine_app/Others/constants/widgets.dart';
+import 'package:numberpicker/numberpicker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'OrderPage.dart';
@@ -27,8 +29,14 @@ class _CartPageState extends State<CartPage> {
   void initState() {
     super.initState();
     loadData();
+    if (myList.isEmpty) {
+      loading = true;
+    } else {
+      loading = false;
+    }
   }
 
+  bool loading = false;
   Future<List<CartModel>> loadData() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     final String encodedMap = prefs.getString('cart');
@@ -44,28 +52,29 @@ class _CartPageState extends State<CartPage> {
               HttpHeaders.authorizationHeader: 'Bearer $token',
             },
             body: jsonEncode(<String, dynamic>{"qty": body}));
-    print(response.body);
-    print(myList);
-    if (response.statusCode == 200) {
+    loading = true;
+    if (response.statusCode == 200 &&
+        (jsonDecode(response.body)["rows"]) != null) {
       final responseJson = jsonDecode(response.body)["rows"]["products"];
-      setState(() {
-        cartProducts.clear();
-        for (final Map product in responseJson) {
-          cartProducts.add({
-            "id": CartModel.fromJson(product).id,
-            "name": CartModel.fromJson(product).productName,
-            "quantity": 0,
-            "image": CartModel.fromJson(product).images,
-            "price": CartModel.fromJson(product).price,
-            "stockMin": CartModel.fromJson(product).stockCount
-          });
-        }
-        print(cartProducts.length);
-        for (int i = 0; i < myList.length; i++) {
-          cartProducts[i]["quantity"] = myList[i]["cartQuantity"];
-        }
-      });
 
+      if (mounted) {
+        setState(() {
+          cartProducts.clear();
+          for (final Map product in responseJson) {
+            cartProducts.add({
+              "id": CartModel.fromJson(product).id,
+              "name": CartModel.fromJson(product).productName,
+              "quantity": 0,
+              "image": CartModel.fromJson(product).images,
+              "price": CartModel.fromJson(product).price,
+              "stockMin": CartModel.fromJson(product).stockCount
+            });
+          }
+          for (int i = 0; i < myList.length; i++) {
+            cartProducts[i]["quantity"] = myList[i]["cartQuantity"];
+          }
+        });
+      }
       return null;
     } else {
       return null;
@@ -127,20 +136,45 @@ class _CartPageState extends State<CartPage> {
     return SafeArea(
         child: Scaffold(
             appBar: appBar("cart"),
-            floatingActionButton: floatingActionButton(),
-            body: cartProducts.isEmpty
-                ? Center(
+            floatingActionButton: cartProducts.isEmpty
+                ? SizedBox.shrink()
+                : floatingActionButton(),
+            body: loading
+                ? cartProducts.isEmpty
+                    ? emptyCart()
+                    : ListView.builder(
+                        physics: const BouncingScrollPhysics(),
+                        itemCount: cartProducts.length,
+                        itemBuilder: (context, index) {
+                          return cartCard(
+                            index: index,
+                          );
+                        },
+                      )
+                : Center(
                     child: spinKit(),
-                  )
-                : ListView.builder(
-                    physics: const BouncingScrollPhysics(),
-                    itemCount: cartProducts.length,
-                    itemBuilder: (context, index) {
-                      return cartCard(
-                        index: index,
-                      );
-                    },
                   )));
+  }
+
+  Padding emptyCart() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Image.asset("assets/images/noItem.png"),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 20),
+            child: const Text("cartEmpty",
+                style: TextStyle(
+                  color: Colors.black,
+                  fontFamily: popPinsMedium,
+                  fontSize: 24,
+                )).tr(),
+          )
+        ],
+      ),
+    );
   }
 
   saveData(int id, int quantity) async {
@@ -150,13 +184,14 @@ class _CartPageState extends State<CartPage> {
       final SharedPreferences prefs = await SharedPreferences.getInstance();
       final String encodedMap = json.encode(myList);
       prefs.setString('cart', encodedMap);
-      print(encodedMap);
     } else {
       for (final element in myList) {
         if (element["id"] == id) {
-          setState(() {
-            element["cartQuantity"] = quantity;
-          });
+          if (mounted) {
+            setState(() {
+              element["cartQuantity"] = quantity;
+            });
+          }
           value = true;
         }
       }
@@ -166,7 +201,6 @@ class _CartPageState extends State<CartPage> {
       final SharedPreferences prefs = await SharedPreferences.getInstance();
       final String encodedMap = json.encode(myList);
       prefs.setString('cart', encodedMap);
-      print(encodedMap);
     }
   }
 
@@ -231,16 +265,11 @@ class _CartPageState extends State<CartPage> {
                               ),
                               GestureDetector(
                                 onTap: () {
-                                  print(cartProducts.length);
-                                  print(myList.length);
-                                  print(cartProducts[index]["id"]);
                                   setState(() {
                                     saveData(cartProducts[index]["id"], 0);
 
                                     cartProducts.removeAt(index);
                                   });
-                                  print(cartProducts.length);
-                                  print(myList.length);
                                 },
                                 child: const Icon(
                                   IconlyLight.delete,
@@ -322,9 +351,8 @@ class _CartPageState extends State<CartPage> {
                               ),
                               GestureDetector(
                                 onTap: () {
-                                  // currentValue = 0;
-                                  // selectCount2(index, size);
-                                  setState(() {});
+                                  currentValue = 0;
+                                  selectCount2(index, size);
                                 },
                                 child: Padding(
                                   padding: const EdgeInsets.symmetric(
@@ -383,6 +411,97 @@ class _CartPageState extends State<CartPage> {
               ),
             ),
           )),
+    );
+  }
+
+  int currentValue = 0;
+  String countProcut = tr('selectCount');
+  selectCount2(int index, Size size) {
+    return showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      builder: (BuildContext context) {
+        return StatefulBuilder(
+          builder:
+              (BuildContext context, void Function(void Function()) setState) {
+            return Container(
+              margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+              decoration: const BoxDecoration(
+                  color: Colors.white, borderRadius: borderRadius10),
+              child: Wrap(
+                alignment: WrapAlignment.center,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 10),
+                    child: RichText(
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      text: TextSpan(
+                        text: countProcut,
+                        style: const TextStyle(
+                            color: Colors.black,
+                            fontSize: 24,
+                            fontFamily: popPinsMedium),
+                        children: <TextSpan>[
+                          TextSpan(
+                            text: " $currentValue",
+                            style: const TextStyle(
+                                color: kPrimaryColor,
+                                fontSize: 24,
+                                fontFamily: popPinsMedium),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  NumberPicker(
+                    infiniteLoop: true,
+                    axis: Axis.horizontal,
+                    value: currentValue,
+                    minValue: 0,
+                    itemHeight: 80,
+                    step: 5,
+                    selectedTextStyle: const TextStyle(
+                        color: kPrimaryColor,
+                        fontSize: 24,
+                        fontFamily: popPinsSemiBold),
+                    maxValue: cartProducts[index]["stockMin"],
+                    onChanged: (value) => setState(() {
+                      currentValue = value;
+                    }),
+                  ),
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 10, vertical: 15),
+                    width: size.width,
+                    child: RaisedButton(
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 10, horizontal: 20),
+                        color: kPrimaryColor,
+                        elevation: 1,
+                        shape: const RoundedRectangleBorder(
+                            borderRadius: borderRadius5),
+                        onPressed: () {
+                          setState(() {
+                            saveData(cartProducts[index]["id"], currentValue);
+
+                            Navigator.of(context).pop();
+                          });
+                        },
+                        child: const Text(
+                          "agree",
+                          style: TextStyle(
+                              fontFamily: popPinsMedium,
+                              fontSize: 18,
+                              color: Colors.white),
+                        ).tr()),
+                  ),
+                ],
+              ),
+            );
+          },
+        );
+      },
     );
   }
 }

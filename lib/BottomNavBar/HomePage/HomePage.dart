@@ -105,7 +105,7 @@ class _HomePageState extends State<HomePage> {
             Navigator.of(context).push(MaterialPageRoute(
                 builder: (_) => const Search(
                       categoryId: -1,
-                      newInCome: 0,
+                      newInCome: "0",
                       // categoryId: ,
                     )));
           },
