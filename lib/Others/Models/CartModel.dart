@@ -32,7 +32,7 @@ class CartModel extends ChangeNotifier {
 
   final int id;
   final String images;
-  final int price;
+  final String price;
   final String productName;
   final int quantity;
   final int stockCount;
@@ -85,21 +85,23 @@ class CartModel extends ChangeNotifier {
     }
   }
 
-  Future order() async {
+  Future order(int id) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     final String encodedMap = prefs.getString('cart');
     final List decodedMap = json.decode(encodedMap);
     final body = json.encode(decodedMap);
 
     final token = await Auth().getToken();
-
-    final response =
-        await http.post(Uri.http(serverURL, "/api/user/create-order"),
-            headers: <String, String>{
-              HttpHeaders.contentTypeHeader: 'application/json; charset=UTF-8',
-              HttpHeaders.authorizationHeader: 'Bearer $token',
-            },
-            body: jsonEncode(<String, dynamic>{"qty": body}));
+    final response = await http.post(
+        Uri.http(
+          serverURL,
+          "/api/user/create-order/$id",
+        ),
+        headers: <String, String>{
+          HttpHeaders.contentTypeHeader: 'application/json; charset=UTF-8',
+          HttpHeaders.authorizationHeader: 'Bearer $token',
+        },
+        body: jsonEncode(<String, dynamic>{"qty": body}));
     print(response.body);
     if (response.statusCode == 200) {
       return true;

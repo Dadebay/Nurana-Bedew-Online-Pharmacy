@@ -7,6 +7,7 @@ import 'package:flutter/services.dart';
 import 'package:medicine_app/BottomNavBar/BottomNavBar.dart';
 import 'package:medicine_app/Others/Models/AuthModel.dart';
 import 'package:medicine_app/Others/constants/constants.dart';
+import 'package:medicine_app/Others/constants/widgets.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vibration/vibration.dart';
 
@@ -36,21 +37,34 @@ class _LoginState extends State<Login> {
             controllerLogin1.text.length == 12) {
           setState(() {
             animation = true;
+            Future.delayed(Duration(milliseconds: 5000), () {
+              setState(() {
+                controllerLogin1.clear();
+                controllerLogin2.clear();
+                animation = false;
+
+                _form1Key.currentState.validate();
+                Vibration.vibrate();
+              });
+            });
             Auth()
                 .loginUser(
                     phone: controllerLogin1.text.substring(4, 12).toString(),
                     password: controllerLogin2.text.toString())
                 .then((value) {
-              if (value == false) {
+              if (value == true) {
+                firsttimeSaveData(true);
+                Navigator.of(context).pushReplacement(MaterialPageRoute(
+                    builder: (context) => const BottomNavBar()));
+              } else {
                 setState(() {
-                  animation = false;
                   controllerLogin1.clear();
                   controllerLogin2.clear();
+                  animation = false;
+
+                  _form1Key.currentState.validate();
+                  Vibration.vibrate();
                 });
-              } else {
-                firsttimeSaveData(true);
-                Navigator.of(context).pushReplacement(
-                    MaterialPageRoute(builder: (context) => BottomNavBar()));
               }
             });
           });
@@ -230,47 +244,52 @@ class _LoginState extends State<Login> {
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
     return SafeArea(
-      child: Scaffold(
-        body: GestureDetector(
-          onTap: () {
-            FocusScope.of(context).unfocus();
-          },
-          child: SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 40, vertical: 20),
-                    child: Image.asset('assets/images/diller/logo.png',
-                        fit: BoxFit.fill),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 25),
-                    child: namePart(),
-                  ),
-                  Form(
-                    key: _form1Key,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        phoneNumber(),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 50),
-                          child: textfieldPassword(),
-                        ),
-                      ],
+      child: WillPopScope(
+        onWillPop: () {
+          return backPressed(size, context);
+        },
+        child: Scaffold(
+          body: GestureDetector(
+            onTap: () {
+              FocusScope.of(context).unfocus();
+            },
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 40, vertical: 20),
+                      child: Image.asset('assets/images/diller/logo.png',
+                          fit: BoxFit.fill),
                     ),
-                  ),
-                  agreeButton(context, size),
-                  const SizedBox(
-                    height: 30,
-                  )
-                ],
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 25),
+                      child: namePart(),
+                    ),
+                    Form(
+                      key: _form1Key,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          phoneNumber(),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 50),
+                            child: textfieldPassword(),
+                          ),
+                        ],
+                      ),
+                    ),
+                    agreeButton(context, size),
+                    const SizedBox(
+                      height: 30,
+                    )
+                  ],
+                ),
               ),
             ),
           ),

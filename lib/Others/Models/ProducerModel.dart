@@ -9,32 +9,32 @@ import 'package:medicine_app/Others/constants/constants.dart';
 
 import 'AuthModel.dart';
 
-class CountryModel extends ChangeNotifier {
-  CountryModel({this.id, this.countryName});
+class ProducerModel extends ChangeNotifier {
+  ProducerModel({this.id, this.producerName});
 
-  factory CountryModel.fromJson(Map<String, dynamic> json) {
-    return CountryModel(id: json["id"], countryName: json["country_name"]);
+  factory ProducerModel.fromJson(Map<String, dynamic> json) {
+    return ProducerModel(id: json["id"], producerName: json["producer_name"]);
   }
 
-  final String countryName;
+  final String producerName;
   final int id;
 
-  Future<List<CountryModel>> getCountries() async {
+  Future<List<ProducerModel>> getProducer() async {
     final token = await Auth().getToken();
-    final List<CountryModel> countries = [];
+    final List<ProducerModel> countries = [];
     final response = await http.get(
         Uri.http(
           serverURL,
-          "/api/user/get-countries",
+          "/api/user/get-producers",
         ),
         headers: <String, String>{
           HttpHeaders.contentTypeHeader: 'application/json; charset=UTF-8',
           HttpHeaders.authorizationHeader: 'Bearer $token',
         });
     if (response.statusCode == 200) {
-      final responseJson = jsonDecode(response.body)["rows"]["countries"];
+      final responseJson = jsonDecode(response.body)["rows"]["producers"];
       for (final Map product in responseJson) {
-        countries.add(CountryModel.fromJson(product));
+        countries.add(ProducerModel.fromJson(product));
       }
       return countries;
     } else {

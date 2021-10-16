@@ -1,15 +1,19 @@
-// ignore_for_file: deprecated_member_use, duplicate_ignore, implementation_imports, avoid_positional_boolean_parameters, non_constant_identifier_names
+// ignore_for_file: deprecated_member_use, duplicate_ignore, implementation_imports, avoid_positional_boolean_parameters, non_constant_identifier_names, always_declare_return_types, type_annotate_public_apis
 
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:easy_localization/src/public_ext.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_iconly/flutter_iconly.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:medicine_app/BottomNavBar/HomePage/SearchPage.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'constants.dart';
 
@@ -148,27 +152,87 @@ AppBar appBar(String name) {
   );
 }
 
-CachedNetworkImage image(String name) {
-  return CachedNetworkImage(
-      width: double.infinity,
-      colorBlendMode: BlendMode.difference,
-      imageUrl: name,
-      imageBuilder: (context, imageProvider) => Container(
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                image: imageProvider,
-                fit: BoxFit.fill,
+saveData(int id, int quantity) async {
+  bool value = false;
+  if (quantity == 0) {
+    myList.removeWhere((element) => element["id"] == id);
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final String encodedMap = json.encode(myList);
+    prefs.setString('cart', encodedMap);
+  } else {
+    for (final element in myList) {
+      if (element["id"] == id) {
+        element["cartQuantity"] = quantity;
+        value = true;
+      }
+    }
+
+    if (value == false) myList.add({"id": id, "cartQuantity": quantity});
+
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final String encodedMap = json.encode(myList);
+    prefs.setString('cart', encodedMap);
+  }
+}
+
+AppBar appBarSearchButton(BuildContext context, String pageName) {
+  return AppBar(
+    automaticallyImplyLeading: false,
+    elevation: 0.0,
+    systemOverlayStyle: SystemUiOverlayStyle.light,
+    backgroundColor: kPrimaryColor,
+    title: Text(
+      pageName,
+      style: const TextStyle(color: Colors.white, fontFamily: popPinsSemiBold),
+    ),
+    centerTitle: true,
+    actions: [
+      GestureDetector(
+        onTap: () {
+          Navigator.of(context).push(MaterialPageRoute(
+              builder: (_) => const Search(
+                    newInCome: "0",
+                  )));
+        },
+        child: const Padding(
+          padding: EdgeInsets.only(right: 15),
+          child: Icon(IconlyLight.search, color: Colors.white),
+        ),
+      ),
+    ],
+  );
+}
+
+Widget image(String name, Size size) {
+  return Container(
+    height: size.height,
+    margin: const EdgeInsets.all(10),
+    decoration:
+        BoxDecoration(color: Colors.grey[200], borderRadius: borderRadius10),
+    child: ClipRRect(
+      borderRadius: borderRadius10,
+      child: CachedNetworkImage(
+          width: double.infinity,
+          colorBlendMode: BlendMode.difference,
+          imageUrl: name,
+          imageBuilder: (context, imageProvider) => Container(
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    image: imageProvider,
+                    fit: BoxFit.fill,
+                  ),
+                ),
               ),
-            ),
-          ),
-      placeholder: (context, url) => Center(child: spinKit()),
-      errorWidget: (context, url, error) => Padding(
-            padding: const EdgeInsets.all(30.0),
-            child: SvgPicture.asset(
-              "assets/icons/logo.svg",
-              color: Colors.grey,
-            ),
-          ));
+          placeholder: (context, url) => Center(child: spinKit()),
+          errorWidget: (context, url, error) => Padding(
+                padding: const EdgeInsets.all(30.0),
+                child: SvgPicture.asset(
+                  "assets/icons/logo.svg",
+                  color: Colors.grey,
+                ),
+              )),
+    ),
+  );
 }
 
 AppBar appBarBackButton(BuildContext context, String name) {

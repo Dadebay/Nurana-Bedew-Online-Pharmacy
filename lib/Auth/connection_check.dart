@@ -2,7 +2,6 @@
 
 import 'dart:io';
 
-import 'package:connectivity/connectivity.dart';
 import 'package:easy_localization/src/public_ext.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -19,8 +18,6 @@ class ConnectionCheck extends StatefulWidget {
 }
 
 class _ConnectionCheckState extends State<ConnectionCheck> {
-  ConnectivityResult _connectivityResult;
-
   @override
   void initState() {
     super.initState();
@@ -78,9 +75,12 @@ class _ConnectionCheckState extends State<ConnectionCheck> {
                         firsttime
                             ? Navigator.of(context).pushReplacement(
                                 CupertinoPageRoute(
-                                    builder: (_) => BottomNavBar()))
+                                    builder: (BuildContext context) =>
+                                        BottomNavBar()))
                             : Navigator.of(context).pushReplacement(
-                                CupertinoPageRoute(builder: (_) => Login()));
+                                CupertinoPageRoute(
+                                    builder: (BuildContext context) =>
+                                        Login()));
                         saveData("tm");
                         setState(() {
                           context.locale = Locale("en", "US");
@@ -101,9 +101,12 @@ class _ConnectionCheckState extends State<ConnectionCheck> {
                         firsttime
                             ? Navigator.of(context).pushReplacement(
                                 CupertinoPageRoute(
-                                    builder: (_) => BottomNavBar()))
+                                    builder: (BuildContext context) =>
+                                        BottomNavBar()))
                             : Navigator.of(context).pushReplacement(
-                                CupertinoPageRoute(builder: (_) => Login()));
+                                CupertinoPageRoute(
+                                    builder: (BuildContext context) =>
+                                        Login()));
                         saveData("ru");
                         setState(() {
                           context.locale = Locale("ru", "RU");
@@ -139,8 +142,8 @@ class _ConnectionCheckState extends State<ConnectionCheck> {
           langSelect();
         } else {
           Future.delayed(Duration(milliseconds: 2000), () {
-            Navigator.of(context).pushReplacement(
-                CupertinoPageRoute(builder: (_) => BottomNavBar()));
+            Navigator.of(context).pushReplacement(CupertinoPageRoute(
+                builder: (BuildContext context) => BottomNavBar()));
           });
         }
       }
@@ -170,25 +173,25 @@ class _ConnectionCheckState extends State<ConnectionCheck> {
                         mainAxisSize: MainAxisSize.min,
                         children: <Widget>[
                           Text(
-                            'Aragatnaşyk ýok',
+                            'noConnection1',
                             style: TextStyle(
                               fontSize: 24.0,
                               color: kPrimaryColor,
                               fontFamily: popPinsSemiBold,
                             ),
-                          ),
+                          ).tr(),
                           Padding(
                             padding: const EdgeInsets.symmetric(
                                 vertical: 10, horizontal: 5),
                             child: Text(
-                              'Internede baglanyp bolmady.Internet sazlamalryňyzy barlap gaýtadan synanşyň !',
+                              'noConnection2',
                               textAlign: TextAlign.center,
                               style: TextStyle(
                                 color: Colors.black,
                                 fontFamily: popPinsMedium,
                                 fontSize: 16.0,
                               ),
-                            ),
+                            ).tr(),
                           ),
                           RaisedButton(
                             color: kPrimaryColor,

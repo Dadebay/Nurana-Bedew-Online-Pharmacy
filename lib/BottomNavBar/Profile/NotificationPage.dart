@@ -1,13 +1,9 @@
 // ignore_for_file: file_names, implementation_imports, deprecated_member_use
 
-import 'dart:convert';
-
 import 'package:easy_localization/src/public_ext.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_iconly/flutter_iconly.dart';
 import 'package:medicine_app/BottomNavBar/HomePage/ProductProfil/ProductProfil.dart';
-import 'package:medicine_app/Others/Models/CartModel.dart';
 import 'package:medicine_app/Others/Models/NotificationModel.dart';
 import 'package:medicine_app/Others/constants/constants.dart';
 import 'package:medicine_app/Others/constants/widgets.dart';
@@ -73,20 +69,10 @@ class _NotificationPageState extends State<NotificationPage> {
               child: Row(
                 children: [
                   Expanded(
-                      flex: 2,
-                      child: Container(
-                        height: size.height,
-                        margin: const EdgeInsets.all(10),
-                        decoration: BoxDecoration(
-                            color: Colors.grey[200],
-                            borderRadius: borderRadius15),
-                        child: ClipRRect(
-                          borderRadius: borderRadius15,
-                          child: image(
-                            "$serverImage/${product.image}-mini.webp",
-                          ),
-                        ),
-                      )),
+                    flex: 2,
+                    child:
+                        image("$serverImage/${product.image}-mini.webp", size),
+                  ),
                   Expanded(
                     flex: 3,
                     child: Padding(
@@ -127,12 +113,12 @@ class _NotificationPageState extends State<NotificationPage> {
                             child: Row(
                               children: [
                                 const Text(
-                                  "Bahasy : ",
+                                  "price",
                                   style: TextStyle(
                                       color: Colors.red,
                                       fontFamily: popPinsRegular,
                                       fontSize: 14),
-                                ),
+                                ).tr(),
                                 Expanded(
                                   child: RichText(
                                     maxLines: 1,
@@ -157,52 +143,6 @@ class _NotificationPageState extends State<NotificationPage> {
                                 ),
                               ],
                             ),
-                          ),
-                          Container(
-                            width: size.width,
-                            margin: const EdgeInsets.symmetric(vertical: 5),
-                            child: RaisedButton(
-                                onPressed: () async {
-                                  await CartModel().addToCart(
-                                      id: product.productId,
-                                      parametrs: {
-                                        "quantity": jsonEncode(1)
-                                      }).then((value) {
-                                    if (value == true) {
-                                      showMessage("addCart", context,
-                                          Colors.green.shade500);
-                                    } else {
-                                      showMessage("tryagain", context,
-                                          Colors.green.shade500);
-                                    }
-                                  });
-                                },
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 5, vertical: 5),
-                                shape: const RoundedRectangleBorder(
-                                  borderRadius: borderRadius15,
-                                ),
-                                color: kPrimaryColor,
-                                elevation: 2,
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    const Padding(
-                                      padding:
-                                          EdgeInsets.symmetric(horizontal: 10),
-                                      child: Icon(IconlyLight.bag,
-                                          color: Colors.white, size: 25),
-                                    ),
-                                    const Text(
-                                      "addCartTitle",
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                          color: Colors.white, //kPrimaryColor,
-                                          fontFamily: popPinsMedium,
-                                          fontSize: 16),
-                                    ).tr(),
-                                  ],
-                                )),
                           ),
                         ],
                       ),

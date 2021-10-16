@@ -9,6 +9,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class Auth {
   Future loginUser({String phone, String password}) async {
+    print(phone);
     final response = await http.post(Uri.http(authServerUrl, "/api/user/login"),
         headers: <String, String>{
           HttpHeaders.contentTypeHeader: 'application/json; charset=UTF-8',
@@ -17,7 +18,7 @@ class Auth {
           "phone": phone,
           "password": password,
         }));
-
+    print(response.body);
     if (response.statusCode == 200) {
       final responseJson = jsonDecode(response.body)["data"];
       Auth().setToken(jsonDecode(response.body)["access_token"]);

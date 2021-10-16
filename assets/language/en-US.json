@@ -30,8 +30,7 @@
     "noProduct":"Haryt ýok",
     "noProductTitle":"Haryt ammara gelende sms arkaly ýatladylmak isleýarsiňizmi ?",
     "notification":"Habar Et",
-    "descriptionRu":"Düşündirilişi",
-    "descriptionTm":"Düşündirilişi",
+    "descriptionTm":"Düşündirilişi : ",
     "category":"Kategoriýa : ",
     "categoryName":"Kategoriýa",
     "country":"Öndürülinen Ýurdy : ",
@@ -45,7 +44,7 @@
     "hightolow":"Gymmatdan -> Arzana",
     "lowtohigh":"Arzandan -> Gymmada",
     "search":"Gözleg",
-    "location":"Ýerleşýän ýeri",
+    "producer":"Öndürüji",
     "minSany":"Minimum sany",
     "quantity":"Gutudaky sany :",
     "orders":"Sargytlarym",
@@ -56,7 +55,9 @@
     "cartEmpty":"Sebediňiz Boş",
     "log_out_yes":"Hawwa",
     "log_out_no":"Ýok",
-    "noSearch":"Haryt Ýok"
-    
-    
+    "noSearch":"Haryt Ýok",
+    "paymentMethod":"Töleg görnüşi :",
+    "newInCome":"Täze gelen harytlar",
+    "noConnection1":"Aragatnaşyk ýok",
+    "noConnection2":"Internede baglanyp bolmady.Internet sazlamalryňyzy barlap gaýtadan synanşyň !"
 }

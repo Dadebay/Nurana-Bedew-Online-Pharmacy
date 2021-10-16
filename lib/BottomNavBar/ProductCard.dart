@@ -1,11 +1,10 @@
-// ignore_for_file: file_names, implementation_imports, unnecessary_statements, always_declare_return_types, type_annotate_public_apis, avoid_print, deprecated_member_use
+// ignore_for_file: file_names, implementation_imports, unnecessary_statements, always_declare_return_types, type_annotate_public_apis, avoid_print, deprecated_member_use, invariant_booleans
 
-import 'dart:convert';
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:easy_localization/src/public_ext.dart';
 import 'package:flutter/material.dart';
 import 'package:medicine_app/Others/Models/NotificationModel.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../Others/constants/constants.dart';
 import '../Others/constants/widgets.dart';
@@ -15,20 +14,19 @@ class ProductCard extends StatefulWidget {
   final int id;
   final String imagePath;
   final String name;
-  final int price;
+  final String price;
   final int stockCount;
   final bool addCart;
   final int cartQuantity;
+
   const ProductCard(
-      {Key key,
-      this.id,
+      {this.id,
       this.imagePath,
       this.name,
       this.price,
       this.stockCount,
       this.addCart,
-      this.cartQuantity})
-      : super(key: key);
+      this.cartQuantity});
 
   @override
   State<ProductCard> createState() => _ProductCardState();
@@ -49,70 +47,14 @@ class _ProductCardState extends State<ProductCard> {
     if (widget.stockCount == 0) bildir = true;
   }
 
-  saveData(int id, int quantity) async {
-    bool value = false;
-    if (quantity == 0) {
-      myList.removeWhere((element) => element["id"] == id);
-      final SharedPreferences prefs = await SharedPreferences.getInstance();
-      final String encodedMap = json.encode(myList);
-      prefs.setString('cart', encodedMap);
-      print(encodedMap);
-    } else {
-      for (final element in myList) {
-        if (element["id"] == id) {
-          setState(() {
-            element["cartQuantity"] = quantity;
-          });
-          value = true;
-        }
-      }
-
-      if (value == false) myList.add({"id": id, "cartQuantity": quantity});
-
-      final SharedPreferences prefs = await SharedPreferences.getInstance();
-      final String encodedMap = json.encode(myList);
-      prefs.setString('cart', encodedMap);
-      print(encodedMap);
-    }
-  }
-
-  removeQuantity() {
-    if (quantity != 0) {
-      setState(() {
-        quantity -= 1;
-
-        saveData(widget.id, quantity);
-
-        if (quantity == 0) {
-          saveData(widget.id, 0);
-        }
-      });
-    }
-  }
-
-  addQuantity() {
-    final int a = widget.stockCount;
-    final int b = quantity + 1;
-    if (a > b) {
-      setState(() {
-        quantity += 1;
-        saveData(widget.id, quantity);
-      });
-    } else {
-      showMessage("Haryt Ammarda Yok", context, Colors.red);
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
     return GestureDetector(
       onTap: () {
         Navigator.of(context).push(MaterialPageRoute(
-            builder: (_) => ProductProfil(
-                  drugID: widget.id,
-                  quantity: quantity,
-                )));
+            builder: (_) =>
+                ProductProfil(drugID: widget.id, quantity: quantity)));
       },
       child: Container(
         margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
@@ -125,16 +67,8 @@ class _ProductCardState extends State<ProductCard> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Expanded(
-                      child: Container(
-                    margin: const EdgeInsets.all(8),
-                    decoration: BoxDecoration(
-                        color: Colors.grey[200], borderRadius: borderRadius10),
-                    child: ClipRRect(
-                        borderRadius: borderRadius5,
-                        child: image(
-                          "$serverImage/${widget.imagePath}-mini.webp",
-                        )),
-                  )),
+                      child: image(
+                          "$serverImage/${widget.imagePath}-mini.webp", size)),
                   Padding(
                     padding: const EdgeInsets.symmetric(
                       horizontal: 10,
@@ -193,66 +127,21 @@ class _ProductCardState extends State<ProductCard> {
                       });
                     },
                     child: quantity != 0
-                        ? Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 8.0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                GestureDetector(
-                                  onTap: () {
-                                    removeQuantity();
-                                  },
-                                  child: Container(
-                                    padding: const EdgeInsets.all(3),
-                                    margin: const EdgeInsets.all(3),
-                                    decoration: BoxDecoration(
-                                        color: Colors.grey[200],
-                                        shape: BoxShape.circle),
-                                    child: const FittedBox(
-                                      child: Icon(
-                                        Icons.remove,
-                                        color: kPrimaryColor,
-                                        size: 22,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 15),
-                                  child: Text(
-                                    "$quantity",
-                                    overflow: TextOverflow.ellipsis,
-                                    maxLines: 1,
-                                    textAlign: TextAlign.center,
-                                    style: const TextStyle(
-                                        fontSize: 18,
-                                        color: Colors.black,
-                                        fontFamily: popPinsMedium),
-                                  ),
-                                ),
-                                GestureDetector(
-                                  onTap: () {
-                                    addQuantity();
-                                  },
-                                  child: Container(
-                                    margin: const EdgeInsets.all(3),
-                                    padding: const EdgeInsets.all(3),
-                                    decoration: BoxDecoration(
-                                        color: Colors.grey[200],
-                                        shape: BoxShape.circle),
-                                    child: const FittedBox(
-                                      child: Icon(
-                                        Icons.add,
-                                        color: kPrimaryColor,
-                                        size: 22,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          )
+                        ? Container(
+                            width: size.width,
+                            margin: const EdgeInsets.symmetric(
+                                vertical: 5, horizontal: 5),
+                            padding: const EdgeInsets.symmetric(vertical: 8),
+                            decoration: const BoxDecoration(
+                                color: Colors.green,
+                                borderRadius: borderRadius10),
+                            child: const Text(
+                              "addCart",
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontFamily: popPinsMedium),
+                            ).tr())
                         : Container(
                             width: size.width,
                             margin: const EdgeInsets.symmetric(
@@ -292,7 +181,7 @@ class _ProductCardState extends State<ProductCard> {
                       RaisedButton(
                         onPressed: () {
                           setState(() {
-                            saveData(widget.id, widget.stockCount);
+                            // saveData(widget.id, widget.stockCount);
                             redCard = false;
                           });
                         },

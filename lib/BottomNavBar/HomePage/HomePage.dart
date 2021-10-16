@@ -1,34 +1,28 @@
 // ignore_for_file: always_declare_return_types, type_annotate_public_apis, file_names
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_iconly/flutter_iconly.dart';
 import 'package:medicine_app/BottomNavBar/ProductCard.dart';
 import 'package:medicine_app/Others/Models/ProductsModel.dart';
 import 'package:medicine_app/Others/constants/constants.dart';
 import 'package:medicine_app/Others/constants/widgets.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
-import 'SearchPage.dart';
-
 class HomePage extends StatefulWidget {
+  final String pageName;
+  const HomePage({
+    Key key,
+    this.pageName,
+  }) : super(key: key);
   @override
   _HomePageState createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
-  bool animation = false;
   List list = [];
   bool loading = false;
   int page = 1;
 
   final RefreshController _refreshController = RefreshController();
-
-  @override
-  void initState() {
-    super.initState();
-    getData();
-  }
 
   void _onRefresh() {
     if (mounted) {
@@ -43,11 +37,23 @@ class _HomePageState extends State<HomePage> {
     _refreshController.refreshCompleted();
   }
 
-  bool load = false;
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    getData();
+  }
+
   int a = 0;
   getData() {
     Product()
-        .getProducts(parametrs: {"page": '$page', "limit": '20'}).then((value) {
+        .getProducts(
+            parametrs: widget.pageName == "Nurana Bedew"
+                ? {
+                    "page": '$page',
+                    "limit": '20',
+                  }
+                : {"page": '$page', "limit": '20', "new_in_come": "1"})
+        .then((value) {
       if (value != null) {
         for (final element in value) {
           a = 0;
@@ -70,16 +76,16 @@ class _HomePageState extends State<HomePage> {
           });
         }
       } else {
-        setState(() {
-          load = true;
-        });
+        // showMessage("tryagain", context, Colors.red);
       }
     });
   }
 
   void _onLoading() {
+    int a = 0;
+    a = pageNumber;
     Future.delayed(const Duration(milliseconds: 1000));
-    if (mounted && load == false) {
+    if ((a / 20) > page + 1) {
       setState(() {
         page += 1;
         getData();
@@ -88,42 +94,12 @@ class _HomePageState extends State<HomePage> {
     _refreshController.loadComplete();
   }
 
-  AppBar appBar() {
-    return AppBar(
-      automaticallyImplyLeading: false,
-      elevation: 0.0,
-      systemOverlayStyle: SystemUiOverlayStyle.light,
-      backgroundColor: kPrimaryColor,
-      title: const Text(
-        "Nurana Bedew",
-        style: TextStyle(color: Colors.white, fontFamily: popPinsSemiBold),
-      ),
-      centerTitle: true,
-      actions: [
-        GestureDetector(
-          onTap: () {
-            Navigator.of(context).push(MaterialPageRoute(
-                builder: (_) => const Search(
-                      categoryId: -1,
-                      newInCome: "0",
-                      // categoryId: ,
-                    )));
-          },
-          child: const Padding(
-            padding: EdgeInsets.only(right: 15),
-            child: Icon(IconlyLight.search, color: Colors.white),
-          ),
-        ),
-      ],
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
     return Scaffold(
         backgroundColor: Colors.grey[50],
-        appBar: appBar(),
+        appBar: appBarSearchButton(context, widget.pageName),
         body: SmartRefresher(
           enablePullUp: true,
           physics: const BouncingScrollPhysics(),
@@ -131,7 +107,7 @@ class _HomePageState extends State<HomePage> {
           header: const MaterialClassicHeader(
             color: kPrimaryColor,
           ),
-          footer: loadMore(load ? "" : "pull_up_to_load"),
+          footer: loadMore("pull_up_to_load"),
           controller: _refreshController,
           onRefresh: _onRefresh,
           onLoading: _onLoading,
@@ -153,11 +129,8 @@ class _HomePageState extends State<HomePage> {
                       cartQuantity: list[index]["cartQuantity"],
                     );
                   })
-              : SizedBox(
-                  height: size.height / 1.5,
-                  child: Center(
-                    child: spinKit(),
-                  ),
+              : Center(
+                  child: spinKit(),
                 ),
         ));
   }

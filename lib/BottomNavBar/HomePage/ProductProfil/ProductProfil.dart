@@ -1,24 +1,30 @@
-// ignore_for_file: implementation_imports, deprecated_member_use, file_names, unnecessary_string_interpolations, avoid_bool_literals_in_conditional_expressions, type_annotate_public_apis, always_declare_return_types, unnecessary_statements
+// ignore_for_file: implementation_imports, deprecated_member_use, file_names, unnecessary_string_interpolations, avoid_bool_literals_in_conditional_expressions, type_annotate_public_apis, always_declare_return_types, unnecessary_statements, avoid_print
 
 import 'dart:convert';
 
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:easy_localization/src/public_ext.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_iconly/flutter_iconly.dart';
-import 'package:medicine_app/BottomNavBar/BottomNavBar.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:medicine_app/Others/Models/NotificationModel.dart';
 import 'package:medicine_app/Others/Models/ProductProfilModel.dart';
 import 'package:medicine_app/Others/constants/constants.dart';
 import 'package:medicine_app/Others/constants/widgets.dart';
+import 'package:numberpicker/numberpicker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../BottomNavBar.dart';
 import 'PhotoView.dart';
 
 class ProductProfil extends StatefulWidget {
-  const ProductProfil({Key key, this.drugID, @required this.quantity})
-      : super(key: key);
-
+  const ProductProfil({
+    Key key,
+    this.drugID,
+    @required this.quantity,
+  }) : super(key: key);
   final int drugID;
   final int quantity;
 
@@ -29,7 +35,6 @@ class ProductProfil extends StatefulWidget {
 class _ProductProfilState extends State<ProductProfil> {
   bool orderButtonChange = false;
   int quantity = 1;
-
   @override
   void initState() {
     super.initState();
@@ -56,10 +61,7 @@ class _ProductProfilState extends State<ProductProfil> {
               maxLines: 2,
               textAlign: TextAlign.start,
               overflow: TextOverflow.ellipsis,
-              style: const TextStyle(
-                  color: Colors.black,
-                  fontFamily: popPinsSemiBold,
-                  fontSize: 24),
+              style: const TextStyle(color: Colors.black, fontSize: 24),
             ),
           ),
           Padding(
@@ -70,8 +72,8 @@ class _ProductProfilState extends State<ProductProfil> {
                   "price",
                   style: TextStyle(
                       color: Colors.grey,
-                      fontFamily: popPinsMedium,
-                      fontSize: 18),
+                      fontFamily: popPinsRegular,
+                      fontSize: 16),
                 ).tr(),
                 Expanded(
                   child: RichText(
@@ -104,7 +106,7 @@ class _ProductProfilState extends State<ProductProfil> {
                   "dateOfExpire",
                   style: TextStyle(
                       color: Colors.black38,
-                      fontFamily: popPinsMedium,
+                      fontFamily: popPinsRegular,
                       fontSize: 16),
                 ).tr(),
                 Expanded(
@@ -129,12 +131,12 @@ class _ProductProfilState extends State<ProductProfil> {
                   "quantity",
                   style: TextStyle(
                       color: Colors.black38,
-                      fontFamily: popPinsMedium,
+                      fontFamily: popPinsRegular,
                       fontSize: 16),
                 ).tr(),
                 Expanded(
                   child: Text(
-                    "${product.quantity}",
+                    " ${product.quantity}",
                     maxLines: 2,
                     style: const TextStyle(
                         color: Colors.black,
@@ -151,40 +153,22 @@ class _ProductProfilState extends State<ProductProfil> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const Text(
-                  "country",
+                  "producer",
                   style: TextStyle(
                       color: Colors.black38,
-                      fontFamily: popPinsMedium,
+                      fontFamily: popPinsRegular,
                       fontSize: 16),
                 ).tr(),
-                Expanded(
-                  child: Text(
-                    "${product.categoryName}",
-                    maxLines: 2,
-                    style: const TextStyle(
-                        color: Colors.black,
-                        fontFamily: popPinsMedium,
-                        fontSize: 16),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
                 const Text(
-                  "category",
+                  " : ",
                   style: TextStyle(
                       color: Colors.black38,
                       fontFamily: popPinsMedium,
                       fontSize: 16),
-                ).tr(),
+                ),
                 Expanded(
                   child: Text(
-                    "${product.categoryName}",
+                    "${product.producerName}",
                     maxLines: 2,
                     style: const TextStyle(
                         color: Colors.black,
@@ -195,52 +179,54 @@ class _ProductProfilState extends State<ProductProfil> {
               ],
             ),
           ),
-          if (lang == "tm")
+          if (product.descriptionTm == "" || product.descriptionRu == "")
+            const SizedBox.shrink()
+          else if (lang == "tm")
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 5),
-              child: ExpansionTile(
-                title: const Text("descriptionTm",
-                        style:
-                            TextStyle(fontFamily: popPinsMedium, fontSize: 17))
-                    .tr(),
-                textColor: kPrimaryColor,
-                collapsedTextColor: Colors.grey,
-                iconColor: kPrimaryColor,
-                childrenPadding:
-                    const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-                children: [
-                  Text(
-                    "${product.descriptionTm}",
-                    style: const TextStyle(
-                        color: Colors.black, fontFamily: popPinsRegular),
-                  )
-                ],
-              ),
-            )
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 10),
+                      child: const Text("descriptionTm",
+                              style: TextStyle(
+                                  fontFamily: popPinsRegular,
+                                  fontSize: 16,
+                                  color: Colors.grey))
+                          .tr(),
+                    ),
+                    Text(
+                      "${product.descriptionTm}",
+                      style: const TextStyle(
+                          color: Colors.black, fontFamily: popPinsRegular),
+                    )
+                  ],
+                ))
           else
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 5),
-              child: ExpansionTile(
-                title: const Text("descriptionRu",
-                        style:
-                            TextStyle(fontFamily: popPinsMedium, fontSize: 17))
-                    .tr(),
-                textColor: kPrimaryColor,
-                collapsedTextColor: Colors.grey,
-                iconColor: kPrimaryColor,
-                childrenPadding:
-                    const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-                children: [
-                  Text(
-                    "${product.descriptionRu}",
-                    style: const TextStyle(
-                        color: Colors.black, fontFamily: popPinsRegular),
-                  )
-                ],
-              ),
-            ),
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 10),
+                      child: const Text("descriptionTm",
+                              style: TextStyle(
+                                  fontFamily: popPinsRegular,
+                                  fontSize: 16,
+                                  color: Colors.grey))
+                          .tr(),
+                    ),
+                    Text(
+                      "${product.descriptionTm}",
+                      style: const TextStyle(
+                          color: Colors.black, fontFamily: popPinsRegular),
+                    )
+                  ],
+                )),
           const SizedBox(
-            height: 80,
+            height: 100,
           )
         ]))
       ],
@@ -331,10 +317,17 @@ class _ProductProfilState extends State<ProductProfil> {
     bool value = false;
     if (quantity == 0) {
       myList.removeWhere((element) => element["id"] == id);
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
+      final String encodedMap = json.encode(myList);
+      prefs.setString('cart', encodedMap);
     } else {
       for (final element in myList) {
         if (element["id"] == id) {
-          element["cartQuantity"] = quantity;
+          if (mounted) {
+            setState(() {
+              element["cartQuantity"] = quantity;
+            });
+          }
           value = true;
         }
       }
@@ -376,7 +369,8 @@ class _ProductProfilState extends State<ProductProfil> {
     final Size size = MediaQuery.of(context).size;
     return Container(
       width: size.width,
-      margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+      color: Colors.white,
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
       child: orderButtonChange
           ? Padding(
               padding: const EdgeInsets.symmetric(vertical: 8),
@@ -401,17 +395,23 @@ class _ProductProfilState extends State<ProductProfil> {
                       ),
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 15),
-                    child: Text(
-                      "$quantity",
-                      overflow: TextOverflow.ellipsis,
-                      maxLines: 1,
-                      textAlign: TextAlign.center,
-                      style: const TextStyle(
-                          fontSize: 24,
-                          color: Colors.black,
-                          fontFamily: popPinsMedium),
+                  GestureDetector(
+                    onTap: () {
+                      currentValue = 0;
+                      selectCount2(widget.drugID, product.stockCount, size);
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 15),
+                      child: Text(
+                        "$quantity",
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 1,
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(
+                            fontSize: 24,
+                            color: Colors.black,
+                            fontFamily: popPinsMedium),
+                      ),
                     ),
                   ),
                   GestureDetector(
@@ -475,9 +475,8 @@ class _ProductProfilState extends State<ProductProfil> {
         padding: const EdgeInsets.fromLTRB(10, 10, 4, 10),
         child: GestureDetector(
           onTap: () {
-            // Navigator.pop(context);
-            Navigator.push(
-                context, MaterialPageRoute(builder: (_) => BottomNavBar()));
+            Navigator.of(context)
+                .push(MaterialPageRoute(builder: (_) => const BottomNavBar()));
           },
           child: Container(
               decoration: const BoxDecoration(
@@ -509,15 +508,33 @@ class _ProductProfilState extends State<ProductProfil> {
           background: SizedBox(
               height: size.height,
               child: GestureDetector(
-                  onTap: () {
-                    Navigator.of(context).push(MaterialPageRoute(
-                        builder: (_) => Photoview(
-                              image: imageString,
-                            )));
-                  },
-                  child: image(
-                    imageString,
-                  ))),
+                onTap: () {
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (_) => Photoview(
+                            image: imageString,
+                          )));
+                },
+                child: CachedNetworkImage(
+                    width: double.infinity,
+                    colorBlendMode: BlendMode.difference,
+                    imageUrl: imageString,
+                    imageBuilder: (context, imageProvider) => Container(
+                          decoration: BoxDecoration(
+                            image: DecorationImage(
+                              image: imageProvider,
+                              fit: BoxFit.fill,
+                            ),
+                          ),
+                        ),
+                    placeholder: (context, url) => Center(child: spinKit()),
+                    errorWidget: (context, url, error) => Padding(
+                          padding: const EdgeInsets.all(30.0),
+                          child: SvgPicture.asset(
+                            "assets/icons/logo.svg",
+                            color: Colors.grey,
+                          ),
+                        )),
+              )),
         );
       }),
       expandedHeight: 400,
@@ -566,5 +583,97 @@ class _ProductProfilState extends State<ProductProfil> {
 
               return Scaffold(backgroundColor: Colors.white, body: spinKit());
             }));
+  }
+
+  int currentValue = 0;
+  String countProcut = tr('selectCount');
+  selectCount2(int id, int maxValue, Size size) {
+    return showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      builder: (BuildContext context) {
+        return StatefulBuilder(
+          builder: (BuildContext context, setState) {
+            return Container(
+              margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+              decoration: const BoxDecoration(
+                  color: Colors.white, borderRadius: borderRadius10),
+              child: Wrap(
+                alignment: WrapAlignment.center,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 10),
+                    child: RichText(
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      text: TextSpan(
+                        text: countProcut,
+                        style: const TextStyle(
+                            color: Colors.black,
+                            fontSize: 24,
+                            fontFamily: popPinsMedium),
+                        children: <TextSpan>[
+                          TextSpan(
+                            text: " $currentValue",
+                            style: const TextStyle(
+                                color: kPrimaryColor,
+                                fontSize: 24,
+                                fontFamily: popPinsMedium),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  NumberPicker(
+                    infiniteLoop: true,
+                    axis: Axis.horizontal,
+                    value: currentValue,
+                    minValue: 0,
+                    itemHeight: 80,
+                    step: maxValue >= 5 ? 5 : 1,
+                    selectedTextStyle: const TextStyle(
+                        color: kPrimaryColor,
+                        fontSize: 24,
+                        fontFamily: popPinsSemiBold),
+                    maxValue: maxValue,
+                    onChanged: (value) => setState(() {
+                      currentValue = value;
+                    }),
+                  ),
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 10, vertical: 15),
+                    width: size.width,
+                    child: RaisedButton(
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 10, horizontal: 20),
+                        color: kPrimaryColor,
+                        elevation: 1,
+                        shape: const RoundedRectangleBorder(
+                            borderRadius: borderRadius5),
+                        onPressed: () {
+                          setState(() {
+                            saveData(id, currentValue);
+                            setState(() {
+                              quantity = currentValue;
+                            });
+                            Navigator.of(context).pop();
+                          });
+                        },
+                        child: const Text(
+                          "agree",
+                          style: TextStyle(
+                              fontFamily: popPinsMedium,
+                              fontSize: 18,
+                              color: Colors.white),
+                        ).tr()),
+                  ),
+                ],
+              ),
+            );
+          },
+        );
+      },
+    );
   }
 }

@@ -3,9 +3,10 @@ import 'package:flutter/material.dart';
 
 List<Map<String, dynamic>> myList = [];
 
-const String serverURL = "192.168.31.219:8000";
-const String serverImage = "http://192.168.31.219:8000";
-const String authServerUrl = "192.168.31.219:8000";
+int pageNumber = 0;
+const String serverURL = "45.93.136.141:7000";
+const String serverImage = "http://45.93.136.141:7000";
+const String authServerUrl = "45.93.136.141:7000";
 const String langKey = "language";
 // const String firsttimeKey = "firsttime";
 ////Colors
@@ -26,6 +27,9 @@ const String popPinsBold = "Poppins_Bold";
 const String popPinsSemiBold = "Poppins_SemiBold";
 const String popPinsMedium = "Poppins_Medium";
 // text
+String hightolow = tr('hightolow');
+String lowtohigh = tr('lowtohigh');
+
 String errorPassword = tr('errorPassword');
 String removeCart = tr('removeCart');
 String tryagain = tr('tryagain');

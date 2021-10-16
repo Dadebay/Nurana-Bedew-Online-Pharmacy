@@ -1,10 +1,12 @@
-// ignore_for_file: implementation_imports, file_names, always_declare_return_types, use_build_context_synchronously
+// ignore_for_file: implementation_imports, file_names, always_declare_return_types, use_build_context_synchronously, deprecated_member_use
 
 import 'dart:convert';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:easy_localization/src/public_ext.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:medicine_app/Others/Models/CartModel.dart';
 import 'package:medicine_app/Others/constants/constants.dart';
 import 'package:medicine_app/Others/constants/widgets.dart';
@@ -20,7 +22,7 @@ class OrderPage extends StatefulWidget {
   }) : super(key: key);
 
   final int count;
-  final int price;
+  final double price;
 
   @override
   _OrderPageState createState() => _OrderPageState();
@@ -47,6 +49,8 @@ class _OrderPageState extends State<OrderPage> {
       });
     });
   }
+
+  bool buttonColor = false;
 
   @override
   Widget build(BuildContext context) {
@@ -78,59 +82,129 @@ class _OrderPageState extends State<OrderPage> {
 
                       return spinKit();
                     })),
-            Container(
-              color: Colors.white,
-              child: Column(
-                children: [
-                  dividerr(),
-                  text("buyer", username),
-                  text("drugCount", "${widget.count}"),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
-                    child: Row(
-                      children: [
-                        const Text(
-                          "totalPrice",
+            bottomPart(context, size),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Container bottomPart(BuildContext context, Size size) {
+    return Container(
+      color: Colors.white,
+      child: Column(
+        children: [
+          dividerr(),
+          text("buyer", username),
+          text("drugCount", "${widget.count}"),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: Row(
+              children: [
+                const Text(
+                  "totalPrice",
+                  style: TextStyle(
+                      color: Colors.black,
+                      fontFamily: popPinsMedium,
+                      fontSize: 16),
+                ).tr(),
+                Expanded(
+                  child: RichText(
+                    textAlign: TextAlign.right,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    text: TextSpan(
+                      text: "${widget.price}",
+                      style: const TextStyle(
+                          color: Colors.black,
+                          fontSize: 20,
+                          fontFamily: popPinsMedium),
+                      children: const <TextSpan>[
+                        TextSpan(
+                          text: ' TMT ',
                           style: TextStyle(
                               color: Colors.black,
-                              fontFamily: popPinsMedium,
-                              fontSize: 16),
-                        ).tr(),
-                        Expanded(
-                          child: RichText(
-                            textAlign: TextAlign.right,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            text: TextSpan(
-                              text: "${widget.price}",
-                              style: const TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 20,
-                                  fontFamily: popPinsMedium),
-                              children: const <TextSpan>[
-                                TextSpan(
-                                  text: ' TMT ',
-                                  style: TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 16,
-                                      fontFamily: popPinsMedium),
-                                ),
-                              ],
-                            ),
-                          ),
+                              fontSize: 16,
+                              fontFamily: popPinsMedium),
                         ),
                       ],
                     ),
                   ),
-                  Padding(
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 20, horizontal: 20),
-                      child: agreeButton(context, size)),
-                ],
-              ),
+                ),
+              ],
             ),
-          ],
-        ),
+          ),
+          paymentMethod(size),
+          Padding(
+              padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+              child: agreeButton(context, size)),
+        ],
+      ),
+    );
+  }
+
+  int nagt = 1;
+  Padding paymentMethod(Size size) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 10),
+            child: const Text(
+              "paymentMethod",
+              style: TextStyle(
+                  color: Colors.black, fontFamily: popPinsMedium, fontSize: 16),
+            ).tr(),
+          ),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              RaisedButton(
+                  onPressed: () {
+                    setState(() {
+                      buttonColor = false;
+                      nagt = 1;
+                    });
+                  },
+                  elevation: 0,
+                  disabledElevation: 0,
+                  color: buttonColor ? Colors.white : kPrimaryColor,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: borderRadius5,
+                      side: BorderSide(
+                          color: buttonColor ? Colors.grey[400] : kPrimaryColor,
+                          width: 2)),
+                  child: Text("Nagt",
+                      style: TextStyle(
+                          color: buttonColor ? Colors.black : Colors.white,
+                          fontFamily: popPinsMedium))),
+              const SizedBox(
+                width: 10,
+              ),
+              RaisedButton(
+                  onPressed: () {
+                    setState(() {
+                      buttonColor = true;
+                      nagt = 2;
+                    });
+                  },
+                  elevation: 0,
+                  disabledElevation: 0,
+                  color: buttonColor ? kPrimaryColor : Colors.white,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: borderRadius5,
+                      side: BorderSide(
+                          color: buttonColor ? kPrimaryColor : Colors.grey[400],
+                          width: 2)),
+                  child: Text("Hasapdan",
+                      style: TextStyle(
+                          color: buttonColor ? Colors.white : Colors.black,
+                          fontFamily: popPinsMedium))),
+            ],
+          ),
+        ],
       ),
     );
   }
@@ -149,9 +223,26 @@ class _OrderPageState extends State<OrderPage> {
           width: 50,
           child: ClipRRect(
             borderRadius: borderRadius5,
-            child: image(
-              "$serverImage/${cart.images}-mini.webp",
-            ),
+            child: CachedNetworkImage(
+                width: double.infinity,
+                colorBlendMode: BlendMode.difference,
+                imageUrl: "$serverImage/${cart.images}-mini.webp",
+                imageBuilder: (context, imageProvider) => Container(
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                          image: imageProvider,
+                          fit: BoxFit.fill,
+                        ),
+                      ),
+                    ),
+                placeholder: (context, url) => Center(child: spinKit()),
+                errorWidget: (context, url, error) => Padding(
+                      padding: const EdgeInsets.all(30.0),
+                      child: SvgPicture.asset(
+                        "assets/icons/logo.svg",
+                        color: Colors.grey,
+                      ),
+                    )),
           ),
         ),
         minLeadingWidth: 50,
@@ -160,7 +251,7 @@ class _OrderPageState extends State<OrderPage> {
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
           text: TextSpan(
-            text: "${cart.price}",
+            text: cart.price,
             style: const TextStyle(
                 color: Colors.black, fontSize: 20, fontFamily: popPinsMedium),
             children: const <TextSpan>[
@@ -183,7 +274,7 @@ class _OrderPageState extends State<OrderPage> {
   GestureDetector agreeButton(BuildContext context, Size size) {
     return GestureDetector(
       onTap: () {
-        CartModel().order().then((value) async {
+        CartModel().order(nagt).then((value) async {
           if (value == true) {
             final SharedPreferences preferences =
                 await SharedPreferences.getInstance();
@@ -192,7 +283,7 @@ class _OrderPageState extends State<OrderPage> {
             preferences.setString('cart', encodedMap);
             showMessage("orderCompleted", context, Colors.green.shade500);
             Navigator.of(context)
-                .push(MaterialPageRoute(builder: (_) => BottomNavBar()));
+                .push(MaterialPageRoute(builder: (_) => const BottomNavBar()));
           } else {
             showMessage("tryagain", context, Colors.red);
           }

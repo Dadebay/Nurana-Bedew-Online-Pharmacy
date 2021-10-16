@@ -1,4 +1,4 @@
-// ignore_for_file: file_names, avoid_print, unnecessary_statements, missing_return, implementation_imports, type_annotate_public_apis, always_declare_return_types, invariant_booleans
+// ignore_for_file: file_names, avoid_print, unnecessary_statements, missing_return, implementation_imports, type_annotate_public_apis, always_declare_return_types, invariant_booleans, deprecated_member_use
 
 import 'dart:convert';
 import 'dart:io';
@@ -70,8 +70,12 @@ class _CartPageState extends State<CartPage> {
               "stockMin": CartModel.fromJson(product).stockCount
             });
           }
-          for (int i = 0; i < myList.length; i++) {
-            cartProducts[i]["quantity"] = myList[i]["cartQuantity"];
+          for (int i = 0; i < cartProducts.length; i++) {
+            for (int j = 0; j < myList.length; j++) {
+              if (cartProducts[i]["id"] == myList[j]["id"]) {
+                cartProducts[i]["quantity"] = myList[j]["cartQuantity"];
+              }
+            }
           }
         });
       }
@@ -81,67 +85,67 @@ class _CartPageState extends State<CartPage> {
     }
   }
 
-  int price = 0;
-  int count = 0;
   Widget floatingActionButton() {
-    return SizedBox(
-      width: 150,
-      child: FloatingActionButton(
-        elevation: 1,
-        isExtended: true,
-        shape: const RoundedRectangleBorder(borderRadius: borderRadius20),
-        onPressed: () {
-          price = 0;
-          count = 0;
-          for (final element in cartProducts) {
-            price += element["price"] * element["quantity"];
-            count += element['quantity'];
-          }
-          cartProducts.isEmpty
-              ? null
-              : Navigator.of(context).push(MaterialPageRoute(
-                  builder: (_) => OrderPage(
-                        count: count,
-                        price: price,
-                      )));
-        },
-        backgroundColor: kPrimaryColor,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            const Text(
-              "order",
-              overflow: TextOverflow.ellipsis,
-              style: TextStyle(
-                  fontFamily: popPinsSemiBold,
-                  fontSize: 18,
-                  color: Colors.white),
-            ).tr(),
-            const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 5),
-              child: Icon(
-                IconlyLight.arrowRightCircle,
-                size: 20,
-                color: Colors.white,
-              ),
-            )
-          ],
-        ),
+    double result = 0.0;
+    int count = 0;
+    double price = 0.0;
+    return FloatingActionButton.extended(
+      elevation: 1,
+      shape: const RoundedRectangleBorder(borderRadius: borderRadius15),
+      onPressed: () {
+        price = 0;
+        count = 0;
+        for (final element in cartProducts) {
+          price = double.parse(element["price"]);
+          final double doubleVar = element["quantity"].toDouble();
+          result += price * doubleVar;
+          count += element['quantity'];
+        }
+        cartProducts.isEmpty
+            ? null
+            : Navigator.of(context).push(MaterialPageRoute(
+                builder: (_) => OrderPage(
+                      count: count,
+                      price: result,
+                    )));
+      },
+      backgroundColor: kPrimaryColor,
+      extendedPadding: const EdgeInsets.symmetric(horizontal: 10),
+      label: Row(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          const Text(
+            "order",
+            overflow: TextOverflow.ellipsis,
+            style: TextStyle(
+                fontFamily: popPinsSemiBold, fontSize: 18, color: Colors.white),
+          ).tr(),
+          const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 5),
+            child: Icon(
+              IconlyLight.arrowRightCircle,
+              size: 20,
+              color: Colors.white,
+            ),
+          )
+        ],
       ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
+    final Size size = MediaQuery.of(context).size;
     return SafeArea(
         child: Scaffold(
             appBar: appBar("cart"),
             floatingActionButton: cartProducts.isEmpty
-                ? SizedBox.shrink()
+                ? const SizedBox.shrink()
                 : floatingActionButton(),
             body: loading
                 ? cartProducts.isEmpty
-                    ? emptyCart()
+                    ? emptyCart(size)
                     : ListView.builder(
                         physics: const BouncingScrollPhysics(),
                         itemCount: cartProducts.length,
@@ -156,21 +160,36 @@ class _CartPageState extends State<CartPage> {
                   )));
   }
 
-  Padding emptyCart() {
+  Padding emptyCart(Size size) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Image.asset("assets/images/noItem.png"),
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 20),
-            child: const Text("cartEmpty",
-                style: TextStyle(
-                  color: Colors.black,
-                  fontFamily: popPinsMedium,
-                  fontSize: 24,
-                )).tr(),
+          Expanded(
+            child: Align(
+              alignment: Alignment.bottomCenter,
+              child: Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+                child: Image.asset(
+                  "assets/images/noItem.png",
+                ),
+              ),
+            ),
+          ),
+          Expanded(
+            child: Align(
+              alignment: Alignment.topCenter,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 20),
+                child: const Text("cartEmpty",
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontFamily: popPinsMedium,
+                      fontSize: 24,
+                    )).tr(),
+              ),
+            ),
           )
         ],
       ),
@@ -216,32 +235,24 @@ class _CartPageState extends State<CartPage> {
                 )));
       },
       child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+          padding: EdgeInsets.fromLTRB(
+              15, 10, 15, index + 1 == cartProducts.length ? 70 : 15),
           child: Material(
             elevation: 1,
-            borderRadius: borderRadius15,
+            borderRadius: borderRadius10,
             color: Colors.white,
             child: Container(
               height: 160,
               decoration: const BoxDecoration(
-                  color: Colors.white, borderRadius: borderRadius15),
+                  color: Colors.white, borderRadius: borderRadius10),
               child: Row(
                 children: [
                   Expanded(
-                      flex: 2,
-                      child: Container(
-                        height: size.height,
-                        margin: const EdgeInsets.all(10),
-                        decoration: BoxDecoration(
-                            color: Colors.grey[200],
-                            borderRadius: borderRadius15),
-                        child: ClipRRect(
-                          borderRadius: borderRadius15,
-                          child: image(
-                            "$serverImage/${cartProducts[index]["image"]}-mini.webp",
-                          ),
-                        ),
-                      )),
+                    flex: 2,
+                    child: image(
+                        "$serverImage/${cartProducts[index]["image"]}-mini.webp",
+                        size),
+                  ),
                   Expanded(
                     flex: 3,
                     child: Padding(
@@ -283,12 +294,12 @@ class _CartPageState extends State<CartPage> {
                             child: Row(
                               children: [
                                 const Text(
-                                  "Bahasy : ",
+                                  "price",
                                   style: TextStyle(
                                       color: Colors.grey,
                                       fontFamily: popPinsRegular,
                                       fontSize: 14),
-                                ),
+                                ).tr(),
                                 Expanded(
                                   child: RichText(
                                     maxLines: 1,
@@ -352,7 +363,11 @@ class _CartPageState extends State<CartPage> {
                               GestureDetector(
                                 onTap: () {
                                   currentValue = 0;
-                                  selectCount2(index, size);
+                                  selectCount2(
+                                      cartProducts[index]["id"],
+                                      cartProducts[index]["stockMin"],
+                                      size,
+                                      index);
                                 },
                                 child: Padding(
                                   padding: const EdgeInsets.symmetric(
@@ -416,7 +431,7 @@ class _CartPageState extends State<CartPage> {
 
   int currentValue = 0;
   String countProcut = tr('selectCount');
-  selectCount2(int index, Size size) {
+  selectCount2(int id, int maxValue, Size size, int index) {
     return showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -460,12 +475,12 @@ class _CartPageState extends State<CartPage> {
                     value: currentValue,
                     minValue: 0,
                     itemHeight: 80,
-                    step: 5,
+                    step: maxValue >= 5 ? 5 : 1,
                     selectedTextStyle: const TextStyle(
                         color: kPrimaryColor,
                         fontSize: 24,
                         fontFamily: popPinsSemiBold),
-                    maxValue: cartProducts[index]["stockMin"],
+                    maxValue: maxValue,
                     onChanged: (value) => setState(() {
                       currentValue = value;
                     }),
@@ -483,8 +498,8 @@ class _CartPageState extends State<CartPage> {
                             borderRadius: borderRadius5),
                         onPressed: () {
                           setState(() {
-                            saveData(cartProducts[index]["id"], currentValue);
-
+                            saveData(id, currentValue);
+                            cartProducts[index]["quantity"] = currentValue;
                             Navigator.of(context).pop();
                           });
                         },

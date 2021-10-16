@@ -13,7 +13,7 @@ class OrdersModel extends ChangeNotifier {
   final int id;
 
   final String createdAt;
-  final int totalPrice;
+  final String totalPrice;
 
   OrdersModel({this.id, this.createdAt, this.totalPrice});
 
@@ -36,9 +36,9 @@ class OrdersModel extends ChangeNotifier {
           HttpHeaders.contentTypeHeader: 'application/json; charset=UTF-8',
           HttpHeaders.authorizationHeader: 'Bearer $token',
         });
+
     if (response.statusCode == 200) {
       final responseJson = jsonDecode(response.body)["rows"]["orders"];
-      print(responseJson);
       for (final Map product in responseJson) {
         orders.add(OrdersModel.fromJson(product));
       }

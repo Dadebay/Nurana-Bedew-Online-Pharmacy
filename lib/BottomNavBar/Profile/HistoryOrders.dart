@@ -26,6 +26,8 @@ class _HistoryOrderState extends State<HistoryOrder> {
               if (snapshot.hasData) {
                 return ListView.builder(
                   itemCount: snapshot.data.length,
+                  shrinkWrap: true,
+                  reverse: true,
                   itemBuilder: (BuildContext context, int index) {
                     return Padding(
                       padding: const EdgeInsets.symmetric(
@@ -108,7 +110,7 @@ class _OrderPageState extends State<OrderPage> {
     final Size size = MediaQuery.of(context).size;
     return SafeArea(
       child: Scaffold(
-        appBar: appBarBackButton(context, "text" + " ${widget.index}"),
+        appBar: appBarBackButton(context, "$text ${widget.index}"),
         body: FutureBuilder<List<Product>>(
             future: Product().getOrderedProducts(widget.id),
             builder: (context, snapshot) {
@@ -141,19 +143,9 @@ class _OrderPageState extends State<OrderPage> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Expanded(
-                                  child: Container(
-                                margin: const EdgeInsets.all(8),
-                                width: size.width,
-                                height: size.height,
-                                decoration: BoxDecoration(
-                                    color: Colors.grey[200],
-                                    borderRadius: borderRadius10),
-                                child: ClipRRect(
-                                    borderRadius: borderRadius5,
-                                    child: image(
+                                  child: image(
                                       "$serverImage/${snapshot.data[index].images}-mini.webp",
-                                    )),
-                              )),
+                                      size)),
                               Padding(
                                 padding: const EdgeInsets.symmetric(
                                   horizontal: 10,

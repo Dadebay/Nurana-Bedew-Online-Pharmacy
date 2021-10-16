@@ -1,4 +1,4 @@
-// ignore_for_file: type_annotate_public_apis, always_declare_return_types, file_names, deprecated_member_use, avoid_bool_literals_in_conditional_expressions, prefer_const_constructors, avoid_print
+// ignore_for_file: type_annotate_public_apis, always_declare_return_types, file_names, deprecated_member_use, avoid_bool_literals_in_conditional_expressions, prefer_const_constructors, avoid_print, invariant_booleans
 
 import 'dart:convert';
 
@@ -6,8 +6,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_iconly/flutter_iconly.dart';
-import 'package:medicine_app/Others/Models/CategoryModel.dart';
-import 'package:medicine_app/Others/Models/CountryModel.dart';
+import 'package:medicine_app/Others/Models/ProducerModel.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 import '../../Others/Models/ProductsModel.dart';
@@ -16,65 +15,44 @@ import '../../Others/constants/widgets.dart';
 import '../ProductCard.dart';
 
 class Search extends StatefulWidget {
-  const Search({Key key, this.categoryId, @required this.newInCome})
-      : super(key: key);
+  const Search({Key key, @required this.newInCome}) : super(key: key);
+
   final String newInCome;
-  final int categoryId;
 
   @override
   _SearchState createState() => _SearchState();
 }
 
 class _SearchState extends State<Search> {
-  List categoryName = [];
-  int categoryValue = -1;
+  int cartProductNumber = 0;
+  String newInCome = "0";
+  bool inCartElement = false;
   List list = [];
   bool loading = false;
-  List locationName = [];
-  int locationValue = -1;
-  List<Map<String, dynamic>> minSany = [
-    {"name": "10", "isSelected": false},
-    {"name": "20", "isSelected": false},
-    {"name": "30", "isSelected": false},
-    {"name": "40", "isSelected": false},
-    {"name": "50", "isSelected": false},
-    {"name": "100", "isSelected": false},
-  ];
-  int minValue = -1;
+  List producerName = [];
   int page = 1;
-  String hightolow = tr('hightolow');
-  String lowtohigh = tr('lowtohigh');
-
+  List<Map<String, dynamic>> priceName;
   int priceValue = -1;
   TextEditingController textEditingController = TextEditingController();
 
   final RefreshController _refreshController = RefreshController();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-  List<Map<String, dynamic>> priceName;
+
   @override
   void initState() {
     super.initState();
-    b = widget.newInCome ?? "0";
+
+    newInCome = widget.newInCome ?? "0";
     priceName = [
-      {"name": hightolow, "isSelected": true, "number": 0},
-      {"name": lowtohigh, "isSelected": false, "number": 1}
+      {"name": hightolow, "number": 0},
+      {"name": lowtohigh, "number": 1}
     ];
 
-    CountryModel().getCountries().then((value) {
+    ProducerModel().getProducer().then((value) {
       for (final element in value) {
-        locationName.add({
+        producerName.add({
           "id": element.id,
-          "name": element.countryName,
-          "isSelected": false
-        });
-      }
-    });
-
-    Category().getCategory().then((value) {
-      for (final element in value) {
-        categoryName.add({
-          "id": element.id,
-          "name": element.categoryName,
+          "name": element.producerName,
           "isSelected": false
         });
       }
@@ -83,32 +61,23 @@ class _SearchState extends State<Search> {
     getData();
   }
 
-  int a = 0;
-  String b = "0";
   getData() {
     Product().getProducts(parametrs: {
       "page": '$page', "limit": '20',
       "product_name": textEditingController.text,
-      "country_id": null, //jsonEncode([3]),
+      "producer_id": null, //jsonEncode([3]),
       "stock_min": null,
       "price": null,
-      "new_in_come": b,
-      "category_id":
-          widget.categoryId == -1 ? [] : jsonEncode([widget.categoryId])
+      "new_in_come": newInCome,
     }).then((value) {
-      if (value == null) {
-        setState(() {
-          list.clear();
-          loading = true;
-        });
-      } else if (value != null) {
+      if (value != null) {
         for (final element in value) {
           inCartElement = false;
-          a = 0;
+          cartProductNumber = 0;
           for (final element2 in myList) {
             if (element.id == element2["id"]) {
               inCartElement = true;
-              a = element2["cartQuantity"];
+              cartProductNumber = element2["cartQuantity"];
             }
           }
 
@@ -121,13 +90,13 @@ class _SearchState extends State<Search> {
               "image": element.images,
               "stockCount": element.stockCount,
               "addCart": inCartElement,
-              "cartQuantity": a
+              "cartQuantity": cartProductNumber
             });
           });
         }
       } else {
         setState(() {
-          load = true;
+          loading = true;
         });
       }
     });
@@ -148,8 +117,10 @@ class _SearchState extends State<Search> {
   }
 
   void _onLoading() {
+    int a = 0;
+    a = pageNumber;
     Future.delayed(const Duration(milliseconds: 1000));
-    if (mounted && load == false) {
+    if ((a / 20) > page + 1) {
       setState(() {
         page += 1;
         getData();
@@ -195,8 +166,6 @@ class _SearchState extends State<Search> {
         ).tr());
   }
 
-  bool inCartElement = false;
-
   Padding searchTextField() {
     return Padding(
       padding: const EdgeInsets.all(10.0),
@@ -208,36 +177,9 @@ class _SearchState extends State<Search> {
         onEditingComplete: () {
           setState(() {
             list.clear();
+            loading = false;
           });
-          Product().getProducts(parametrs: {
-            "page": '$page', "limit": '20',
-            "product_name": textEditingController.text,
-            "country_id": null, //jsonEncode([3]),
-            "stock_min": null,
-            "price": null,
-            "category_id":
-                widget.categoryId == -1 ? [] : jsonEncode([widget.categoryId])
-          }).then((value) {
-            setState(() {
-              loading = true;
-              if (value.isEmpty) list.clear();
-            });
-            for (final element in value) {
-              inCartElement = false;
-              for (final element2 in myList) {
-                if (element.id == element2["id"]) {
-                  inCartElement = true;
-                }
-              }
-              list.add({
-                "id": element.id,
-                "name": element.productName,
-                "price": element.price,
-                "image": element.images,
-                "addCart": inCartElement,
-              });
-            }
-          });
+          getData();
         },
         decoration: InputDecoration(
           hintText: search,
@@ -267,6 +209,7 @@ class _SearchState extends State<Search> {
     );
   }
 
+  bool newInComeValue = false;
   Drawer endDrawer(Size size) {
     return Drawer(
       child: Stack(
@@ -287,18 +230,9 @@ class _SearchState extends State<Search> {
                 ),
                 dividerr(),
                 CheckBoxListBuilder(
-                  name: "location",
-                  list: locationName,
+                  name: "producer",
+                  list: producerName,
                 ),
-
-                // ),
-
-                dividerr(),
-                CheckBoxListBuilder(
-                  name: "categoryName",
-                  list: categoryName,
-                ),
-
                 dividerr(),
                 ExpansionTile(
                   title: const Text("priceName",
@@ -333,41 +267,25 @@ class _SearchState extends State<Search> {
                   ],
                 ),
                 dividerr(),
-                ExpansionTile(
-                  title: const Text("minSany",
-                      style: TextStyle(
-                        fontFamily: popPinsMedium,
-                      )).tr(),
-                  collapsedIconColor: Colors.grey,
-                  iconColor: kPrimaryColor,
-                  textColor: kPrimaryColor,
-                  collapsedTextColor: Colors.grey,
-                  children: [
-                    ListView.builder(
-                      itemBuilder: (context, index) {
-                        return RadioListTile(
-                          value: index,
-                          activeColor: kPrimaryColor,
-                          groupValue: minValue,
-                          onChanged: (ind) {
-                            setState(() {
-                              minValue = ind;
-                              for (final element in minSany) {
-                                element["isSelected"] = false;
-                              }
-                              minSany[index]["isSelected"] = true;
-                            });
-                          },
-                          title: Text(
-                            minSany[index]["name"],
-                            style: const TextStyle(fontFamily: popPinsRegular),
-                          ),
-                        );
-                      },
-                      itemCount: minSany.length,
-                      shrinkWrap: true,
-                    ),
-                  ],
+                CheckboxListTile(
+                  value: newInComeValue,
+                  checkColor: Colors.white,
+                  activeColor: kPrimaryColor,
+                  onChanged: (val) {
+                    setState(() {
+                      newInComeValue = val;
+                      if (newInComeValue == true) {
+                        newInCome = "1";
+                      } else {
+                        newInCome = "0";
+                      }
+                    });
+                  },
+                  title: Text(
+                    "newInCome",
+                    style: const TextStyle(
+                        color: Colors.black, fontFamily: popPinsRegular),
+                  ).tr(),
                 ),
                 dividerr(),
               ],
@@ -386,57 +304,48 @@ class _SearchState extends State<Search> {
                   shape:
                       const RoundedRectangleBorder(borderRadius: borderRadius5),
                   onPressed: () {
+                    list.clear();
                     final List countryId = [];
-                    for (final element in locationName) {
+                    for (final element in producerName) {
                       if (element["isSelected"] == true) {
                         countryId.add(element["id"]);
                       }
                     }
-                    final List category = [];
-                    for (final element in categoryName) {
-                      if (element["isSelected"] == true) {
-                        category.add(element["id"]);
-                      }
-                    }
-                    String abc;
-                    for (final element in minSany) {
-                      if (element["isSelected"] == true) abc = element["name"];
-                    }
-                    bool priceSendValue;
-                    setState(() {
-                      if (priceValue == -1) {
-                        priceSendValue = null;
-                      } else {
-                        priceSendValue = priceName[priceValue]["isSelected"];
-                      }
-                      list.clear();
-                    });
+
                     Product().getProducts(parametrs: {
                       "page": '$page',
                       "limit": '20',
                       "product_name": textEditingController.text,
-                      "country_id":
+                      "new_in_come": newInCome,
+                      "producer_id":
                           countryId.isEmpty ? null : jsonEncode(countryId),
-                      "stock_min": abc,
-                      "price": priceSendValue,
-                      "category_id": category.isEmpty
-                          ? widget.categoryId == -1
-                              ? []
-                              : jsonEncode([widget.categoryId])
-                          : jsonEncode(category)
+                      "price": "${priceValue + 1}",
                     }).then((value) {
-                      if (value.isNotEmpty) {
-                        setState(() {
-                          for (final element in value) {
+                      if (value != null) {
+                        for (final element in value) {
+                          inCartElement = false;
+                          cartProductNumber = 0;
+                          for (final element2 in myList) {
+                            if (element.id == element2["id"]) {
+                              inCartElement = true;
+                              cartProductNumber = element2["cartQuantity"];
+                            }
+                          }
+
+                          setState(() {
+                            loading = true;
                             list.add({
                               "id": element.id,
                               "name": element.productName,
                               "price": element.price,
-                              "image": element.images
+                              "image": element.images,
+                              "stockCount": element.stockCount,
+                              "addCart": inCartElement,
+                              "cartQuantity": cartProductNumber
                             });
-                          }
-                        });
-                      } else {
+                          });
+                        }
+                      } else if (value == null) {
                         showMessage("noProduct", context, Colors.red);
                       }
                     });
@@ -455,7 +364,6 @@ class _SearchState extends State<Search> {
     );
   }
 
-  bool load = false;
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
@@ -476,7 +384,7 @@ class _SearchState extends State<Search> {
             header: const MaterialClassicHeader(
               color: kPrimaryColor,
             ),
-            footer: loadMore(load ? "" : "pull_up_to_load"),
+            footer: loadMore("pull_up_to_load"),
             controller: _refreshController,
             onRefresh: _onRefresh,
             onLoading: _onLoading,
@@ -511,11 +419,8 @@ class _SearchState extends State<Search> {
                             cartQuantity: list[index]["cartQuantity"],
                           );
                         })
-                : SizedBox(
-                    height: size.height / 1.5,
-                    child: Center(
-                      child: spinKit(),
-                    ),
+                : Center(
+                    child: spinKit(),
                   ),
           )),
         ],
@@ -525,9 +430,11 @@ class _SearchState extends State<Search> {
 }
 
 class CheckBoxListBuilder extends StatefulWidget {
-  final String name;
-  final List list;
   const CheckBoxListBuilder({Key key, this.name, this.list}) : super(key: key);
+
+  final List list;
+  final String name;
+
   @override
   CheckBoxListBuilderState createState() {
     return CheckBoxListBuilderState();

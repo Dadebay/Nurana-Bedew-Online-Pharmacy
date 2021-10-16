@@ -4,6 +4,7 @@ import 'package:easy_localization/src/public_ext.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_iconly/flutter_iconly.dart';
+import 'package:medicine_app/Auth/Login.dart';
 import 'package:medicine_app/Others/Models/AuthModel.dart';
 import 'package:medicine_app/Others/constants/constants.dart';
 import 'package:medicine_app/Others/constants/widgets.dart';
@@ -20,11 +21,13 @@ class Profile extends StatefulWidget {
 class _ProfileState extends State<Profile> {
   String phoneNumber = "";
   String username = "";
-
+  bool loading = false;
   @override
   void initState() {
     super.initState();
-    setData();
+    Future.delayed(Duration(milliseconds: 200), () {
+      setData();
+    });
   }
 
   Future<String> getUsername() async {
@@ -46,6 +49,7 @@ class _ProfileState extends State<Profile> {
     getPhoneNumber().then((value) {
       setState(() {
         phoneNumber = value;
+        loading = true;
       });
     });
   }
@@ -114,6 +118,8 @@ class _ProfileState extends State<Profile> {
                     await Auth().removeRefreshToken();
                     saveDataFirstTime(false);
                     Navigator.of(context).pop();
+                    Navigator.of(context).pushReplacement(MaterialPageRoute(
+                        builder: (BuildContext context) => Login()));
                   },
                   child: Container(
                     width: size.width,
@@ -271,60 +277,62 @@ class _ProfileState extends State<Profile> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: appBar("profil"),
-      body: SingleChildScrollView(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            logoPart(),
-            Text(
-              username,
-              style: TextStyle(
-                  color: Colors.black,
-                  fontFamily: popPinsSemiBold,
-                  fontSize: 20),
-            ).tr(),
-            Padding(
-              padding: const EdgeInsets.only(bottom: 20, top: 10),
-              child: Text(
-                "+993-$phoneNumber",
-                style: TextStyle(
-                    color: Colors.black54,
-                    fontFamily: popPinsMedium,
-                    fontSize: 16),
-              ).tr(),
-            ),
-            buttonProfile(
-                name: "notificationName",
-                icon: IconlyLight.notification,
-                onTap: () {
-                  Navigator.of(context).push(
-                      CupertinoPageRoute(builder: (_) => NotificationPage()));
-                }),
-            buttonProfile(
-                name: "orders",
-                icon: IconlyLight.paper,
-                onTap: () {
-                  Navigator.of(context)
-                      .push(CupertinoPageRoute(builder: (_) => HistoryOrder()));
-                }),
-            buttonProfile(
-                name: "language",
-                icon: Icons.language_outlined,
-                onTap: () {
-                  changeLanguage(context); //languagePicker();
-                }),
-            buttonProfile(
-                name: "log_out",
-                icon: IconlyLight.logout,
-                onTap: () {
-                  log_out(context, size);
-                }),
-            SizedBox(
-              height: 100,
+      body: loading
+          ? SingleChildScrollView(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  logoPart(),
+                  Text(
+                    username,
+                    style: TextStyle(
+                        color: Colors.black,
+                        fontFamily: popPinsSemiBold,
+                        fontSize: 20),
+                  ).tr(),
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 20, top: 10),
+                    child: Text(
+                      "+993-$phoneNumber",
+                      style: TextStyle(
+                          color: Colors.black54,
+                          fontFamily: popPinsMedium,
+                          fontSize: 16),
+                    ).tr(),
+                  ),
+                  buttonProfile(
+                      name: "notificationName",
+                      icon: IconlyLight.notification,
+                      onTap: () {
+                        Navigator.of(context).push(CupertinoPageRoute(
+                            builder: (_) => NotificationPage()));
+                      }),
+                  buttonProfile(
+                      name: "orders",
+                      icon: IconlyLight.paper,
+                      onTap: () {
+                        Navigator.of(context).push(
+                            CupertinoPageRoute(builder: (_) => HistoryOrder()));
+                      }),
+                  buttonProfile(
+                      name: "language",
+                      icon: Icons.language_outlined,
+                      onTap: () {
+                        changeLanguage(context); //languagePicker();
+                      }),
+                  buttonProfile(
+                      name: "log_out",
+                      icon: IconlyLight.logout,
+                      onTap: () {
+                        log_out(context, size);
+                      }),
+                  SizedBox(
+                    height: 100,
+                  )
+                ],
+              ),
             )
-          ],
-        ),
-      ),
+          : spinKit(),
     );
   }
 }

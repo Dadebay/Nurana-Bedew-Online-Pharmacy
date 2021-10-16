@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors, implementation_imports, file_names
+// ignore_for_file: prefer_const_constructors, implementation_imports, file_names, avoid_positional_boolean_parameters
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -8,11 +8,13 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../Others/constants/constants.dart';
 import '../Others/constants/widgets.dart';
-import 'CategoryPage.dart';
 import 'HomePage/HomePage.dart';
 import 'Profile/Profile.dart';
 
 class BottomNavBar extends StatefulWidget {
+  final int page;
+
+  const BottomNavBar({Key key, this.page}) : super(key: key);
   @override
   _BottomNavBarState createState() => _BottomNavBarState();
 }
@@ -20,8 +22,8 @@ class BottomNavBar extends StatefulWidget {
 class _BottomNavBarState extends State<BottomNavBar> {
   PageController pageController = PageController();
   int selectedIndex;
+
   List<Widget> _pages;
-  // ignore: avoid_positional_boolean_parameters
   Future<bool> saveData(bool value) async {
     final SharedPreferences pref = await SharedPreferences.getInstance();
     return pref.setBool("firstTime", value);
@@ -31,8 +33,17 @@ class _BottomNavBarState extends State<BottomNavBar> {
   void initState() {
     saveData(true);
     super.initState();
-    selectedIndex = 0;
-    _pages = <Widget>[HomePage(), CategoryPage(), CartPage(), Profile()];
+    selectedIndex = widget.page ?? 0;
+    _pages = <Widget>[
+      HomePage(
+        pageName: "Nurana Bedew",
+      ),
+      HomePage(
+        pageName: "Täze gelenler",
+      ),
+      CartPage(),
+      Profile()
+    ];
   }
 
   @override
@@ -55,6 +66,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
             selectedItemColor: kPrimaryColor,
             unselectedItemColor: Colors.grey[400],
             currentIndex: selectedIndex,
+
             onTap: (index) {
               pageController.jumpToPage(index);
             },
@@ -65,8 +77,8 @@ class _BottomNavBarState extends State<BottomNavBar> {
                 label: "",
               ),
               BottomNavigationBarItem(
-                icon: Icon(IconlyLight.category),
-                activeIcon: Icon(IconlyBold.category),
+                icon: Icon(IconlyLight.paper),
+                activeIcon: Icon(IconlyBold.paper),
                 label: "",
               ),
               BottomNavigationBarItem(
