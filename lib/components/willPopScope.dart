@@ -1,7 +1,9 @@
 // ignore_for_file: deprecated_member_use, file_names
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:get/get.dart';
 import 'package:get/get_utils/src/extensions/internacionalization.dart';
 import 'package:medicine_app/constants/constants.dart';
 
@@ -42,33 +44,40 @@ class MyWillPopScope extends StatelessWidget {
             children: [
               RaisedButton(
                   shape: const RoundedRectangleBorder(
-                      borderRadius: borderRadius10,
-                      side: BorderSide(color: kPrimaryColor, width: 2)),
-                  color: Colors.white,
+                    borderRadius: borderRadius10,
+                  ),
+                  color: kPrimaryColor,
                   child: Text(
                     'yes'.tr,
-                    style: const TextStyle(
-                        color: kPrimaryColor,
-                        fontSize: 18,
-                        fontFamily: popPinsSemiBold),
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: Get.locale.toLanguageTag() == "ru"
+                          ? FontWeight.bold
+                          : FontWeight.normal,
+                      fontSize: 18,
+                      fontFamily: popPinsSemiBold,
+                    ),
                   ),
                   onPressed: () {
                     SystemNavigator.pop();
                   }),
               RaisedButton(
                   shape: const RoundedRectangleBorder(
-                      borderRadius: borderRadius10,
-                      side: BorderSide(color: kPrimaryColor, width: 2)),
-                  color: Colors.white,
+                    borderRadius: borderRadius10,
+                  ),
+                  color: kPrimaryColor,
                   child: Text(
                     'no'.tr,
-                    style: const TextStyle(
-                        color: kPrimaryColor,
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: Get.locale.toLanguageTag() == "ru"
+                            ? FontWeight.bold
+                            : FontWeight.normal,
                         fontSize: 18,
                         fontFamily: popPinsSemiBold),
                   ),
                   onPressed: () {
-                    Navigator.of(context).pop(false);
+                    Get.back();
                   }),
             ],
           ),

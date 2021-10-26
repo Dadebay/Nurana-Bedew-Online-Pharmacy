@@ -67,7 +67,8 @@ class MyTranslations extends Translations {
           "newInCome": "Täze gelen harytlar",
           "noConnection1": "Aragatnaşyk ýok",
           "noConnection2":
-              "Internede baglanyp bolmady.Internet sazlamalryňyzy barlap gaýtadan synanşyň !",
+              "Internede baglanyp bolmady.Internet sazlamalaryňyzy barlap gaýtadan synanşyň !",
+          "noConnection3": "Täzeden synanş",
           "minStockCount":
               "Sebediňizdäki harydyň sany Ammardaky derman sanyndan az. Derman sanyny azaltmagyňyzy haýyşt edýäris.",
           "maximum": "Maksimum",
@@ -108,7 +109,7 @@ class MyTranslations extends Translations {
           "noProduct": "Товара нет",
           "noProductTitle":
               "Хотите получать SMS-уведомление о поступлении товара на склад?",
-          "notification": "Добавить уведомление",
+          "notification": "Добавить в уведомления",
           "descriptionTm": "Состав",
           "category": "Категория : ",
           "categoryName": "Категория",

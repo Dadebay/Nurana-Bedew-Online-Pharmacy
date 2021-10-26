@@ -2,6 +2,7 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:get/get_utils/src/extensions/internacionalization.dart';
 import 'package:medicine_app/components/appBar.dart';
 import 'package:medicine_app/constants/constants.dart';
@@ -23,6 +24,9 @@ class _HistoryOrderState extends State<HistoryOrder> {
         body: FutureBuilder<List<OrdersModel>>(
             future: OrdersModel().getorders(),
             builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return spinKit();
+              }
               if (snapshot.hasData) {
                 return ListView.builder(
                   itemCount: snapshot.data.length,
@@ -40,21 +44,24 @@ class _HistoryOrderState extends State<HistoryOrder> {
                         elevation: 2,
                         padding: const EdgeInsets.all(10),
                         onPressed: () {
-                          Navigator.of(context).push(CupertinoPageRoute(
-                              builder: (_) => OrderPage(
-                                    index: index + 1,
-                                    id: snapshot.data[index].id,
-                                  )));
+                          Get.to(() => OrderPage(
+                                index: index + 1,
+                                id: snapshot.data[index].id,
+                              ));
                         },
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Expanded(
-                              child: Text("Sargyt ${index + 1}",
+                              child: Text("orderHistory".tr + " ${index + 1}",
                                   textAlign: TextAlign.start,
-                                  style: const TextStyle(
-                                      color: Colors.black,
-                                      fontFamily: popPinsMedium)),
+                                  style: TextStyle(
+                                    fontWeight:
+                                        Get.locale.toLanguageTag() == "ru"
+                                            ? FontWeight.bold
+                                            : FontWeight.normal,
+                                    color: Colors.black,
+                                  )),
                             ),
                             Expanded(
                               child: Text(snapshot.data[index].createdAt,
@@ -78,15 +85,6 @@ class _HistoryOrderState extends State<HistoryOrder> {
                     );
                   },
                 );
-              } else if (snapshot.data == null) {
-                return Center(
-                    child: Text(
-                  "noHistoryOrder".tr,
-                  style: const TextStyle(
-                      fontFamily: popPinsSemiBold,
-                      color: Colors.black,
-                      fontSize: 18),
-                ));
               } else if (snapshot.hasError) {
                 return Center(
                   child: GestureDetector(
@@ -96,6 +94,15 @@ class _HistoryOrderState extends State<HistoryOrder> {
                       child: const Icon(Icons.refresh,
                           color: kPrimaryColor, size: 35)),
                 );
+              } else if (snapshot.data == null) {
+                return Center(
+                    child: Text(
+                  "noHistoryOrder".tr,
+                  style: const TextStyle(
+                      fontFamily: popPinsSemiBold,
+                      color: Colors.black,
+                      fontSize: 18),
+                ));
               }
               return spinKit();
             }),

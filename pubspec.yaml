@@ -1,7 +1,7 @@
 name: medicine_app
 description: A new Flutter project.
 publish_to: 'none'
-version: 1.0.0+1
+version: 1.0.1+1
 
 environment:
   sdk: ">=2.7.0 <3.0.0"
@@ -24,6 +24,7 @@ dependencies:
   shared_preferences: null
   vibration: ^1.7.3
   get:
+  back_button_interceptor: ^5.0.2
 
 dev_dependencies:
   flutter_test:

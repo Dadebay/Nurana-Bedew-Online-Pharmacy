@@ -2,6 +2,7 @@
 
 import 'dart:convert';
 
+import 'package:back_button_interceptor/back_button_interceptor.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_iconly/flutter_iconly.dart';
@@ -14,7 +15,6 @@ import 'package:medicine_app/controllers/HomePageController.dart';
 import 'package:medicine_app/controllers/NewInComeController.dart';
 import 'package:medicine_app/models/ProductProfilModel.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 import '../../../views/BottomNavBar.dart';
 import 'PhotoView.dart';
 
@@ -40,7 +40,30 @@ class _ProductProfilState extends State<ProductProfil> {
   void initState() {
     super.initState();
     quantity = widget.quantity ?? 0;
+    BackButtonInterceptor.add(myInterceptor);
     orderButtonChange = widget.quantity == 0 ? false : true;
+  }
+
+  @override
+  void dispose() {
+    BackButtonInterceptor.remove(myInterceptor);
+    super.dispose();
+  }
+
+  bool myInterceptor(bool stopDefaultButtonEvent, RouteInfo info) {
+    if (widget.refreshPage == 1) {
+      homeController.reolodProduct();
+      Get.to(() => BottomNavBar());
+    } else if (widget.refreshPage == 2) {
+      newInComeController.reolodProduct();
+      Get.to(() => BottomNavBar());
+    } else if (widget.refreshPage == 3) {
+      cartPageController.loadData();
+      Get.to(() => BottomNavBar());
+    } else if (widget.refreshPage == 0) {
+      Get.to(() => BottomNavBar());
+    }
+    return true;
   }
 
   final HomePageController homeController = Get.put(HomePageController());
@@ -182,7 +205,10 @@ class _ProductProfilState extends State<ProductProfil> {
               ],
             ),
           ),
-          if (product.descriptionTm == "" || product.descriptionRu == "")
+          if (product.descriptionTm == "" ||
+              product.descriptionRu == "" ||
+              product.descriptionTm == null ||
+              product.descriptionRu == null)
             const SizedBox.shrink()
           else if (Get.locale.toLanguageTag() == "en")
             Padding(
@@ -199,7 +225,9 @@ class _ProductProfilState extends State<ProductProfil> {
                               color: Colors.grey)),
                     ),
                     Text(
-                      "${product.descriptionTm}",
+                      product.descriptionTm == null
+                          ? ""
+                          : "${product.descriptionTm}",
                       style: const TextStyle(
                           color: Colors.black, fontFamily: popPinsRegular),
                     )
@@ -220,7 +248,9 @@ class _ProductProfilState extends State<ProductProfil> {
                               color: Colors.grey)),
                     ),
                     Text(
-                      "${product.descriptionTm}",
+                      product.descriptionTm == null
+                          ? ""
+                          : "${product.descriptionTm}",
                       style: const TextStyle(
                           color: Colors.black, fontFamily: popPinsRegular),
                     )

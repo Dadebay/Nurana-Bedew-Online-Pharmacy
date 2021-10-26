@@ -5,6 +5,7 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_iconly/flutter_iconly.dart';
+import 'package:get/get.dart';
 import 'package:get/get_utils/src/extensions/internacionalization.dart';
 import 'package:medicine_app/constants/constants.dart';
 import 'package:medicine_app/constants/widgets.dart';
@@ -174,15 +175,17 @@ class _SearchState extends State<Search> {
           hintText: search,
           contentPadding:
               const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
-          prefixIcon: textEditingController.text.isEmpty
-              ? const Icon(
-                  IconlyLight.search,
-                  color: Colors.black,
-                )
-              : const Icon(
-                  IconlyBold.search,
-                  color: kPrimaryColor,
-                ),
+          suffixIcon: IconButton(
+            onPressed: () {
+              setState(() {
+                list.clear();
+                loading = false;
+              });
+              getData();
+            },
+            icon: Icon(IconlyBold.search, size: 24),
+            color: kPrimaryColor,
+          ),
           hintStyle:
               const TextStyle(color: Colors.black38, fontFamily: popPinsMedium),
           filled: true,
@@ -333,6 +336,7 @@ class _SearchState extends State<Search> {
                         showMessage("noProduct", context, Colors.red);
                       }
                     });
+                    Get.back();
                   },
                   child: Text(
                     "search".tr,
