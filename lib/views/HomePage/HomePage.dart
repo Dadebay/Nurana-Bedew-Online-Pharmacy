@@ -52,7 +52,7 @@ class HomePage extends StatelessWidget {
                     itemCount: homeController.list.length,
                     physics: const NeverScrollableScrollPhysics(),
                     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: Get.size.width <= 1100 ? 2 : 4,
+                        crossAxisCount: Get.size.width <= 800 ? 2 : 4,
                         childAspectRatio: 3 / 4.5),
                     itemBuilder: (BuildContext context, int index) {
                       return ProductCard(

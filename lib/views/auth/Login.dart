@@ -38,7 +38,7 @@ class Login extends StatelessWidget {
           myList.clear();
           final String encodedMap = json.encode(myList);
           preferences.setString('cart', encodedMap);
-          print(myList.length);
+
           if (_form1Key.currentState.validate() &&
               controllerLogin1.text.length == 8) {
             loginController.changeStatus();

@@ -5,7 +5,7 @@ List<Map<String, dynamic>> myList = [];
 
 int pageNumber = 0;
 const String serverURL = "45.93.136.141:7000";
-const String serverImage = "http://45.93.136.141:7000";
+const String serverImage = "http://45.93.136.141";
 const String authServerUrl = "45.93.136.141:7000";
 const String langKey = "language";
 ////Colors

@@ -70,7 +70,10 @@ class NewInCome extends StatelessWidget {
                     });
               } else if (newInComeController.loading.value == 2) {
                 return Center(
-                  child: spinKit(),
+                  child: Text(
+                    "noProduct".tr,
+                    style: TextStyle(fontFamily: popPinsSemiBold, fontSize: 20),
+                  ),
                 );
               } else if (newInComeController.loading.value == 3) {
                 return Center(

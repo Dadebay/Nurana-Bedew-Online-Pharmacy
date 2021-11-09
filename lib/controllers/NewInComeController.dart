@@ -14,6 +14,7 @@ class NewInComeController extends GetxController {
   void onInit() {
     loading.value = 0;
     fetchProducts();
+
     super.onInit();
   }
 
