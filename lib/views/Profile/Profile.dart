@@ -26,6 +26,7 @@ class _ProfileState extends State<Profile> {
   @override
   void initState() {
     super.initState();
+    getTokenMine();
     Future.delayed(Duration(milliseconds: 200), () {
       setData();
     });
@@ -44,12 +45,12 @@ class _ProfileState extends State<Profile> {
   setData() {
     getUsername().then((value) {
       setState(() {
-        username = value;
+        username = value ?? "Nurana Bedew";
       });
     });
     getPhoneNumber().then((value) {
       setState(() {
-        phoneNumber = value;
+        phoneNumber = value ?? "65555555";
         loading = true;
       });
     });
@@ -69,25 +70,20 @@ class _ProfileState extends State<Profile> {
             child: Wrap(
               children: [
                 Padding(
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
+                  padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       const SizedBox.shrink(),
                       Text(
                         "log_out".tr,
-                        style: const TextStyle(
-                            color: Colors.black,
-                            fontFamily: popPinsSemiBold,
-                            fontSize: 18),
+                        style: const TextStyle(color: Colors.black, fontFamily: popPinsSemiBold, fontSize: 18),
                       ),
                       GestureDetector(
                         onTap: () {
                           Navigator.of(context).pop();
                         },
-                        child: Icon(CupertinoIcons.xmark_circle_fill,
-                            size: 35, color: Colors.grey[300]),
+                        child: Icon(CupertinoIcons.xmark_circle_fill, size: 35, color: Colors.grey[300]),
                       )
                     ],
                   ),
@@ -98,8 +94,7 @@ class _ProfileState extends State<Profile> {
                   thickness: 2,
                 ),
                 Padding(
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+                  padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
                   child: Text("log_out_title".tr,
                       textAlign: TextAlign.center,
                       style: TextStyle(
@@ -115,23 +110,17 @@ class _ProfileState extends State<Profile> {
                     await Auth().removeRefreshToken();
                     saveDataFirstTime(false);
                     Navigator.of(context).pop();
-                    Navigator.of(context).pushReplacement(MaterialPageRoute(
-                        builder: (BuildContext context) => Login()));
+                    Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (BuildContext context) => Login()));
                   },
                   child: Container(
                     width: size.width,
-                    margin:
-                        const EdgeInsets.only(left: 20, right: 20, bottom: 10),
+                    margin: const EdgeInsets.only(left: 20, right: 20, bottom: 10),
                     padding: const EdgeInsets.all(10),
-                    decoration: const BoxDecoration(
-                        color: Colors.red, borderRadius: borderRadius10),
+                    decoration: const BoxDecoration(color: Colors.red, borderRadius: borderRadius10),
                     child: Text(
                       "log_out_yes".tr,
                       textAlign: TextAlign.center,
-                      style: const TextStyle(
-                          color: Colors.white,
-                          fontFamily: popPinsBold,
-                          fontSize: 18),
+                      style: const TextStyle(color: Colors.white, fontFamily: popPinsBold, fontSize: 18),
                     ),
                   ),
                 ),
@@ -141,18 +130,13 @@ class _ProfileState extends State<Profile> {
                   },
                   child: Container(
                     width: size.width,
-                    margin: const EdgeInsets.symmetric(
-                        vertical: 10, horizontal: 20),
+                    margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
                     padding: const EdgeInsets.all(10),
-                    decoration: BoxDecoration(
-                        color: Colors.grey[100], borderRadius: borderRadius10),
+                    decoration: BoxDecoration(color: Colors.grey[100], borderRadius: borderRadius10),
                     child: Text(
                       "log_out_no".tr,
                       textAlign: TextAlign.center,
-                      style: const TextStyle(
-                          color: Colors.black,
-                          fontFamily: popPinsMedium,
-                          fontSize: 18),
+                      style: const TextStyle(color: Colors.black, fontFamily: popPinsMedium, fontSize: 18),
                     ),
                   ),
                 ),
@@ -187,25 +171,20 @@ class _ProfileState extends State<Profile> {
             child: Wrap(
               children: [
                 Padding(
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 12, horizontal: 10),
+                  padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 10),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       const SizedBox.shrink(),
                       Text(
                         "select_language".tr,
-                        style: const TextStyle(
-                            color: Colors.black,
-                            fontFamily: popPinsSemiBold,
-                            fontSize: 18),
+                        style: const TextStyle(color: Colors.black, fontFamily: popPinsSemiBold, fontSize: 18),
                       ),
                       GestureDetector(
                         onTap: () {
                           Navigator.of(context).pop();
                         },
-                        child: Icon(CupertinoIcons.xmark_circle_fill,
-                            size: 35, color: Colors.grey[300]),
+                        child: Icon(CupertinoIcons.xmark_circle_fill, size: 35, color: Colors.grey[300]),
                       )
                     ],
                   ),
@@ -251,6 +230,12 @@ class _ProfileState extends State<Profile> {
         });
   }
 
+  String token = null;
+  getTokenMine() async {
+    final token1 = await Auth().getToken();
+    token = token1;
+  }
+
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
@@ -265,19 +250,13 @@ class _ProfileState extends State<Profile> {
                   logoPart(),
                   Text(
                     username.tr,
-                    style: TextStyle(
-                        color: Colors.black,
-                        fontFamily: popPinsSemiBold,
-                        fontSize: 20),
+                    style: TextStyle(color: Colors.black, fontFamily: popPinsSemiBold, fontSize: 20),
                   ),
                   Padding(
                     padding: const EdgeInsets.only(bottom: 20, top: 10),
                     child: Text(
                       "+993-$phoneNumber".tr,
-                      style: TextStyle(
-                          color: Colors.black54,
-                          fontFamily: popPinsMedium,
-                          fontSize: 16),
+                      style: TextStyle(color: Colors.black54, fontFamily: popPinsMedium, fontSize: 16),
                     ),
                   ),
                   buttonProfile(
@@ -299,10 +278,14 @@ class _ProfileState extends State<Profile> {
                         changeLanguage(context); //languagePicker();
                       }),
                   buttonProfile(
-                      name: "log_out",
-                      icon: IconlyLight.logout,
-                      onTap: () {
-                        log_out(context, size);
+                      name: token == null ? "login" : "log_out",
+                      icon: token == null ? IconlyLight.login : IconlyLight.logout,
+                      onTap: () async {
+                        if (token == null) {
+                          Get.to(() => Login());
+                        } else {
+                          log_out(context, size);
+                        }
                       }),
                   SizedBox(
                     height: 100,

@@ -10,6 +10,7 @@ import 'package:medicine_app/components/appBar.dart';
 import 'package:medicine_app/constants/constants.dart';
 import 'package:medicine_app/constants/widgets.dart';
 import 'package:medicine_app/controllers/CartPageController.dart';
+import 'package:medicine_app/models/AuthModel.dart';
 import 'package:medicine_app/views/HomePage/ProductProfil/ProductProfil.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -37,21 +38,26 @@ class _CartPageState extends State<CartPage> {
       elevation: 1,
       shape: const RoundedRectangleBorder(borderRadius: borderRadius15),
       onPressed: () {
-        price = 0;
-        count = 0;
-        for (final element in cartPageController.list) {
-          price = double.parse(element["price"]);
-          final double doubleVar = element["quantity"].toDouble();
-          result += price * doubleVar;
-          count += element['quantity'];
+        final token = Auth().getToken();
+        if (token == null) {
+          showMessage("Ulgama giriň".tr, context, Colors.red);
+        } else {
+          price = 0;
+          count = 0;
+          for (final element in cartPageController.list) {
+            price = double.parse(element["price"]);
+            final double doubleVar = element["quantity"].toDouble();
+            result += price * doubleVar;
+            count += element['quantity'];
+          }
+          cartPageController.list.isEmpty
+              ? null
+              : Navigator.of(context).push(MaterialPageRoute(
+                  builder: (_) => OrderPage(
+                        count: count,
+                        price: result,
+                      )));
         }
-        cartPageController.list.isEmpty
-            ? null
-            : Navigator.of(context).push(MaterialPageRoute(
-                builder: (_) => OrderPage(
-                      count: count,
-                      price: result,
-                    )));
       },
       backgroundColor: kPrimaryColor,
       extendedPadding: const EdgeInsets.symmetric(horizontal: 10),
@@ -62,8 +68,7 @@ class _CartPageState extends State<CartPage> {
           Text(
             "order".tr,
             overflow: TextOverflow.ellipsis,
-            style: const TextStyle(
-                fontFamily: popPinsSemiBold, fontSize: 18, color: Colors.white),
+            style: const TextStyle(fontFamily: popPinsSemiBold, fontSize: 18, color: Colors.white),
           ),
           const Padding(
             padding: EdgeInsets.symmetric(horizontal: 5),
@@ -84,9 +89,7 @@ class _CartPageState extends State<CartPage> {
     return SafeArea(child: Obx(() {
       return Scaffold(
           appBar: const MyAppBar(name: "cart", backArrow: false),
-          floatingActionButton: cartPageController.list.isEmpty
-              ? const SizedBox.shrink()
-              : floatingActionButton(),
+          floatingActionButton: cartPageController.list.isEmpty ? const SizedBox.shrink() : floatingActionButton(),
           body: cartPageController.list.isEmpty
               ? myList.isEmpty
                   ? emptyCart(size)
@@ -114,8 +117,7 @@ class _CartPageState extends State<CartPage> {
             child: Align(
               alignment: Alignment.bottomCenter,
               child: Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
                 child: Image.asset(
                   "assets/images/noItem.png",
                 ),
@@ -178,23 +180,19 @@ class _CartPageState extends State<CartPage> {
                 )));
       },
       child: Padding(
-          padding: EdgeInsets.fromLTRB(15, 10, 15,
-              index + 1 == cartPageController.list.length ? 70 : 15),
+          padding: EdgeInsets.fromLTRB(15, 10, 15, index + 1 == cartPageController.list.length ? 70 : 15),
           child: Material(
             elevation: 1,
             borderRadius: borderRadius10,
             color: Colors.white,
             child: Container(
               height: 160,
-              decoration: const BoxDecoration(
-                  color: Colors.white, borderRadius: borderRadius10),
+              decoration: const BoxDecoration(color: Colors.white, borderRadius: borderRadius10),
               child: Row(
                 children: [
                   Expanded(
                     flex: 2,
-                    child: image(
-                        "$serverImage/${cartPageController.list[index]["image"]}-mini.webp",
-                        size),
+                    child: image("$serverImage/${cartPageController.list[index]["image"]}-mini.webp", size),
                   ),
                   Expanded(
                     flex: 3,
@@ -211,16 +209,12 @@ class _CartPageState extends State<CartPage> {
                                   cartPageController.list[index]["name"],
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
-                                  style: const TextStyle(
-                                      color: Colors.black,
-                                      fontFamily: popPinsMedium,
-                                      fontSize: 18),
+                                  style: const TextStyle(color: Colors.black, fontFamily: popPinsMedium, fontSize: 18),
                                 ),
                               ),
                               GestureDetector(
                                 onTap: () {
-                                  saveData(
-                                      cartPageController.list[index]["id"], 0);
+                                  saveData(cartPageController.list[index]["id"], 0);
 
                                   cartPageController.list.removeAt(index);
                                 },
@@ -237,29 +231,19 @@ class _CartPageState extends State<CartPage> {
                               children: [
                                 Text(
                                   "price".tr,
-                                  style: const TextStyle(
-                                      color: Colors.grey,
-                                      fontFamily: popPinsRegular,
-                                      fontSize: 14),
+                                  style: const TextStyle(color: Colors.grey, fontFamily: popPinsRegular, fontSize: 14),
                                 ),
                                 Expanded(
                                   child: RichText(
                                     maxLines: 1,
                                     overflow: TextOverflow.ellipsis,
                                     text: TextSpan(
-                                      text:
-                                          "${cartPageController.list[index]["price"]}",
-                                      style: const TextStyle(
-                                          color: Colors.black,
-                                          fontSize: 20,
-                                          fontFamily: popPinsMedium),
+                                      text: "${cartPageController.list[index]["price"]}",
+                                      style: const TextStyle(color: Colors.black, fontSize: 20, fontFamily: popPinsMedium),
                                       children: const <TextSpan>[
                                         TextSpan(
                                           text: ' TMT ',
-                                          style: TextStyle(
-                                              color: Colors.black,
-                                              fontSize: 14,
-                                              fontFamily: popPinsMedium),
+                                          style: TextStyle(color: Colors.black, fontSize: 14, fontFamily: popPinsMedium),
                                         ),
                                       ],
                                     ),
@@ -273,33 +257,22 @@ class _CartPageState extends State<CartPage> {
                             children: [
                               GestureDetector(
                                 onTap: () {
-                                  if (cartPageController.list[index]
-                                          ["quantity"] !=
-                                      0) {
-                                    cartPageController.list[index]
-                                        ["quantity"] -= 1;
+                                  if (cartPageController.list[index]["quantity"] != 0) {
+                                    cartPageController.list[index]["quantity"] -= 1;
                                     myList[index]["cartQuantity"] -= 1;
-                                    saveData(
-                                        cartPageController.list[index]["id"],
-                                        myList[index]["cartQuantity"]);
-                                    if (cartPageController.list[index]
-                                            ["quantity"] ==
-                                        0) {
+                                    saveData(cartPageController.list[index]["id"], myList[index]["cartQuantity"]);
+                                    if (cartPageController.list[index]["quantity"] == 0) {
                                       cartPageController.list.removeAt(index);
                                     }
                                   } else {
                                     cartPageController.list.removeAt(index);
-                                    saveData(
-                                        cartPageController.list[index]["id"],
-                                        0);
+                                    saveData(cartPageController.list[index]["id"], 0);
                                   }
                                 },
                                 child: Container(
                                   padding: const EdgeInsets.all(3),
                                   margin: const EdgeInsets.all(3),
-                                  decoration: BoxDecoration(
-                                      color: Colors.grey[200],
-                                      shape: BoxShape.circle),
+                                  decoration: BoxDecoration(color: Colors.grey[200], shape: BoxShape.circle),
                                   child: const FittedBox(
                                     child: Icon(
                                       Icons.remove,
@@ -312,54 +285,36 @@ class _CartPageState extends State<CartPage> {
                               RaisedButton(
                                 onPressed: () {
                                   controller.clear();
-                                  selectCount(
-                                      cartPageController.list[index]["id"],
-                                      cartPageController.list[index]
-                                          ["stockMin"],
-                                      index);
+                                  selectCount(cartPageController.list[index]["id"], cartPageController.list[index]["stockMin"], index);
                                 },
                                 color: Colors.grey[200],
                                 elevation: 0,
                                 padding: EdgeInsets.zero,
-                                shape: const RoundedRectangleBorder(
-                                    borderRadius: borderRadius5),
+                                shape: const RoundedRectangleBorder(borderRadius: borderRadius5),
                                 child: Text(
                                   "${cartPageController.list[index]["quantity"]}",
                                   overflow: TextOverflow.ellipsis,
                                   maxLines: 1,
                                   textAlign: TextAlign.center,
-                                  style: const TextStyle(
-                                      fontSize: 20,
-                                      color: Colors.black,
-                                      fontFamily: popPinsMedium),
+                                  style: const TextStyle(fontSize: 20, color: Colors.black, fontFamily: popPinsMedium),
                                 ),
                               ),
                               GestureDetector(
                                 onTap: () {
-                                  final int a = cartPageController.list[index]
-                                      ['stockMin'];
-                                  final int b = cartPageController.list[index]
-                                          ["quantity"] +
-                                      1;
+                                  final int a = cartPageController.list[index]['stockMin'];
+                                  final int b = cartPageController.list[index]["quantity"] + 1;
                                   if (a > b) {
-                                    cartPageController.list[index]
-                                        ["quantity"] += 1;
+                                    cartPageController.list[index]["quantity"] += 1;
                                     myList[index]["cartQuantity"] += 1;
-                                    saveData(
-                                        cartPageController.list[index]["id"],
-                                        cartPageController.list[index]
-                                            ["quantity"]);
+                                    saveData(cartPageController.list[index]["id"], cartPageController.list[index]["quantity"]);
                                   } else {
-                                    showMessage("Haryt Ammarda Yok", context,
-                                        Colors.red);
+                                    showMessage("Haryt Ammarda Yok", context, Colors.red);
                                   }
                                 },
                                 child: Container(
                                   margin: const EdgeInsets.all(3),
                                   padding: const EdgeInsets.all(3),
-                                  decoration: BoxDecoration(
-                                      color: Colors.grey[200],
-                                      shape: BoxShape.circle),
+                                  decoration: BoxDecoration(color: Colors.grey[200], shape: BoxShape.circle),
                                   child: const FittedBox(
                                     child: Icon(
                                       Icons.add,
@@ -400,25 +355,18 @@ class _CartPageState extends State<CartPage> {
             padding: const EdgeInsets.symmetric(vertical: 15),
             child: Text(
               "maximum2".tr,
-              style: const TextStyle(
-                  color: Colors.black,
-                  fontFamily: popPinsSemiBold,
-                  fontSize: 18),
+              style: const TextStyle(color: Colors.black, fontFamily: popPinsSemiBold, fontSize: 18),
             ),
           ),
           TextField(
             controller: controller,
             keyboardType: TextInputType.number,
-            style:
-                const TextStyle(fontFamily: popPinsMedium, color: Colors.black),
+            style: const TextStyle(fontFamily: popPinsMedium, color: Colors.black),
             decoration: InputDecoration(
                 isDense: true,
                 hintText: "${"maximum".tr} : $maxValue",
-                hintStyle: TextStyle(
-                    color: Colors.grey[400], fontFamily: popPinsMedium),
-                border: OutlineInputBorder(
-                    borderRadius: borderRadius5,
-                    borderSide: BorderSide(color: Colors.grey[300]))),
+                hintStyle: TextStyle(color: Colors.grey[400], fontFamily: popPinsMedium),
+                border: OutlineInputBorder(borderRadius: borderRadius5, borderSide: BorderSide(color: Colors.grey[300]))),
           ),
         ],
       ),
@@ -447,10 +395,7 @@ class _CartPageState extends State<CartPage> {
               },
               child: Text(
                 "agree".tr,
-                style: const TextStyle(
-                    fontFamily: popPinsMedium,
-                    fontSize: 18,
-                    color: Colors.white),
+                style: const TextStyle(fontFamily: popPinsMedium, fontSize: 18, color: Colors.white),
               )),
         ),
       ],

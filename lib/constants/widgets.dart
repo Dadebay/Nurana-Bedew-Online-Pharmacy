@@ -70,19 +70,11 @@ Widget spinKit() {
 }
 
 Widget textWht({String text}) {
-  return Text(text.tr,
-      maxLines: 1,
-      style: const TextStyle(
-          color: Colors.white, fontFamily: popPinsRegular, fontSize: 16));
+  return Text(text.tr, maxLines: 1, style: const TextStyle(color: Colors.white, fontFamily: popPinsRegular, fontSize: 16));
 }
 
 Widget textBlck({String text}) {
-  return Text(text.tr,
-      textAlign: TextAlign.start,
-      overflow: TextOverflow.ellipsis,
-      maxLines: 1,
-      style: const TextStyle(
-          color: Colors.black, fontFamily: popPinsRegular, fontSize: 18));
+  return Text(text.tr, textAlign: TextAlign.start, overflow: TextOverflow.ellipsis, maxLines: 1, style: const TextStyle(color: Colors.black, fontFamily: popPinsRegular, fontSize: 18));
 }
 
 habarEt2(int productId, BuildContext context) {
@@ -100,16 +92,14 @@ habarEt2(int productId, BuildContext context) {
         Text(
           'noProduct'.tr,
           textAlign: TextAlign.center,
-          style:
-              const TextStyle(color: Colors.black, fontFamily: popPinsMedium),
+          style: const TextStyle(color: Colors.black, fontFamily: popPinsMedium),
         ),
         Padding(
           padding: const EdgeInsets.only(top: 8),
           child: Text(
             'noProductTitle'.tr,
             textAlign: TextAlign.center,
-            style: const TextStyle(
-                color: Colors.black, fontFamily: popPinsRegular, fontSize: 16),
+            style: const TextStyle(color: Colors.black, fontFamily: popPinsRegular, fontSize: 16),
           ),
         ),
       ],
@@ -120,34 +110,25 @@ habarEt2(int productId, BuildContext context) {
         children: [
           RaisedButton(
               elevation: 1,
-              shape: const RoundedRectangleBorder(
-                  borderRadius: borderRadius10,
-                  side: BorderSide(color: kPrimaryColor, width: 2)),
+              shape: const RoundedRectangleBorder(borderRadius: borderRadius10, side: BorderSide(color: kPrimaryColor, width: 2)),
               color: kPrimaryColor,
               child: Text(
                 'yes'.tr,
-                style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 18,
-                    fontFamily: popPinsSemiBold),
+                style: const TextStyle(color: Colors.white, fontSize: 18, fontFamily: popPinsSemiBold),
               ),
               onPressed: () {
-                NotificationModel().addNotification(productId);
+                // NotificationModel().addNotification(productId);
+                showMessage("Ulgama giriň".tr, context, Colors.red);
                 Get.back();
-                showMessage(
-                    "notificationSend".tr, context, Colors.green.shade500);
+                // showMessage(
+                //     "notificationSend".tr, context, Colors.green.shade500);
               }),
           RaisedButton(
-              shape: const RoundedRectangleBorder(
-                  borderRadius: borderRadius10,
-                  side: BorderSide(color: kPrimaryColor, width: 2)),
+              shape: const RoundedRectangleBorder(borderRadius: borderRadius10, side: BorderSide(color: kPrimaryColor, width: 2)),
               color: kPrimaryColor,
               child: Text(
                 'no'.tr,
-                style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 18,
-                    fontFamily: popPinsSemiBold),
+                style: const TextStyle(color: Colors.white, fontSize: 18, fontFamily: popPinsSemiBold),
               ),
               onPressed: () {
                 Get.back();
@@ -163,15 +144,13 @@ Widget buttonProfile({String name, IconData icon, Function() onTap}) {
     children: [
       ListTile(
         minVerticalPadding: 0,
-        contentPadding:
-            const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+        contentPadding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
         onTap: onTap,
         shape: const RoundedRectangleBorder(borderRadius: borderRadius10),
         tileColor: Colors.white,
         leading: Container(
           padding: const EdgeInsets.all(9),
-          decoration: BoxDecoration(
-              color: Colors.grey[100], borderRadius: borderRadius15),
+          decoration: BoxDecoration(color: Colors.grey[100], borderRadius: borderRadius15),
           child: Icon(
             icon,
             color: kPrimaryColor,
@@ -183,8 +162,7 @@ Widget buttonProfile({String name, IconData icon, Function() onTap}) {
           maxLines: 1,
           textAlign: TextAlign.left,
           overflow: TextOverflow.ellipsis,
-          style: const TextStyle(
-              color: Colors.black, fontSize: 18, fontFamily: popPinsMedium),
+          style: const TextStyle(color: Colors.black, fontSize: 18, fontFamily: popPinsMedium),
         ),
         trailing: const Icon(
           IconlyLight.arrowRight2,
@@ -206,8 +184,7 @@ Widget image(String name, Size size) {
   return Container(
     height: size.height,
     margin: const EdgeInsets.all(10),
-    decoration:
-        BoxDecoration(color: Colors.grey[200], borderRadius: borderRadius10),
+    decoration: BoxDecoration(color: Colors.grey[200], borderRadius: borderRadius10),
     child: ClipRRect(
       borderRadius: borderRadius10,
       child: CachedNetworkImage(
@@ -245,7 +222,6 @@ void showMessage(String text, BuildContext context, Color color) {
       content: Text(
         text.tr,
         textAlign: TextAlign.center,
-        style:
-            const TextStyle(color: Colors.white, fontFamily: popPinsSemiBold),
+        style: const TextStyle(color: Colors.white, fontFamily: popPinsSemiBold),
       )));
 }

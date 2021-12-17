@@ -4,12 +4,13 @@ import 'package:get/get_utils/src/extensions/internacionalization.dart';
 List<Map<String, dynamic>> myList = [];
 
 int pageNumber = 0;
-const String serverURL = "45.93.136.141:7000";
+const String serverURL = "45.93.136.141:7001";
 const String serverImage = "http://45.93.136.141";
-const String authServerUrl = "45.93.136.141:7000";
+const String authServerUrl = "45.93.136.141:7001";
 const String langKey = "language";
 ////Colors
-const Color kPrimaryColor = Color(0xff144DDE);
+// const Color kPrimaryColor = Color(0xff6366f1);
+const Color kPrimaryColor = Color(0xff144dde);
 const Color kPrimaryGrey = Color(0xff737373);
 const Color kPrimaryStroke = Color(0xFFececec);
 

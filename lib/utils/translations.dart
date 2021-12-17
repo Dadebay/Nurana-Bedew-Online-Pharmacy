@@ -10,6 +10,7 @@ class MyTranslations extends Translations {
           "retry": "Maglumat gelmedi täzeden synanşyň !",
           "pull_up_to_load": "Ýokary çek",
           "language": "Dil",
+          "login": "Ulgama gir",
           "exit_app": "Programmadan çykmak isleýärsiňizmi ?",
           "errorPassword": "Açar sözüňiz ýalňyş",
           "errorPhoneNumber": "Telefon belgiňiz ýalňyş",
@@ -33,8 +34,7 @@ class MyTranslations extends Translations {
           "addCart": "Sebede goşuldy",
           "addCartTitle": "Sebede goş",
           "noProduct": "Haryt ýok",
-          "noProductTitle":
-              "Haryt ammara gelende sms arkaly ýatladylmak isleýarsiňizmi ?",
+          "noProductTitle": "Haryt ammara gelende sms arkaly ýatladylmak isleýarsiňizmi ?",
           "notification": "Habar Et",
           "descriptionTm": "Düzümi : ",
           "category": "Kategoriýa : ",
@@ -66,11 +66,9 @@ class MyTranslations extends Translations {
           "paymentMethod": "Töleg görnüşi :",
           "newInCome": "Täze gelen harytlar",
           "noConnection1": "Aragatnaşyk ýok",
-          "noConnection2":
-              "Internede baglanyp bolmady.Internet sazlamalaryňyzy barlap gaýtadan synanşyň !",
+          "noConnection2": "Internede baglanyp bolmady.Internet sazlamalaryňyzy barlap gaýtadan synanşyň !",
           "noConnection3": "Täzeden synanş",
-          "minStockCount":
-              "Sebediňizdäki harydyň sany Ammardaky derman sanyndan az. Derman sanyny azaltmagyňyzy haýyşt edýäris.",
+          "minStockCount": "Sebediňizdäki harydyň sany Ammardaky derman sanyndan az. Derman sanyny azaltmagyňyzy haýyşt edýäris.",
           "maximum": "Maksimum",
           "maximum2": "Haryt möçberini giriziň",
           "error": "Ýalňyş",
@@ -81,6 +79,7 @@ class MyTranslations extends Translations {
           "select_language": "Выберите язык",
           "close": "Закрыть",
           "agree": "Подтверждение",
+          "login": "Авторизоваться",
           "retry": "Нет информации, попробуйте еще раз!",
           "pull_up_to_load": "Поднимите, чтобы загрузить",
           "language": "Язык",
@@ -107,8 +106,7 @@ class MyTranslations extends Translations {
           "addCart": "Добавлен в корзину",
           "addCartTitle": "Добавить в корзину",
           "noProduct": "Товара нет",
-          "noProductTitle":
-              "Хотите получать SMS-уведомление о поступлении товара на склад?",
+          "noProductTitle": "Хотите получать SMS-уведомление о поступлении товара на склад?",
           "notification": "Добавить в уведомления",
           "descriptionTm": "Состав",
           "category": "Категория : ",
@@ -140,16 +138,13 @@ class MyTranslations extends Translations {
           "paymentMethod": "Способ оплаты :",
           "newInCome": "Новые поступления",
           "noConnection1": "Нет связи",
-          "noConnection2":
-              "Невозможно подключиться к Интернету. Проверьте настройки Интернета и повторите попытку!",
+          "noConnection2": "Невозможно подключиться к Интернету. Проверьте настройки Интернета и повторите попытку!",
           "noConnection3": "Проверить снова",
-          "minStockCount":
-              "Количество товаров в вашей корзине меньше, чем количество лекарств в Аммаре. Пожалуйста, уменьшите количество лекарств.",
+          "minStockCount": "Количество товаров в вашей корзине меньше, чем количество лекарств в Аммаре. Пожалуйста, уменьшите количество лекарств.",
           "maximum": "Максимум",
           "maximum2": "Введите количество товара",
           "error": "Неправильный",
-          "error2":
-              "Введенное вами число больше, чем количество товаров на складе",
+          "error2": "Введенное вами число больше, чем количество товаров на складе",
           "noHistoryOrder": "Нет заказа !"
         }
       };

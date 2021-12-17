@@ -18,10 +18,14 @@ class HomePageController extends GetxController {
   }
 
   void fetchProducts() async {
+    print("ASd");
     final products = await Product().getProducts(parametrs: {
       "page": '${page.value}',
       "limit": '20',
     });
+    print("ASd");
+
+    print(products);
     if (products != null) {
       loading.value = 1;
       for (final element in products) {
@@ -31,14 +35,7 @@ class HomePageController extends GetxController {
             addCart = element2["cartQuantity"];
           }
         }
-        list.add({
-          "id": element.id,
-          "name": element.productName,
-          "price": element.price,
-          "image": element.images,
-          "stockCount": element.stockCount,
-          "cartQuantity": addCart
-        });
+        list.add({"id": element.id, "name": element.productName, "price": element.price, "image": element.images, "stockCount": element.stockCount, "cartQuantity": addCart});
       }
     } else if (products == null) {
       loading.value = 2;

@@ -73,7 +73,6 @@ apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
             shrinkResources true// to shrink your image resource read more at https://developer.android.com/studio/build/shrink-code
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.release
-            // signingConfig signingConfigs.debug//release uytgetmeli
         }
     }
     

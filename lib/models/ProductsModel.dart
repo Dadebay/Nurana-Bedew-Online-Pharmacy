@@ -38,14 +38,19 @@ class Product extends ChangeNotifier {
   Future<List<Product>> getProducts({
     Map<String, dynamic> parametrs,
   }) async {
-    final token = await Auth().getToken();
+    // final token = await Auth().getToken()
+    print("Adssad");
+    print(parametrs);
+
     final List<Product> products = [];
-    final response = await http.get(
-        Uri.http(serverURL, "/api/user/get-products", parametrs),
-        headers: <String, String>{
-          HttpHeaders.contentTypeHeader: 'application/json; charset=UTF-8',
-          HttpHeaders.authorizationHeader: 'Bearer $token',
-        });
+    final response = await http.get(Uri.http(serverURL, "/api/user/get-products", parametrs), headers: <String, String>{
+      HttpHeaders.contentTypeHeader: 'application/json; charset=UTF-8',
+      // HttpHeaders.authorizationHeader: 'Bearer $token',
+    });
+    print("Adssad");
+
+    print(response.statusCode);
+    print(response.body);
     if (response.statusCode == 200) {
       final responseJson = jsonDecode(response.body)["rows"][0]["products"];
       final responseCount = jsonDecode(response.body)["rows"][0]["count"];
@@ -61,12 +66,10 @@ class Product extends ChangeNotifier {
     } else if (response.statusCode == 402) {
       Auth().refreshToken().then((value) async {
         final token = await Auth().getToken();
-        final response = await http.get(
-            Uri.http(serverURL, "/api/user/get-products", parametrs),
-            headers: <String, String>{
-              HttpHeaders.contentTypeHeader: 'application/json; charset=UTF-8',
-              HttpHeaders.authorizationHeader: 'Bearer $token',
-            });
+        final response = await http.get(Uri.http(serverURL, "/api/user/get-products", parametrs), headers: <String, String>{
+          HttpHeaders.contentTypeHeader: 'application/json; charset=UTF-8',
+          HttpHeaders.authorizationHeader: 'Bearer $token',
+        });
         final responseJson = jsonDecode(response.body)["rows"][0]["products"];
         for (final Map product in responseJson) {
           products.add(Product.fromJson(product));

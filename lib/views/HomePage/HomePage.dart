@@ -10,8 +10,18 @@ import 'package:medicine_app/constants/widgets.dart';
 import 'package:medicine_app/controllers/HomePageController.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
   final RefreshController _refreshController = RefreshController();
+
+  initState() {
+    super.initState();
+    homeController.fetchProducts();
+  }
 
   void _onRefresh() {
     homeController.refreshPage();
@@ -24,12 +34,12 @@ class HomePage extends StatelessWidget {
   }
 
   final HomePageController homeController = Get.put(HomePageController());
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: Colors.grey[50],
-        appBar: const MyAppBar(
-            name: "Nurana Bedew", backArrow: false, icon: IconlyLight.search),
+        appBar: const MyAppBar(name: "Dermanlar", backArrow: false, icon: IconlyLight.search),
         body: SmartRefresher(
             enablePullUp: true,
             physics: const BouncingScrollPhysics(),
@@ -51,9 +61,7 @@ class HomePage extends StatelessWidget {
                     shrinkWrap: true,
                     itemCount: homeController.list.length,
                     physics: const NeverScrollableScrollPhysics(),
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: Get.size.width <= 800 ? 2 : 4,
-                        childAspectRatio: 3 / 4.5),
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: Get.size.width <= 800 ? 2 : 4, childAspectRatio: 3 / 4.5),
                     itemBuilder: (BuildContext context, int index) {
                       return ProductCard(
                         id: homeController.list[index]["id"],
@@ -61,8 +69,7 @@ class HomePage extends StatelessWidget {
                         price: homeController.list[index]["price"],
                         imagePath: homeController.list[index]["image"],
                         stockCount: homeController.list[index]["stockCount"],
-                        cartQuantity: homeController.list[index]
-                            ["cartQuantity"],
+                        cartQuantity: homeController.list[index]["cartQuantity"],
                         refreshPage: 1,
                       );
                     });
@@ -76,8 +83,7 @@ class HomePage extends StatelessWidget {
                       onTap: () {
                         homeController.fetchProducts();
                       },
-                      child: const Icon(Icons.refresh,
-                          color: kPrimaryColor, size: 35)),
+                      child: const Icon(Icons.refresh, color: kPrimaryColor, size: 35)),
                 );
               }
               return Center(

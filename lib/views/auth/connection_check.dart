@@ -58,23 +58,20 @@ class _ConnectionCheckState extends State<ConnectionCheck> {
           child: Opacity(
             opacity: a1.value,
             child: AlertDialog(
-              shape: OutlineInputBorder(
-                  borderSide: BorderSide.none, borderRadius: borderRadius10),
+              shape: OutlineInputBorder(borderSide: BorderSide.none, borderRadius: borderRadius10),
               title: Text(
                 "select_language".tr,
-                style: const TextStyle(
-                    color: Colors.black,
-                    fontFamily: popPinsSemiBold,
-                    fontSize: 20),
+                style: const TextStyle(color: Colors.black, fontFamily: popPinsSemiBold, fontSize: 20),
               ),
               content: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   ListTile(
                       onTap: () {
-                        firsttime
-                            ? Get.to(() => BottomNavBar())
-                            : Get.to(() => Login());
+                        // firsttime
+                        //     ? Get.to(() => BottomNavBar())
+                        //     : Get.to(() => Login());
+                        Get.to(() => BottomNavBar());
                         saveData("tm");
                         Get.updateLocale(Locale("en"));
                       },
@@ -90,9 +87,10 @@ class _ConnectionCheckState extends State<ConnectionCheck> {
                   ),
                   ListTile(
                       onTap: () {
-                        firsttime
-                            ? Get.to(() => BottomNavBar())
-                            : Get.to(() => Login());
+                        // firsttime
+                        //     ? Get.to(() => BottomNavBar())
+                        //     : Get.to(() => Login());
+                        Get.to(() => BottomNavBar());
                         saveData("ru");
                         Get.updateLocale(Locale("ru"));
                       },
@@ -126,8 +124,7 @@ class _ConnectionCheckState extends State<ConnectionCheck> {
           langSelect();
         } else {
           Future.delayed(Duration(milliseconds: 2000), () {
-            Navigator.of(context).pushReplacement(CupertinoPageRoute(
-                builder: (BuildContext context) => BottomNavBar()));
+            Navigator.of(context).pushReplacement(CupertinoPageRoute(builder: (BuildContext context) => BottomNavBar()));
           });
         }
       }
@@ -151,8 +148,7 @@ class _ConnectionCheckState extends State<ConnectionCheck> {
                     padding: EdgeInsets.only(top: 50),
                     child: Container(
                       padding: EdgeInsets.only(top: 100),
-                      decoration: BoxDecoration(
-                          color: Colors.white, borderRadius: borderRadius20),
+                      decoration: BoxDecoration(color: Colors.white, borderRadius: borderRadius20),
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: <Widget>[
@@ -165,8 +161,7 @@ class _ConnectionCheckState extends State<ConnectionCheck> {
                             ),
                           ),
                           Padding(
-                            padding: const EdgeInsets.symmetric(
-                                vertical: 10, horizontal: 5),
+                            padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 5),
                             child: Text(
                               'noConnection2'.tr,
                               textAlign: TextAlign.center,
@@ -179,8 +174,7 @@ class _ConnectionCheckState extends State<ConnectionCheck> {
                           ),
                           RaisedButton(
                             color: kPrimaryColor,
-                            shape: RoundedRectangleBorder(
-                                borderRadius: borderRadius10),
+                            shape: RoundedRectangleBorder(borderRadius: borderRadius10),
                             onPressed: () {
                               Navigator.of(context).pop();
                               Future.delayed(Duration(milliseconds: 1000), () {
@@ -189,10 +183,7 @@ class _ConnectionCheckState extends State<ConnectionCheck> {
                             },
                             child: Text(
                               "noConnection3".tr,
-                              style: TextStyle(
-                                  fontSize: 18,
-                                  color: Colors.white,
-                                  fontFamily: popPinsSemiBold),
+                              style: TextStyle(fontSize: 18, color: Colors.white, fontFamily: popPinsSemiBold),
                             ),
                           ),
                           SizedBox(
@@ -240,15 +231,13 @@ class _ConnectionCheckState extends State<ConnectionCheck> {
                 },
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 30),
-                  child: Image.asset('assets/images/diller/logo.png',
-                      fit: BoxFit.fill),
+                  child: Image.asset('assets/images/diller/logo.png', fit: BoxFit.fill),
                 ),
               ),
             ),
             Align(
               alignment: Alignment.bottomCenter,
-              child: LinearProgressIndicator(
-                  backgroundColor: Colors.grey[300], color: kPrimaryColor),
+              child: LinearProgressIndicator(backgroundColor: Colors.grey[300], color: kPrimaryColor),
             )
           ],
         ),

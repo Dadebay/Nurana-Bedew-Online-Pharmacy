@@ -10,9 +10,7 @@ import 'constants/constants.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  // await EasyLocalization.ensureInitialized();
 
-  //statusBar,bottom navigation bar colors change
   SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
     statusBarBrightness: Brightness.dark,
     statusBarIconBrightness: Brightness.light,

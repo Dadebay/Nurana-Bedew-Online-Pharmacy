@@ -3,7 +3,9 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
+import 'package:medicine_app/constants/widgets.dart';
 import '../constants/constants.dart';
 import 'AuthModel.dart';
 
@@ -34,24 +36,39 @@ class NotificationModel extends ChangeNotifier {
 
   Future<List<NotificationModel>> getAllNotificationModels() async {
     final token = await Auth().getToken();
-    final List<NotificationModel> products = [];
-    final response = await http.get(
-        Uri.http(
-          serverURL,
-          "/api/user/get-notifications",
-        ),
-        headers: <String, String>{
-          HttpHeaders.contentTypeHeader: 'application/json; charset=UTF-8',
-          HttpHeaders.authorizationHeader: 'Bearer $token',
-        });
-    if (response.statusCode == 200) {
-      final responseJson = jsonDecode(response.body)["rows"];
-      for (final Map product in responseJson) {
-        products.add(NotificationModel.fromJson(product));
+    if (token == !null) {
+      final List<NotificationModel> products = [];
+      final response = await http.get(
+          Uri.http(
+            serverURL,
+            "/api/user/get-notifications",
+          ),
+          headers: <String, String>{
+            HttpHeaders.contentTypeHeader: 'application/json; charset=UTF-8',
+            HttpHeaders.authorizationHeader: 'Bearer $token',
+          });
+      if (response.statusCode == 200) {
+        final responseJson = jsonDecode(response.body)["rows"];
+        for (final Map product in responseJson) {
+          products.add(NotificationModel.fromJson(product));
+        }
+        return products;
+      } else {
+        return null;
       }
-      return products;
     } else {
-      return null;
+      Get.snackbar("Asd", "Asdasdasd",
+          titleText: Text(
+            "ASdasdas".tr,
+            style: const TextStyle(fontFamily: popPinsSemiBold, fontSize: 16, color: Colors.white),
+          ),
+          messageText: Text(
+            "ASdasd".tr,
+            style: const TextStyle(fontFamily: popPinsRegular, fontSize: 14, color: Colors.white),
+          ),
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: kPrimaryColor,
+          margin: const EdgeInsets.only(bottom: 20, left: 20, right: 20));
     }
   }
 
