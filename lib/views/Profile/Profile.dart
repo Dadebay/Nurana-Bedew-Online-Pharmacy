@@ -277,16 +277,16 @@ class _ProfileState extends State<Profile> {
                       onTap: () {
                         changeLanguage(context); //languagePicker();
                       }),
-                  buttonProfile(
-                      name: token == null ? "login" : "log_out",
-                      icon: token == null ? IconlyLight.login : IconlyLight.logout,
-                      onTap: () async {
-                        if (token == null) {
-                          Get.to(() => Login());
-                        } else {
-                          log_out(context, size);
-                        }
-                      }),
+                  // buttonProfile(
+                  //     name: token == null ? "login" : "log_out",
+                  //     icon: token == null ? IconlyLight.login : IconlyLight.logout,
+                  //     onTap: () async {
+                  //       if (token == null) {
+                  //         Get.to(() => Login());
+                  //       } else {
+                  //         log_out(context, size);
+                  //       }
+                  //     }),
                   SizedBox(
                     height: 100,
                   )

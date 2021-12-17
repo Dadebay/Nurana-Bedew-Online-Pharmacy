@@ -19,10 +19,7 @@ class OrdersModel extends ChangeNotifier {
   OrdersModel({this.id, this.createdAt, this.totalPrice});
 
   factory OrdersModel.fromJson(Map<String, dynamic> json) {
-    return OrdersModel(
-        id: json["id"],
-        createdAt: json["created_at"],
-        totalPrice: json["total_price"]);
+    return OrdersModel(id: json["id"], createdAt: json["created_at"], totalPrice: json["total_price"]);
   }
 
   Future<List<OrdersModel>> getorders() async {
@@ -37,12 +34,18 @@ class OrdersModel extends ChangeNotifier {
           HttpHeaders.contentTypeHeader: 'application/json; charset=UTF-8',
           HttpHeaders.authorizationHeader: 'Bearer $token',
         });
+    print(response.body);
+    print(response.statusCode);
+
     if (response.statusCode == 200) {
       final responseJson = jsonDecode(response.body)["rows"]["orders"];
-      for (final Map product in responseJson) {
-        orders.add(OrdersModel.fromJson(product));
+      if (responseJson != null) {
+        for (final Map product in responseJson) {
+          orders.add(OrdersModel.fromJson(product));
+        }
       }
-      return orders;
+
+      return responseJson == null ? null : orders;
     } else {
       return null;
     }

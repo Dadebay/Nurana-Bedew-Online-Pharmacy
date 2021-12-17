@@ -68,10 +68,7 @@ class _ConnectionCheckState extends State<ConnectionCheck> {
                 children: [
                   ListTile(
                       onTap: () {
-                        // firsttime
-                        //     ? Get.to(() => BottomNavBar())
-                        //     : Get.to(() => Login());
-                        Get.to(() => BottomNavBar());
+                        Get.to(() => Login());
                         saveData("tm");
                         Get.updateLocale(Locale("en"));
                       },
@@ -87,10 +84,7 @@ class _ConnectionCheckState extends State<ConnectionCheck> {
                   ),
                   ListTile(
                       onTap: () {
-                        // firsttime
-                        //     ? Get.to(() => BottomNavBar())
-                        //     : Get.to(() => Login());
-                        Get.to(() => BottomNavBar());
+                        Get.to(() => Login());
                         saveData("ru");
                         Get.updateLocale(Locale("ru"));
                       },

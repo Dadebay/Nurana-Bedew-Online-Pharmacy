@@ -23,24 +23,28 @@ class _NotificationPageState extends State<NotificationPage> {
           body: FutureBuilder<List<NotificationModel>>(
               future: NotificationModel().getAllNotificationModels(),
               builder: (context, snapshot) {
-                if (snapshot.hasData) {
-                  return ListView.builder(
-                    itemCount: snapshot.data.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      return cartCard(snapshot.data[index]);
-                    },
-                  );
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Center(child: spinKit());
                 } else if (snapshot.hasError) {
-                  return const Center(
-                    child: Icon(
-                      Icons.refresh,
-                      size: 35,
-                      color: kPrimaryColor,
-                    ),
+                  return Center(
+                    child: GestureDetector(
+                        onTap: () {
+                          setState(() {});
+                        },
+                        child: const Icon(Icons.refresh, color: kPrimaryColor, size: 35)),
                   );
+                } else if (snapshot.data == null || snapshot.data.isEmpty) {
+                  return Center(
+                      child: Text(
+                    "notificationNameSubtitle".tr,
+                    style: const TextStyle(fontFamily: popPinsSemiBold, color: Colors.black, fontSize: 18),
+                  ));
                 }
-                return Center(
-                  child: spinKit(),
+                return ListView.builder(
+                  itemCount: snapshot.data.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return cartCard(snapshot.data[index]);
+                  },
                 );
               })),
     );
@@ -65,14 +69,12 @@ class _NotificationPageState extends State<NotificationPage> {
             color: Colors.white,
             child: Container(
               height: 160,
-              decoration: const BoxDecoration(
-                  color: Colors.white, borderRadius: borderRadius15),
+              decoration: const BoxDecoration(color: Colors.white, borderRadius: borderRadius15),
               child: Row(
                 children: [
                   Expanded(
                     flex: 2,
-                    child:
-                        image("$serverImage/${product.image}-mini.webp", size),
+                    child: image("$serverImage/${product.image}-mini.webp", size),
                   ),
                   Expanded(
                     flex: 3,
@@ -89,23 +91,16 @@ class _NotificationPageState extends State<NotificationPage> {
                                   product.productName,
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
-                                  style: const TextStyle(
-                                      color: Colors.black,
-                                      fontFamily: popPinsMedium,
-                                      fontSize: 18),
+                                  style: const TextStyle(color: Colors.black, fontFamily: popPinsMedium, fontSize: 18),
                                 ),
                               ),
                               GestureDetector(
                                 onTap: () {
-                                  NotificationModel()
-                                      .removeNotification(
-                                          product.notificationId)
-                                      .then((value) {
+                                  NotificationModel().removeNotification(product.notificationId).then((value) {
                                     setState(() {});
                                   });
                                 },
-                                child: const Icon(CupertinoIcons.xmark_circle,
-                                    color: kPrimaryColor, size: 25),
+                                child: const Icon(CupertinoIcons.xmark_circle, color: kPrimaryColor, size: 25),
                               ),
                             ],
                           ),
@@ -115,10 +110,7 @@ class _NotificationPageState extends State<NotificationPage> {
                               children: [
                                 Text(
                                   "price".tr,
-                                  style: const TextStyle(
-                                      color: Colors.red,
-                                      fontFamily: popPinsRegular,
-                                      fontSize: 14),
+                                  style: const TextStyle(color: Colors.red, fontFamily: popPinsRegular, fontSize: 14),
                                 ),
                                 Expanded(
                                   child: RichText(
@@ -126,17 +118,11 @@ class _NotificationPageState extends State<NotificationPage> {
                                     overflow: TextOverflow.ellipsis,
                                     text: TextSpan(
                                       text: product.price,
-                                      style: const TextStyle(
-                                          color: Colors.black,
-                                          fontSize: 20,
-                                          fontFamily: popPinsMedium),
+                                      style: const TextStyle(color: Colors.black, fontSize: 20, fontFamily: popPinsMedium),
                                       children: const <TextSpan>[
                                         TextSpan(
                                           text: ' TMT ',
-                                          style: TextStyle(
-                                              color: Colors.black,
-                                              fontSize: 14,
-                                              fontFamily: popPinsMedium),
+                                          style: TextStyle(color: Colors.black, fontSize: 14, fontFamily: popPinsMedium),
                                         ),
                                       ],
                                     ),

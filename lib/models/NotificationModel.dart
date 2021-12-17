@@ -34,41 +34,30 @@ class NotificationModel extends ChangeNotifier {
   final String price;
   final String image;
 
+  // ignore: missing_return
   Future<List<NotificationModel>> getAllNotificationModels() async {
     final token = await Auth().getToken();
-    if (token == !null) {
-      final List<NotificationModel> products = [];
-      final response = await http.get(
-          Uri.http(
-            serverURL,
-            "/api/user/get-notifications",
-          ),
-          headers: <String, String>{
-            HttpHeaders.contentTypeHeader: 'application/json; charset=UTF-8',
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-          });
-      if (response.statusCode == 200) {
-        final responseJson = jsonDecode(response.body)["rows"];
+    final List<NotificationModel> products = [];
+    final response = await http.get(
+        Uri.http(
+          serverURL,
+          "/api/user/get-notifications",
+        ),
+        headers: <String, String>{
+          HttpHeaders.contentTypeHeader: 'application/json; charset=UTF-8',
+          HttpHeaders.authorizationHeader: 'Bearer $token',
+        });
+    if (response.statusCode == 200) {
+      final responseJson = jsonDecode(response.body)["rows"];
+      if (responseJson != null) {
         for (final Map product in responseJson) {
           products.add(NotificationModel.fromJson(product));
         }
-        return products;
-      } else {
-        return null;
       }
+
+      return responseJson != null ? products : null;
     } else {
-      Get.snackbar("Asd", "Asdasdasd",
-          titleText: Text(
-            "ASdasdas".tr,
-            style: const TextStyle(fontFamily: popPinsSemiBold, fontSize: 16, color: Colors.white),
-          ),
-          messageText: Text(
-            "ASdasd".tr,
-            style: const TextStyle(fontFamily: popPinsRegular, fontSize: 14, color: Colors.white),
-          ),
-          snackPosition: SnackPosition.BOTTOM,
-          backgroundColor: kPrimaryColor,
-          margin: const EdgeInsets.only(bottom: 20, left: 20, right: 20));
+      return null;
     }
   }
 
