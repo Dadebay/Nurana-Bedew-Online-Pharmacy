@@ -1,15 +1,11 @@
 // ignore_for_file: avoid_positional_boolean_parameters, file_names
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_iconly/flutter_iconly.dart';
 import 'package:get/get.dart';
 import 'package:medicine_app/components/willPopScope.dart';
 import 'package:medicine_app/constants/constants.dart';
 import 'package:medicine_app/controllers/BottomNavBarController.dart';
-import 'package:medicine_app/controllers/CartPageController.dart';
-import 'package:medicine_app/controllers/HomePageController.dart';
-import 'package:medicine_app/controllers/NewInComeController.dart';
 import 'package:medicine_app/views/NewIncomesPage/NewInCome.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 

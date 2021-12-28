@@ -23,14 +23,12 @@ class NewInCome extends StatelessWidget {
     _refreshController.loadComplete();
   }
 
-  final NewInComeController newInComeController =
-      Get.put(NewInComeController());
+  final NewInComeController newInComeController = Get.put(NewInComeController());
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: Colors.grey[50],
-        appBar: MyAppBar(
-            name: "newInCome".tr, backArrow: false, icon: IconlyLight.search),
+        appBar: MyAppBar(name: "newInCome".tr, backArrow: false, icon: IconlyLight.search),
         body: SmartRefresher(
             enablePullUp: true,
             physics: const BouncingScrollPhysics(),
@@ -52,19 +50,15 @@ class NewInCome extends StatelessWidget {
                     shrinkWrap: true,
                     itemCount: newInComeController.list.length,
                     physics: const NeverScrollableScrollPhysics(),
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: Get.size.width <= 1100 ? 2 : 4,
-                        childAspectRatio: 3 / 4.5),
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: Get.size.width <= 1100 ? 2 : 4, childAspectRatio: 3 / 4.5),
                     itemBuilder: (BuildContext context, int index) {
                       return ProductCard(
                         id: newInComeController.list[index]["id"],
                         name: newInComeController.list[index]["name"],
                         price: newInComeController.list[index]["price"],
                         imagePath: newInComeController.list[index]["image"],
-                        stockCount: newInComeController.list[index]
-                            ["stockCount"],
-                        cartQuantity: newInComeController.list[index]
-                            ["cartQuantity"],
+                        stockCount: newInComeController.list[index]["stockCount"],
+                        cartQuantity: newInComeController.list[index]["cartQuantity"],
                         refreshPage: 2,
                       );
                     });
@@ -72,7 +66,7 @@ class NewInCome extends StatelessWidget {
                 return Center(
                   child: Text(
                     "noProduct".tr,
-                    style: TextStyle(fontFamily: popPinsSemiBold, fontSize: 20),
+                    style: const TextStyle(fontFamily: popPinsSemiBold, fontSize: 20),
                   ),
                 );
               } else if (newInComeController.loading.value == 3) {
@@ -81,10 +75,8 @@ class NewInCome extends StatelessWidget {
                       onTap: () {
                         newInComeController.fetchProducts();
                       },
-                      child: const Icon(Icons.refresh,
-                          color: kPrimaryColor, size: 35)),
+                      child: const Icon(Icons.refresh, color: kPrimaryColor, size: 35)),
                 );
-                ;
               }
               return Center(
                 child: spinKit(),

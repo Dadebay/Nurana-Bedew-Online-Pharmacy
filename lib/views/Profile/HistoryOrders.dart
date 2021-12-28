@@ -1,9 +1,7 @@
 // ignore_for_file: file_names, implementation_imports, deprecated_member_use, duplicate_ignore
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_utils/src/extensions/internacionalization.dart';
 import 'package:medicine_app/components/appBar.dart';
 import 'package:medicine_app/constants/constants.dart';
 import 'package:medicine_app/constants/widgets.dart';
@@ -64,7 +62,7 @@ class _HistoryOrderState extends State<HistoryOrder> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Expanded(
-                            child: Text("orderHistory".tr + " ${index + 1}",
+                            child: Text("${"orderHistory".tr} ${index + 1}",
                                 textAlign: TextAlign.start,
                                 style: TextStyle(
                                   fontWeight: Get.locale.toLanguageTag() == "ru" ? FontWeight.bold : FontWeight.normal,

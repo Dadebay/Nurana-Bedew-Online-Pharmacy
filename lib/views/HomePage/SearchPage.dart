@@ -2,11 +2,9 @@
 
 import 'dart:convert';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_iconly/flutter_iconly.dart';
 import 'package:get/get.dart';
-import 'package:get/get_utils/src/extensions/internacionalization.dart';
 import 'package:medicine_app/constants/constants.dart';
 import 'package:medicine_app/constants/widgets.dart';
 import 'package:medicine_app/models/ProductsModel.dart';
@@ -161,8 +159,7 @@ class _SearchState extends State<Search> {
       padding: const EdgeInsets.all(10.0),
       child: TextField(
         controller: textEditingController,
-        style: const TextStyle(
-            color: Colors.black, fontFamily: popPinsMedium, fontSize: 17),
+        style: const TextStyle(color: Colors.black, fontFamily: popPinsMedium, fontSize: 17),
         cursorColor: kPrimaryColor,
         onEditingComplete: () {
           setState(() {
@@ -173,8 +170,7 @@ class _SearchState extends State<Search> {
         },
         decoration: InputDecoration(
           hintText: search,
-          contentPadding:
-              const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+          contentPadding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
           suffixIcon: IconButton(
             onPressed: () {
               setState(() {
@@ -186,16 +182,11 @@ class _SearchState extends State<Search> {
             icon: Icon(IconlyBold.search, size: 24),
             color: kPrimaryColor,
           ),
-          hintStyle:
-              const TextStyle(color: Colors.black38, fontFamily: popPinsMedium),
+          hintStyle: const TextStyle(color: Colors.black38, fontFamily: popPinsMedium),
           filled: true,
           fillColor: Colors.grey[200],
-          focusedBorder: const OutlineInputBorder(
-              borderRadius: borderRadius10,
-              borderSide: BorderSide(color: kPrimaryColor, width: 2)),
-          enabledBorder: OutlineInputBorder(
-              borderRadius: borderRadius10,
-              borderSide: BorderSide(color: Colors.grey[200], width: 2)),
+          focusedBorder: const OutlineInputBorder(borderRadius: borderRadius10, borderSide: BorderSide(color: kPrimaryColor, width: 2)),
+          enabledBorder: OutlineInputBorder(borderRadius: borderRadius10, borderSide: BorderSide(color: Colors.grey[200], width: 2)),
         ),
       ),
     );
@@ -214,10 +205,7 @@ class _SearchState extends State<Search> {
                   padding: const EdgeInsets.fromLTRB(0, 20, 0, 20),
                   child: Text(
                     "search".tr,
-                    style: TextStyle(
-                        fontFamily: popPinsMedium,
-                        fontSize: 18,
-                        color: Colors.black),
+                    style: TextStyle(fontFamily: popPinsMedium, fontSize: 18, color: Colors.black),
                   ),
                 ),
                 dividerr(),
@@ -270,8 +258,7 @@ class _SearchState extends State<Search> {
                   },
                   title: Text(
                     "newInCome".tr,
-                    style: const TextStyle(
-                        color: Colors.black, fontFamily: popPinsRegular),
+                    style: const TextStyle(color: Colors.black, fontFamily: popPinsRegular),
                   ),
                 ),
                 dividerr(),
@@ -288,8 +275,7 @@ class _SearchState extends State<Search> {
                   padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
                   color: kPrimaryColor,
                   elevation: 1,
-                  shape:
-                      const RoundedRectangleBorder(borderRadius: borderRadius5),
+                  shape: const RoundedRectangleBorder(borderRadius: borderRadius5),
                   onPressed: () {
                     list.clear();
                     final List countryId = [];
@@ -304,8 +290,7 @@ class _SearchState extends State<Search> {
                       "limit": '20',
                       "product_name": textEditingController.text,
                       "new_in_come": newInCome,
-                      "producer_id":
-                          countryId.isEmpty ? null : jsonEncode(countryId),
+                      "producer_id": countryId.isEmpty ? null : jsonEncode(countryId),
                       "price": "${priceValue + 1}",
                     }).then((value) {
                       if (value != null) {
@@ -340,10 +325,7 @@ class _SearchState extends State<Search> {
                   },
                   child: Text(
                     "search".tr,
-                    style: TextStyle(
-                        fontFamily: popPinsMedium,
-                        fontSize: 18,
-                        color: Colors.white),
+                    style: TextStyle(fontFamily: popPinsMedium, fontSize: 18, color: Colors.white),
                   )),
             ),
           ),
@@ -393,9 +375,7 @@ class _SearchState extends State<Search> {
                         shrinkWrap: true,
                         itemCount: list.length,
                         physics: const NeverScrollableScrollPhysics(),
-                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: size.width <= 800 ? 2 : 4,
-                            childAspectRatio: 3 / 4.5),
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: size.width <= 800 ? 2 : 4, childAspectRatio: 3 / 4.5),
                         itemBuilder: (BuildContext context, int index) {
                           return ProductCard(
                             id: list[index]["id"],

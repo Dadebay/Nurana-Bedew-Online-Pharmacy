@@ -4,7 +4,6 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_utils/src/extensions/internacionalization.dart';
 import 'package:medicine_app/constants/constants.dart';
 import 'package:medicine_app/constants/widgets.dart';
 import 'package:medicine_app/views/HomePage/ProductProfil/ProductProfil.dart';
@@ -20,15 +19,7 @@ class ProductCard extends StatefulWidget {
   final int cartQuantity;
   final int refreshPage;
 
-  const ProductCard(
-      {this.id,
-      this.imagePath,
-      this.name,
-      this.price,
-      this.stockCount,
-      this.addCart,
-      this.cartQuantity,
-      @required this.refreshPage});
+  const ProductCard({this.id, this.imagePath, this.name, this.price, this.stockCount, this.addCart, this.cartQuantity, @required this.refreshPage});
 
   @override
   State<ProductCard> createState() => _ProductCardState();
@@ -45,9 +36,9 @@ class _ProductCardState extends State<ProductCard> {
     }
     quantity = widget.cartQuantity;
 
-    myList.forEach((element) {
+    for (final element in myList) {
       if (element["id"] == widget.id) quantity = element["cartQuantity"];
-    });
+    }
   }
 
   saveData(int id, int quantity) async {
@@ -95,9 +86,7 @@ class _ProductCardState extends State<ProductCard> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Expanded(
-                      child: image("$serverImage/${widget.imagePath}-mini.webp",
-                          Get.size)),
+                  Expanded(child: image("$serverImage/${widget.imagePath}-mini.webp", Get.size)),
                   Padding(
                     padding: const EdgeInsets.symmetric(
                       horizontal: 10,
@@ -107,8 +96,7 @@ class _ProductCardState extends State<ProductCard> {
                       textAlign: TextAlign.center,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
-                          color: Colors.black, fontFamily: popPinsMedium),
+                      style: const TextStyle(color: Colors.black, fontFamily: popPinsMedium),
                     ),
                   ),
                   Padding(
@@ -117,27 +105,14 @@ class _ProductCardState extends State<ProductCard> {
                       children: [
                         Text(
                           "price".tr,
-                          style: const TextStyle(
-                              color: Colors.grey,
-                              fontFamily: popPinsRegular,
-                              fontSize: 14),
+                          style: const TextStyle(color: Colors.grey, fontFamily: popPinsRegular, fontSize: 14),
                         ),
                         Expanded(
                           child: RichText(
                             overflow: TextOverflow.ellipsis,
                             text: TextSpan(children: <TextSpan>[
-                              TextSpan(
-                                  text: " ${widget.price}",
-                                  style: const TextStyle(
-                                      fontFamily: popPinsMedium,
-                                      fontSize: 18,
-                                      color: Colors.black)),
-                              const TextSpan(
-                                  text: " TMT",
-                                  style: TextStyle(
-                                      fontFamily: popPinsMedium,
-                                      fontSize: 12,
-                                      color: Colors.black))
+                              TextSpan(text: " ${widget.price}", style: const TextStyle(fontFamily: popPinsMedium, fontSize: 18, color: Colors.black)),
+                              const TextSpan(text: " TMT", style: TextStyle(fontFamily: popPinsMedium, fontSize: 12, color: Colors.black))
                             ]),
                           ),
                         )
@@ -154,8 +129,7 @@ class _ProductCardState extends State<ProductCard> {
                             if (quantity == 0) quantity += 1;
                             saveData(widget.id, 1);
                           } else {
-                            showMessage(
-                                "emptyStockMin".tr, context, Colors.red);
+                            showMessage("emptyStockMin".tr, context, Colors.red);
                           }
                         });
                       }
@@ -163,37 +137,23 @@ class _ProductCardState extends State<ProductCard> {
                     child: quantity != 0
                         ? Container(
                             width: Get.size.width,
-                            margin: const EdgeInsets.symmetric(
-                                vertical: 5, horizontal: 5),
+                            margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 5),
                             padding: const EdgeInsets.symmetric(vertical: 8),
-                            decoration: const BoxDecoration(
-                                color: Colors.green,
-                                borderRadius: borderRadius10),
+                            decoration: const BoxDecoration(color: Colors.green, borderRadius: borderRadius10),
                             child: Text(
                               "addCart".tr,
                               textAlign: TextAlign.center,
-                              style: const TextStyle(
-                                  color: Colors.white,
-                                  fontFamily: popPinsMedium),
+                              style: const TextStyle(color: Colors.white, fontFamily: popPinsMedium),
                             ))
                         : Container(
                             width: Get.size.width,
-                            margin: const EdgeInsets.symmetric(
-                                vertical: 5, horizontal: 5),
+                            margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 5),
                             padding: const EdgeInsets.symmetric(vertical: 8),
-                            decoration: BoxDecoration(
-                                color: widget.stockCount == 0
-                                    ? Colors.red
-                                    : kPrimaryColor,
-                                borderRadius: borderRadius10),
+                            decoration: BoxDecoration(color: widget.stockCount == 0 ? Colors.red : kPrimaryColor, borderRadius: borderRadius10),
                             child: Text(
-                              widget.stockCount == 0
-                                  ? "notification".tr
-                                  : "addCartTitle".tr,
+                              widget.stockCount == 0 ? "notification".tr : "addCartTitle".tr,
                               textAlign: TextAlign.center,
-                              style: const TextStyle(
-                                  color: Colors.white,
-                                  fontFamily: popPinsMedium),
+                              style: const TextStyle(color: Colors.white, fontFamily: popPinsMedium),
                             )),
                   )
                 ],
@@ -202,10 +162,7 @@ class _ProductCardState extends State<ProductCard> {
             if (redCard)
               Container(
                 padding: const EdgeInsets.all(3),
-                decoration: BoxDecoration(
-                    borderRadius: borderRadius10,
-                    color: Colors.black.withOpacity(0.6),
-                    border: Border.all(color: Colors.red, width: 2)),
+                decoration: BoxDecoration(borderRadius: borderRadius10, color: Colors.black.withOpacity(0.6), border: Border.all(color: Colors.red, width: 2)),
                 child: Center(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -213,8 +170,7 @@ class _ProductCardState extends State<ProductCard> {
                       Text(
                         "minStockCount".tr,
                         textAlign: TextAlign.center,
-                        style: const TextStyle(
-                            fontFamily: popPinsMedium, color: Colors.white),
+                        style: const TextStyle(fontFamily: popPinsMedium, color: Colors.white),
                       ),
                       RaisedButton(
                         onPressed: () {
@@ -223,10 +179,7 @@ class _ProductCardState extends State<ProductCard> {
                           });
                         },
                         color: kPrimaryColor,
-                        child: const Text("Azalt",
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontFamily: popPinsMedium)),
+                        child: const Text("Azalt", style: TextStyle(color: Colors.white, fontFamily: popPinsMedium)),
                       )
                     ],
                   ),

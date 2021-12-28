@@ -1,17 +1,17 @@
 name: medicine_app
 description: A new Flutter project.
 publish_to: 'none'
-version: 2.1.0+2
+version: 2.1.0+3
 
 environment:
   sdk: ">=2.7.0 <3.0.0"
 
 dependencies:
-  cached_network_image: ^3.1.0
-  connectivity: ^3.0.6
-  cupertino_icons: ^1.0.2
   flutter:
     sdk: flutter
+  cached_network_image: 
+  connectivity: ^3.0.6
+  cupertino_icons: ^1.0.2
   flutter_iconly: ^1.0.2
   flutter_spinkit: ^5.0.0
   flutter_svg: null

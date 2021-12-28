@@ -18,6 +18,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   final RefreshController _refreshController = RefreshController();
 
+  @override
   initState() {
     super.initState();
     homeController.fetchProducts();

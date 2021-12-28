@@ -8,7 +8,7 @@ const String serverURL = "45.93.136.141:7001";
 const String serverImage = "http://45.93.136.141";
 const String authServerUrl = "45.93.136.141:7001";
 const String langKey = "language";
-////Colors
+
 // const Color kPrimaryColor = Color(0xff6366f1);
 const Color kPrimaryColor = Color(0xff144dde);
 const Color kPrimaryGrey = Color(0xff737373);
@@ -34,7 +34,6 @@ String errorPassword = 'errorPassword'.tr;
 String removeCart = 'removeCart'.tr;
 String tryagain = 'tryagain'.tr;
 String search = 'search'.tr;
-
 String errorPhoneNumber = 'errorPhoneNumber'.tr;
 String loremImpsum =
     "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.";

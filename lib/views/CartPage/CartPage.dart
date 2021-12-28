@@ -5,7 +5,6 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_iconly/flutter_iconly.dart';
 import 'package:get/get.dart';
-import 'package:get/get_utils/src/extensions/internacionalization.dart';
 import 'package:medicine_app/components/appBar.dart';
 import 'package:medicine_app/constants/constants.dart';
 import 'package:medicine_app/constants/widgets.dart';

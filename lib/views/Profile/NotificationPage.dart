@@ -59,6 +59,7 @@ class _NotificationPageState extends State<NotificationPage> {
             builder: (_) => ProductProfil(
                   drugID: product.productId,
                   quantity: null,
+                  refreshPage: null,
                 )));
       },
       child: Padding(

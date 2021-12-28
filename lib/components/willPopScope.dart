@@ -1,10 +1,8 @@
 // ignore_for_file: deprecated_member_use, file_names
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:get/get_utils/src/extensions/internacionalization.dart';
 import 'package:medicine_app/constants/constants.dart';
 
 class MyWillPopScope extends StatelessWidget {
@@ -35,8 +33,7 @@ class MyWillPopScope extends StatelessWidget {
         title: Text(
           'exit_app'.tr,
           textAlign: TextAlign.center,
-          style:
-              const TextStyle(color: Colors.black, fontFamily: popPinsMedium),
+          style: const TextStyle(color: Colors.black, fontFamily: popPinsMedium),
         ),
         actions: <Widget>[
           Row(
@@ -51,9 +48,7 @@ class MyWillPopScope extends StatelessWidget {
                     'yes'.tr,
                     style: TextStyle(
                       color: Colors.white,
-                      fontWeight: Get.locale.toLanguageTag() == "ru"
-                          ? FontWeight.bold
-                          : FontWeight.normal,
+                      fontWeight: Get.locale.toLanguageTag() == "ru" ? FontWeight.bold : FontWeight.normal,
                       fontSize: 18,
                       fontFamily: popPinsSemiBold,
                     ),
@@ -68,13 +63,7 @@ class MyWillPopScope extends StatelessWidget {
                   color: kPrimaryColor,
                   child: Text(
                     'no'.tr,
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: Get.locale.toLanguageTag() == "ru"
-                            ? FontWeight.bold
-                            : FontWeight.normal,
-                        fontSize: 18,
-                        fontFamily: popPinsSemiBold),
+                    style: TextStyle(color: Colors.white, fontWeight: Get.locale.toLanguageTag() == "ru" ? FontWeight.bold : FontWeight.normal, fontSize: 18, fontFamily: popPinsSemiBold),
                   ),
                   onPressed: () {
                     Get.back();

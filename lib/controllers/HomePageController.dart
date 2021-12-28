@@ -1,4 +1,4 @@
-// ignore_for_file: file_names, type_annotate_public_apis, always_declare_return_types, avoid_void_async, invariant_booleans
+// ignore_for_file: file_names, type_annotate_public_apis, always_declare_return_types, avoid_void_async, invariant_booleans, unused_local_variable
 
 import 'package:get/state_manager.dart';
 import 'package:medicine_app/constants/constants.dart';
@@ -18,14 +18,10 @@ class HomePageController extends GetxController {
   }
 
   void fetchProducts() async {
-    print("ASd");
     final products = await Product().getProducts(parametrs: {
       "page": '${page.value}',
       "limit": '20',
     });
-    print("ASd");
-
-    print(products);
     if (products != null) {
       loading.value = 1;
       for (final element in products) {
@@ -61,6 +57,6 @@ class HomePageController extends GetxController {
   }
 
   reolodProduct() {
-    list.forEach((element) {});
+    for (final element in list) {}
   }
 }

@@ -5,7 +5,6 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:get/get_utils/src/extensions/internacionalization.dart';
 import 'package:medicine_app/components/willPopScope.dart';
 import 'package:medicine_app/constants/constants.dart';
 import 'package:medicine_app/controllers/LoginController.dart';
@@ -33,20 +32,14 @@ class Login extends StatelessWidget {
     return Obx(() {
       return GestureDetector(
         onTap: () async {
-          final SharedPreferences preferences =
-              await SharedPreferences.getInstance();
+          final SharedPreferences preferences = await SharedPreferences.getInstance();
           myList.clear();
           final String encodedMap = json.encode(myList);
           preferences.setString('cart', encodedMap);
 
-          if (_form1Key.currentState.validate() &&
-              controllerLogin1.text.length == 8) {
+          if (_form1Key.currentState.validate() && controllerLogin1.text.length == 8) {
             loginController.changeStatus();
-            Auth()
-                .loginUser(
-                    phone: controllerLogin1.text.toString(),
-                    password: controllerLogin2.text.toString())
-                .then((value) {
+            Auth().loginUser(phone: controllerLogin1.text.toString(), password: controllerLogin2.text.toString()).then((value) {
               if (value == true) {
                 firsttimeSaveData(true);
                 Get.to(() => BottomNavBar());
@@ -87,10 +80,7 @@ class Login extends StatelessWidget {
                       "agree".tr,
                       overflow: TextOverflow.ellipsis,
                       textAlign: TextAlign.center,
-                      style: const TextStyle(
-                          fontSize: 20,
-                          fontFamily: popPinsSemiBold,
-                          color: Colors.white),
+                      style: const TextStyle(fontSize: 20, fontFamily: popPinsSemiBold, color: Colors.white),
                     ),
             ),
           ),
@@ -107,20 +97,14 @@ class Login extends StatelessWidget {
             padding: const EdgeInsets.only(top: 30),
             child: Text(
               "welcome".tr,
-              style: const TextStyle(
-                  color: Colors.black,
-                  fontFamily: popPinsSemiBold,
-                  fontSize: 20),
+              style: const TextStyle(color: Colors.black, fontFamily: popPinsSemiBold, fontSize: 20),
             )),
         Padding(
           padding: const EdgeInsets.symmetric(vertical: 15),
           child: Text(
             "welcomeTitle".tr,
             textAlign: TextAlign.center,
-            style: const TextStyle(
-                color: Colors.black87,
-                fontFamily: popPinsRegular,
-                fontSize: 15),
+            style: const TextStyle(color: Colors.black87, fontFamily: popPinsRegular, fontSize: 15),
           ),
         ),
       ],
@@ -129,8 +113,7 @@ class Login extends StatelessWidget {
 
   Widget phoneNumber() {
     return TextFormField(
-      style: const TextStyle(
-          fontFamily: popPinsMedium, fontSize: 18, color: Colors.black),
+      style: const TextStyle(fontFamily: popPinsMedium, fontSize: 18, color: Colors.black),
       textAlign: TextAlign.start,
       textInputAction: TextInputAction.next,
       keyboardType: TextInputType.number,
@@ -151,22 +134,16 @@ class Login extends StatelessWidget {
           padding: EdgeInsets.only(left: 16, bottom: 2),
           child: Text(
             '+ 993  ',
-            style: TextStyle(
-                color: Colors.black, fontSize: 18, fontFamily: popPinsMedium),
+            style: TextStyle(color: Colors.black, fontSize: 18, fontFamily: popPinsMedium),
           ),
         ),
         prefixIconConstraints: const BoxConstraints(minWidth: 0, minHeight: 0),
         hintText: '__ ______',
-        labelStyle: const TextStyle(
-            fontFamily: popPinsMedium, fontSize: 16, color: Colors.black38),
+        labelStyle: const TextStyle(fontFamily: popPinsMedium, fontSize: 16, color: Colors.black38),
         fillColor: Colors.grey[100],
         filled: true,
-        border: OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.red[200], width: 2),
-            borderRadius: borderRadius10),
-        focusedBorder: const OutlineInputBorder(
-            borderSide: BorderSide(color: kPrimaryColor, width: 2),
-            borderRadius: borderRadius10),
+        border: OutlineInputBorder(borderSide: BorderSide(color: Colors.red[200], width: 2), borderRadius: borderRadius10),
+        focusedBorder: const OutlineInputBorder(borderSide: BorderSide(color: kPrimaryColor, width: 2), borderRadius: borderRadius10),
         enabledBorder: OutlineInputBorder(
             borderSide: BorderSide(
               color: Colors.grey[100],
@@ -178,8 +155,7 @@ class Login extends StatelessWidget {
 
   Widget textfieldPassword() {
     return TextFormField(
-      style: const TextStyle(
-          fontFamily: popPinsMedium, fontSize: 18, color: Colors.black),
+      style: const TextStyle(fontFamily: popPinsMedium, fontSize: 18, color: Colors.black),
       textInputAction: TextInputAction.next,
       controller: controllerLogin2,
       validator: (value) => value.isEmpty ? errorPassword : null,
@@ -198,9 +174,7 @@ class Login extends StatelessWidget {
             loginController.changeObscure();
           },
           child: Icon(
-            loginController.obscure.value
-                ? Icons.visibility_off
-                : Icons.visibility,
+            loginController.obscure.value ? Icons.visibility_off : Icons.visibility,
             color: loginController.obscure.value ? Colors.grey : kPrimaryColor,
           ),
         ),
@@ -208,19 +182,14 @@ class Login extends StatelessWidget {
         fillColor: Colors.grey[100],
         filled: true,
         label: Text("password".tr),
-        labelStyle:
-            const TextStyle(color: Colors.black38, fontFamily: popPinsMedium),
-        errorBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.red[200], width: 2),
-            borderRadius: borderRadius10),
+        labelStyle: const TextStyle(color: Colors.black38, fontFamily: popPinsMedium),
+        errorBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.red[200], width: 2), borderRadius: borderRadius10),
         border: OutlineInputBorder(
             borderSide: BorderSide(
               color: Colors.grey[100],
             ),
             borderRadius: borderRadius10),
-        focusedBorder: const OutlineInputBorder(
-            borderSide: BorderSide(color: kPrimaryColor, width: 2),
-            borderRadius: borderRadius10),
+        focusedBorder: const OutlineInputBorder(borderSide: BorderSide(color: kPrimaryColor, width: 2), borderRadius: borderRadius10),
         enabledBorder: OutlineInputBorder(
             borderSide: BorderSide(
               color: Colors.grey[100],
@@ -248,10 +217,8 @@ class Login extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 40, vertical: 20),
-                      child: Image.asset('assets/images/diller/logo.png',
-                          fit: BoxFit.fill),
+                      padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 20),
+                      child: Image.asset('assets/images/diller/logo.png', fit: BoxFit.fill),
                     ),
                     Padding(
                       padding: const EdgeInsets.only(bottom: 25),

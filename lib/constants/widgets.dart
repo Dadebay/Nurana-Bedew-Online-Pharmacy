@@ -7,8 +7,6 @@ import 'package:flutter_iconly/flutter_iconly.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
-import 'package:get/get_utils/src/extensions/internacionalization.dart';
-import 'package:medicine_app/models/NotificationModel.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 import 'constants.dart';

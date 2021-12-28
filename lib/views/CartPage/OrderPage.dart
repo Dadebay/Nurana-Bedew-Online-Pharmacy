@@ -3,18 +3,15 @@
 import 'dart:convert';
 
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
-import 'package:get/get_utils/src/extensions/internacionalization.dart';
 import 'package:medicine_app/components/appBar.dart';
 import 'package:medicine_app/constants/constants.dart';
 import 'package:medicine_app/constants/widgets.dart';
 import 'package:medicine_app/controllers/BottomNavBarController.dart';
 import 'package:medicine_app/controllers/CartPageController.dart';
 import 'package:medicine_app/models/CartModel.dart';
-import 'package:medicine_app/views/auth/connection_check.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../views/BottomNavBar.dart';
@@ -80,9 +77,7 @@ class _OrderPageState extends State<OrderPage> {
                       } else if (snapshot.data == null) {
                         return Center(child: spinKit());
                       } else if (snapshot.hasError) {
-                        return const Center(
-                            child: Icon(Icons.refresh,
-                                color: kPrimaryColor, size: 35));
+                        return const Center(child: Icon(Icons.refresh, color: kPrimaryColor, size: 35));
                       }
 
                       return spinKit();
@@ -108,10 +103,7 @@ class _OrderPageState extends State<OrderPage> {
               children: [
                 Text(
                   "totalPrice".tr,
-                  style: const TextStyle(
-                      color: Colors.black,
-                      fontFamily: popPinsMedium,
-                      fontSize: 16),
+                  style: const TextStyle(color: Colors.black, fontFamily: popPinsMedium, fontSize: 16),
                 ),
                 Expanded(
                   child: RichText(
@@ -120,17 +112,11 @@ class _OrderPageState extends State<OrderPage> {
                     overflow: TextOverflow.ellipsis,
                     text: TextSpan(
                       text: "${widget.price}",
-                      style: const TextStyle(
-                          color: Colors.black,
-                          fontSize: 20,
-                          fontFamily: popPinsMedium),
+                      style: const TextStyle(color: Colors.black, fontSize: 20, fontFamily: popPinsMedium),
                       children: const <TextSpan>[
                         TextSpan(
                           text: ' TMT ',
-                          style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 16,
-                              fontFamily: popPinsMedium),
+                          style: TextStyle(color: Colors.black, fontSize: 16, fontFamily: popPinsMedium),
                         ),
                       ],
                     ),
@@ -140,9 +126,7 @@ class _OrderPageState extends State<OrderPage> {
             ),
           ),
           paymentMethod(size),
-          Padding(
-              padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
-              child: agreeButton(context, size)),
+          Padding(padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20), child: agreeButton(context, size)),
         ],
       ),
     );
@@ -159,8 +143,7 @@ class _OrderPageState extends State<OrderPage> {
             padding: const EdgeInsets.symmetric(vertical: 10),
             child: Text(
               "paymentMethod".tr,
-              style: const TextStyle(
-                  color: Colors.black, fontFamily: popPinsMedium, fontSize: 16),
+              style: const TextStyle(color: Colors.black, fontFamily: popPinsMedium, fontSize: 16),
             ),
           ),
           Row(
@@ -176,15 +159,8 @@ class _OrderPageState extends State<OrderPage> {
                   elevation: 0,
                   disabledElevation: 0,
                   color: buttonColor ? Colors.white : kPrimaryColor,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: borderRadius5,
-                      side: BorderSide(
-                          color: buttonColor ? Colors.grey[400] : kPrimaryColor,
-                          width: 2)),
-                  child: Text("Nagt",
-                      style: TextStyle(
-                          color: buttonColor ? Colors.black : Colors.white,
-                          fontFamily: popPinsMedium))),
+                  shape: RoundedRectangleBorder(borderRadius: borderRadius5, side: BorderSide(color: buttonColor ? Colors.grey[400] : kPrimaryColor, width: 2)),
+                  child: Text("Nagt", style: TextStyle(color: buttonColor ? Colors.black : Colors.white, fontFamily: popPinsMedium))),
               const SizedBox(
                 width: 10,
               ),
@@ -198,15 +174,8 @@ class _OrderPageState extends State<OrderPage> {
                   elevation: 0,
                   disabledElevation: 0,
                   color: buttonColor ? kPrimaryColor : Colors.white,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: borderRadius5,
-                      side: BorderSide(
-                          color: buttonColor ? kPrimaryColor : Colors.grey[400],
-                          width: 2)),
-                  child: Text("Hasapdan",
-                      style: TextStyle(
-                          color: buttonColor ? Colors.white : Colors.black,
-                          fontFamily: popPinsMedium))),
+                  shape: RoundedRectangleBorder(borderRadius: borderRadius5, side: BorderSide(color: buttonColor ? kPrimaryColor : Colors.grey[400], width: 2)),
+                  child: Text("Hasapdan", style: TextStyle(color: buttonColor ? Colors.white : Colors.black, fontFamily: popPinsMedium))),
             ],
           ),
         ],
@@ -257,21 +226,16 @@ class _OrderPageState extends State<OrderPage> {
           overflow: TextOverflow.ellipsis,
           text: TextSpan(
             text: cart.price,
-            style: const TextStyle(
-                color: Colors.black, fontSize: 20, fontFamily: popPinsMedium),
+            style: const TextStyle(color: Colors.black, fontSize: 20, fontFamily: popPinsMedium),
             children: const <TextSpan>[
               TextSpan(
                 text: ' TMT ',
-                style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 14,
-                    fontFamily: popPinsMedium),
+                style: TextStyle(color: Colors.black, fontSize: 14, fontFamily: popPinsMedium),
               ),
             ],
           ),
         ),
-        title: Text(cart.productName,
-            style: const TextStyle(fontFamily: popPinsMedium)),
+        title: Text(cart.productName, style: const TextStyle(fontFamily: popPinsMedium)),
       ),
     );
   }
@@ -286,8 +250,7 @@ class _OrderPageState extends State<OrderPage> {
         if (isPressed == false) {
           CartModel().order(nagt).then((value) async {
             if (value == true) {
-              final SharedPreferences preferences =
-                  await SharedPreferences.getInstance();
+              final SharedPreferences preferences = await SharedPreferences.getInstance();
               myList.clear();
               cartPageController.list.clear();
               controller.selectedIndex = 0;
@@ -324,10 +287,7 @@ class _OrderPageState extends State<OrderPage> {
               "agree".tr,
               overflow: TextOverflow.ellipsis,
               textAlign: TextAlign.center,
-              style: const TextStyle(
-                  fontSize: 20,
-                  fontFamily: popPinsSemiBold,
-                  color: Colors.white),
+              style: const TextStyle(fontSize: 20, fontFamily: popPinsSemiBold, color: Colors.white),
             ),
           ),
         ),
@@ -345,16 +305,14 @@ class _OrderPageState extends State<OrderPage> {
             child: Text(
               text1.tr,
               textAlign: TextAlign.left,
-              style: const TextStyle(
-                  color: Colors.black, fontFamily: popPinsMedium, fontSize: 16),
+              style: const TextStyle(color: Colors.black, fontFamily: popPinsMedium, fontSize: 16),
             ),
           ),
           Expanded(
             child: Text(
               text2.tr,
               textAlign: TextAlign.right,
-              style: const TextStyle(
-                  color: Colors.black, fontFamily: popPinsMedium, fontSize: 16),
+              style: const TextStyle(color: Colors.black, fontFamily: popPinsMedium, fontSize: 16),
             ),
           ),
         ],

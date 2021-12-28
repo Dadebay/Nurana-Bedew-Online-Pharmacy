@@ -3,7 +3,6 @@
 import 'package:flutter/material.dart';
 import 'package:medicine_app/components/ProductCard.dart';
 import 'package:medicine_app/components/appBar.dart';
-import 'package:medicine_app/constants/constants.dart';
 import 'package:medicine_app/constants/widgets.dart';
 import 'package:medicine_app/models/OrdersModel.dart';
 import 'package:medicine_app/models/ProductsModel.dart';
@@ -35,7 +34,9 @@ class _OrdersState extends State<Orders> {
                             builder: (context, snapshot) {
                               return ListView.builder(
                                 itemBuilder: (BuildContext context, int index) {
-                                  return const ProductCard();
+                                  return const ProductCard(
+                                    refreshPage: null,
+                                  );
                                 },
                               );
                             })

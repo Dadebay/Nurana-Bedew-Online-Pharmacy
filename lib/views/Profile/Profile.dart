@@ -230,7 +230,7 @@ class _ProfileState extends State<Profile> {
         });
   }
 
-  String token = null;
+  String token;
   getTokenMine() async {
     final token1 = await Auth().getToken();
     token = token1;
@@ -238,7 +238,6 @@ class _ProfileState extends State<Profile> {
 
   @override
   Widget build(BuildContext context) {
-    final Size size = MediaQuery.of(context).size;
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: const MyAppBar(name: "profil", backArrow: false),

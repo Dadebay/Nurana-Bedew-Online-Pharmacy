@@ -1,4 +1,4 @@
-// ignore_for_file: file_names, type_annotate_public_apis, always_declare_return_types, avoid_void_async, invariant_booleans
+// ignore_for_file: file_names, type_annotate_public_apis, always_declare_return_types, avoid_void_async, invariant_booleans, unused_local_variable
 
 import 'package:get/state_manager.dart';
 import 'package:medicine_app/constants/constants.dart';
@@ -19,8 +19,7 @@ class NewInComeController extends GetxController {
   }
 
   void fetchProducts() async {
-    final products = await Product().getProducts(
-        parametrs: {"page": '$page', "limit": '20', "new_in_come": "1"});
+    final products = await Product().getProducts(parametrs: {"page": '$page', "limit": '20', "new_in_come": "1"});
     if (products != null) {
       loading.value = 1;
       for (final element in products) {
@@ -30,14 +29,7 @@ class NewInComeController extends GetxController {
             addCart = element2["cartQuantity"];
           }
         }
-        list.add({
-          "id": element.id,
-          "name": element.productName,
-          "price": element.price,
-          "image": element.images,
-          "stockCount": element.stockCount,
-          "cartQuantity": addCart
-        });
+        list.add({"id": element.id, "name": element.productName, "price": element.price, "image": element.images, "stockCount": element.stockCount, "cartQuantity": addCart});
       }
     } else if (products == null) {
       loading.value = 2;
@@ -63,6 +55,6 @@ class NewInComeController extends GetxController {
   }
 
   reolodProduct() {
-    list.forEach((element) {});
+    for (final element in list) {}
   }
 }

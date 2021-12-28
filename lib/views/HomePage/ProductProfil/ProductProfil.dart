@@ -3,11 +3,9 @@
 import 'dart:convert';
 
 import 'package:back_button_interceptor/back_button_interceptor.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_iconly/flutter_iconly.dart';
 import 'package:get/get.dart';
-import 'package:get/get_utils/src/extensions/internacionalization.dart';
 import 'package:medicine_app/constants/constants.dart';
 import 'package:medicine_app/constants/widgets.dart';
 import 'package:medicine_app/controllers/CartPageController.dart';
@@ -19,12 +17,7 @@ import '../../../views/BottomNavBar.dart';
 import 'PhotoView.dart';
 
 class ProductProfil extends StatefulWidget {
-  const ProductProfil(
-      {Key key,
-      this.drugID,
-      @required this.quantity,
-      @required this.refreshPage})
-      : super(key: key);
+  const ProductProfil({Key key, this.drugID, @required this.quantity, @required this.refreshPage}) : super(key: key);
   final int drugID;
   final int quantity;
   final int refreshPage;
@@ -50,6 +43,7 @@ class _ProductProfilState extends State<ProductProfil> {
     super.dispose();
   }
 
+  // ignore: avoid_positional_boolean_parameters
   bool myInterceptor(bool stopDefaultButtonEvent, RouteInfo info) {
     if (widget.refreshPage == 1) {
       homeController.reolodProduct();
@@ -67,14 +61,12 @@ class _ProductProfilState extends State<ProductProfil> {
   }
 
   final HomePageController homeController = Get.put(HomePageController());
-  final NewInComeController newInComeController =
-      Get.put(NewInComeController());
+  final NewInComeController newInComeController = Get.put(NewInComeController());
   final CartPageController cartPageController = Get.put(CartPageController());
   Widget hasData(Size size, BuildContext context, ProductModel product) {
     return CustomScrollView(
       slivers: [
-        imagePart(size, "$serverImage/${product.images}-big.webp",
-            "${product.productName}"),
+        imagePart(size, "$serverImage/${product.images}-big.webp", "${product.productName}"),
         SliverList(
             delegate: SliverChildListDelegate([
           dividerr(),
@@ -96,27 +88,14 @@ class _ProductProfilState extends State<ProductProfil> {
               children: [
                 Text(
                   "price".tr,
-                  style: const TextStyle(
-                      color: Colors.grey,
-                      fontFamily: popPinsRegular,
-                      fontSize: 16),
+                  style: const TextStyle(color: Colors.grey, fontFamily: popPinsRegular, fontSize: 16),
                 ),
                 Expanded(
                   child: RichText(
                     overflow: TextOverflow.ellipsis,
                     text: TextSpan(children: <TextSpan>[
-                      TextSpan(
-                          text: " ${product.price}",
-                          style: const TextStyle(
-                              fontFamily: popPinsSemiBold,
-                              fontSize: 20,
-                              color: Colors.black)),
-                      const TextSpan(
-                          text: " TMT",
-                          style: TextStyle(
-                              fontFamily: popPinsSemiBold,
-                              fontSize: 16,
-                              color: Colors.black))
+                      TextSpan(text: " ${product.price}", style: const TextStyle(fontFamily: popPinsSemiBold, fontSize: 20, color: Colors.black)),
+                      const TextSpan(text: " TMT", style: TextStyle(fontFamily: popPinsSemiBold, fontSize: 16, color: Colors.black))
                     ]),
                   ),
                 )
@@ -130,19 +109,13 @@ class _ProductProfilState extends State<ProductProfil> {
               children: [
                 Text(
                   "dateOfExpire".tr,
-                  style: const TextStyle(
-                      color: Colors.black38,
-                      fontFamily: popPinsRegular,
-                      fontSize: 16),
+                  style: const TextStyle(color: Colors.black38, fontFamily: popPinsRegular, fontSize: 16),
                 ),
                 Expanded(
                   child: Text(
                     "${product.dateOfExpire.substring(0, 10)}",
                     maxLines: 2,
-                    style: const TextStyle(
-                        color: Colors.black,
-                        fontFamily: popPinsMedium,
-                        fontSize: 16),
+                    style: const TextStyle(color: Colors.black, fontFamily: popPinsMedium, fontSize: 16),
                   ),
                 ),
               ],
@@ -155,19 +128,13 @@ class _ProductProfilState extends State<ProductProfil> {
               children: [
                 Text(
                   "quantity".tr,
-                  style: const TextStyle(
-                      color: Colors.black38,
-                      fontFamily: popPinsRegular,
-                      fontSize: 16),
+                  style: const TextStyle(color: Colors.black38, fontFamily: popPinsRegular, fontSize: 16),
                 ),
                 Expanded(
                   child: Text(
                     " ${product.quantity}",
                     maxLines: 2,
-                    style: const TextStyle(
-                        color: Colors.black,
-                        fontFamily: popPinsMedium,
-                        fontSize: 16),
+                    style: const TextStyle(color: Colors.black, fontFamily: popPinsMedium, fontSize: 16),
                   ),
                 ),
               ],
@@ -180,35 +147,23 @@ class _ProductProfilState extends State<ProductProfil> {
               children: [
                 Text(
                   "producer".tr,
-                  style: const TextStyle(
-                      color: Colors.black38,
-                      fontFamily: popPinsRegular,
-                      fontSize: 16),
+                  style: const TextStyle(color: Colors.black38, fontFamily: popPinsRegular, fontSize: 16),
                 ),
                 const Text(
                   " : ",
-                  style: TextStyle(
-                      color: Colors.black38,
-                      fontFamily: popPinsMedium,
-                      fontSize: 16),
+                  style: TextStyle(color: Colors.black38, fontFamily: popPinsMedium, fontSize: 16),
                 ),
                 Expanded(
                   child: Text(
                     "${product.producerName}",
                     maxLines: 2,
-                    style: const TextStyle(
-                        color: Colors.black,
-                        fontFamily: popPinsMedium,
-                        fontSize: 16),
+                    style: const TextStyle(color: Colors.black, fontFamily: popPinsMedium, fontSize: 16),
                   ),
                 ),
               ],
             ),
           ),
-          if (product.descriptionTm == "" ||
-              product.descriptionRu == "" ||
-              product.descriptionTm == null ||
-              product.descriptionRu == null)
+          if (product.descriptionTm == "" || product.descriptionRu == "" || product.descriptionTm == null || product.descriptionRu == null)
             const SizedBox.shrink()
           else if (Get.locale.toLanguageTag() == "en")
             Padding(
@@ -218,18 +173,11 @@ class _ProductProfilState extends State<ProductProfil> {
                   children: [
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: 10),
-                      child: Text("descriptionTm".tr,
-                          style: const TextStyle(
-                              fontFamily: popPinsRegular,
-                              fontSize: 16,
-                              color: Colors.grey)),
+                      child: Text("descriptionTm".tr, style: const TextStyle(fontFamily: popPinsRegular, fontSize: 16, color: Colors.grey)),
                     ),
                     Text(
-                      product.descriptionTm == null
-                          ? ""
-                          : "${product.descriptionTm}",
-                      style: const TextStyle(
-                          color: Colors.black, fontFamily: popPinsRegular),
+                      product.descriptionTm == null ? "" : "${product.descriptionTm}",
+                      style: const TextStyle(color: Colors.black, fontFamily: popPinsRegular),
                     )
                   ],
                 ))
@@ -241,18 +189,11 @@ class _ProductProfilState extends State<ProductProfil> {
                   children: [
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: 10),
-                      child: Text("descriptionTm".tr,
-                          style: const TextStyle(
-                              fontFamily: popPinsRegular,
-                              fontSize: 16,
-                              color: Colors.grey)),
+                      child: Text("descriptionTm".tr, style: const TextStyle(fontFamily: popPinsRegular, fontSize: 16, color: Colors.grey)),
                     ),
                     Text(
-                      product.descriptionTm == null
-                          ? ""
-                          : "${product.descriptionTm}",
-                      style: const TextStyle(
-                          color: Colors.black, fontFamily: popPinsRegular),
+                      product.descriptionTm == null ? "" : "${product.descriptionTm}",
+                      style: const TextStyle(color: Colors.black, fontFamily: popPinsRegular),
                     )
                   ],
                 )),
@@ -334,8 +275,7 @@ class _ProductProfilState extends State<ProductProfil> {
                     child: Container(
                       padding: const EdgeInsets.all(5),
                       margin: const EdgeInsets.all(3),
-                      decoration: BoxDecoration(
-                          color: Colors.grey[200], shape: BoxShape.circle),
+                      decoration: BoxDecoration(color: Colors.grey[200], shape: BoxShape.circle),
                       child: const FittedBox(
                         child: Icon(
                           Icons.remove,
@@ -352,19 +292,14 @@ class _ProductProfilState extends State<ProductProfil> {
                     },
                     color: Colors.grey[200],
                     elevation: 0,
-                    padding:
-                        const EdgeInsets.symmetric(vertical: 2, horizontal: 5),
-                    shape: const RoundedRectangleBorder(
-                        borderRadius: borderRadius5),
+                    padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 5),
+                    shape: const RoundedRectangleBorder(borderRadius: borderRadius5),
                     child: Text(
                       "$quantity",
                       overflow: TextOverflow.ellipsis,
                       maxLines: 1,
                       textAlign: TextAlign.center,
-                      style: const TextStyle(
-                          fontSize: 24,
-                          color: Colors.black,
-                          fontFamily: popPinsMedium),
+                      style: const TextStyle(fontSize: 24, color: Colors.black, fontFamily: popPinsMedium),
                     ),
                   ),
                   GestureDetector(
@@ -374,8 +309,7 @@ class _ProductProfilState extends State<ProductProfil> {
                     child: Container(
                       margin: const EdgeInsets.all(3),
                       padding: const EdgeInsets.all(5),
-                      decoration: BoxDecoration(
-                          color: Colors.grey[200], shape: BoxShape.circle),
+                      decoration: BoxDecoration(color: Colors.grey[200], shape: BoxShape.circle),
                       child: const FittedBox(
                         child: Icon(Icons.add, color: kPrimaryColor, size: 35),
                       ),
@@ -405,8 +339,7 @@ class _ProductProfilState extends State<ProductProfil> {
                 children: [
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 10),
-                    child: Icon(icon ? IconlyLight.bag : IconlyLight.infoSquare,
-                        color: Colors.white, size: 25),
+                    child: Icon(icon ? IconlyLight.bag : IconlyLight.infoSquare, color: Colors.white, size: 25),
                   ),
                   Text(
                     name.tr,
@@ -442,8 +375,7 @@ class _ProductProfilState extends State<ProductProfil> {
             }
           },
           child: Container(
-              decoration: const BoxDecoration(
-                  color: Colors.white, borderRadius: borderRadius15),
+              decoration: const BoxDecoration(color: Colors.white, borderRadius: borderRadius15),
               padding: const EdgeInsets.all(8),
               child: const Icon(
                 IconlyLight.arrowLeft2,
@@ -453,8 +385,7 @@ class _ProductProfilState extends State<ProductProfil> {
       ),
       pinned: true,
       toolbarHeight: 60,
-      flexibleSpace: LayoutBuilder(
-          builder: (BuildContext context, BoxConstraints constraints) {
+      flexibleSpace: LayoutBuilder(builder: (BuildContext context, BoxConstraints constraints) {
         final top = constraints.biggest.height;
         return FlexibleSpaceBar(
           centerTitle: true,
@@ -465,8 +396,7 @@ class _ProductProfilState extends State<ProductProfil> {
                 name,
                 textAlign: TextAlign.center,
                 overflow: TextOverflow.ellipsis,
-                style: const TextStyle(
-                    fontFamily: popPinsMedium, color: Colors.black),
+                style: const TextStyle(fontFamily: popPinsMedium, color: Colors.black),
               )),
           background: SizedBox(
               height: size.height,
@@ -494,19 +424,10 @@ class _ProductProfilState extends State<ProductProfil> {
               if (snapshot.hasData) {
                 return Scaffold(
                     backgroundColor: Colors.white,
-                    bottomSheet: orderButton(
-                        icon: snapshot.data.stockCount == 0 ? false : true,
-                        name: snapshot.data.stockCount == 0
-                            ? "notification"
-                            : "addCartTitle",
-                        product: snapshot.data),
+                    bottomSheet: orderButton(icon: snapshot.data.stockCount == 0 ? false : true, name: snapshot.data.stockCount == 0 ? "notification" : "addCartTitle", product: snapshot.data),
                     body: hasData(size, context, snapshot.data));
               } else if (snapshot.hasError) {
-                return const Scaffold(
-                    backgroundColor: Colors.white,
-                    body: Center(
-                        child: Icon(Icons.refresh,
-                            color: kPrimaryColor, size: 35)));
+                return const Scaffold(backgroundColor: Colors.white, body: Center(child: Icon(Icons.refresh, color: kPrimaryColor, size: 35)));
               }
 
               return Scaffold(backgroundColor: Colors.white, body: spinKit());
@@ -534,25 +455,18 @@ class _ProductProfilState extends State<ProductProfil> {
             padding: const EdgeInsets.symmetric(vertical: 15),
             child: Text(
               "maximum2".tr,
-              style: const TextStyle(
-                  color: Colors.black,
-                  fontFamily: popPinsSemiBold,
-                  fontSize: 18),
+              style: const TextStyle(color: Colors.black, fontFamily: popPinsSemiBold, fontSize: 18),
             ),
           ),
           TextField(
             controller: controller,
             keyboardType: TextInputType.number,
-            style:
-                const TextStyle(fontFamily: popPinsMedium, color: Colors.black),
+            style: const TextStyle(fontFamily: popPinsMedium, color: Colors.black),
             decoration: InputDecoration(
                 isDense: true,
                 hintText: "${"maximum".tr} : $maxValue",
-                hintStyle: TextStyle(
-                    color: Colors.grey[400], fontFamily: popPinsMedium),
-                border: OutlineInputBorder(
-                    borderRadius: borderRadius5,
-                    borderSide: BorderSide(color: Colors.grey[300]))),
+                hintStyle: TextStyle(color: Colors.grey[400], fontFamily: popPinsMedium),
+                border: OutlineInputBorder(borderRadius: borderRadius5, borderSide: BorderSide(color: Colors.grey[300]))),
           ),
         ],
       ),
@@ -588,10 +502,7 @@ class _ProductProfilState extends State<ProductProfil> {
               },
               child: Text(
                 "agree".tr,
-                style: const TextStyle(
-                    fontFamily: popPinsMedium,
-                    fontSize: 18,
-                    color: Colors.white),
+                style: const TextStyle(fontFamily: popPinsMedium, fontSize: 18, color: Colors.white),
               )),
         ),
       ],
