@@ -1,5 +1,3 @@
-// ignore_for_file: file_names, avoid_print
-
 import 'dart:convert';
 import 'dart:io';
 
@@ -26,16 +24,13 @@ class OrdersModel extends ChangeNotifier {
     final token = await Auth().getToken();
     final List<OrdersModel> orders = [];
     final response = await http.get(
-        Uri.http(
-          serverURL,
-          "/api/user/get-orders",
+        Uri.parse(
+          "$serverURL/api/user/get-orders",
         ),
         headers: <String, String>{
           HttpHeaders.contentTypeHeader: 'application/json; charset=UTF-8',
           HttpHeaders.authorizationHeader: 'Bearer $token',
         });
-    print(response.body);
-    print(response.statusCode);
 
     if (response.statusCode == 200) {
       final responseJson = jsonDecode(response.body)["rows"]["orders"];

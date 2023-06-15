@@ -39,11 +39,13 @@ class MyWillPopScope extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              RaisedButton(
-                  shape: const RoundedRectangleBorder(
-                    borderRadius: borderRadius10,
+              ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: kPrimaryColor,
+                    shape: const RoundedRectangleBorder(
+                      borderRadius: borderRadius10,
+                    ),
                   ),
-                  color: kPrimaryColor,
                   child: Text(
                     'yes'.tr,
                     style: TextStyle(
@@ -56,11 +58,13 @@ class MyWillPopScope extends StatelessWidget {
                   onPressed: () {
                     SystemNavigator.pop();
                   }),
-              RaisedButton(
-                  shape: const RoundedRectangleBorder(
-                    borderRadius: borderRadius10,
+              ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: kPrimaryColor,
+                    shape: const RoundedRectangleBorder(
+                      borderRadius: borderRadius10,
+                    ),
                   ),
-                  color: kPrimaryColor,
                   child: Text(
                     'no'.tr,
                     style: TextStyle(color: Colors.white, fontWeight: Get.locale.toLanguageTag() == "ru" ? FontWeight.bold : FontWeight.normal, fontSize: 18, fontFamily: popPinsSemiBold),

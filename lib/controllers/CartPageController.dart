@@ -24,20 +24,18 @@ class CartPageController extends GetxController {
   Future<List<CartModel>> loadData() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     final String encodedMap = prefs.getString('cart');
-    final List decodedMap = json.decode(encodedMap);
+    final List decodedMap = jsonDecode(encodedMap);
     final body = json.encode(decodedMap);
 
     final token = await Auth().getToken();
 
-    final response =
-        await http.post(Uri.http(serverURL, "/api/user/get-cart-products"),
-            headers: <String, String>{
-              HttpHeaders.contentTypeHeader: 'application/json; charset=UTF-8',
-              HttpHeaders.authorizationHeader: 'Bearer $token',
-            },
-            body: jsonEncode(<String, dynamic>{"qty": body}));
-    if (response.statusCode == 200 &&
-        (jsonDecode(response.body)["rows"]) != null) {
+    final response = await http.post(Uri.parse("$serverURL/api/user/get-cart-products"),
+        headers: <String, String>{
+          HttpHeaders.contentTypeHeader: 'application/json; charset=UTF-8',
+          HttpHeaders.authorizationHeader: 'Bearer $token',
+        },
+        body: jsonEncode(<String, dynamic>{"qty": body}));
+    if (response.statusCode == 200 && (jsonDecode(response.body)["rows"]) != null) {
       loading.value = 1;
       list.clear();
       final responseJson = jsonDecode(response.body)["rows"]["products"];

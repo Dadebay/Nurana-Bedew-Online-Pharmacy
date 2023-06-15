@@ -1,6 +1,6 @@
 name: medicine_app
 description: A new Flutter project.
-publish_to: 'none'
+publish_to: "none"
 version: 2.1.0+3
 
 environment:
@@ -9,7 +9,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  cached_network_image: 
+  cached_network_image:
   connectivity: ^3.0.6
   cupertino_icons: ^1.0.2
   flutter_iconly: ^1.0.2
@@ -22,7 +22,6 @@ dependencies:
   provider: null
   pull_to_refresh: ^2.0.0
   shared_preferences: null
-  vibration: ^1.7.3
   get:
   back_button_interceptor: ^5.0.2
 

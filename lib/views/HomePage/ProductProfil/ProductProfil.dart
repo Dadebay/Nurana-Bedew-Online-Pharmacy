@@ -1,5 +1,3 @@
-// ignore_for_file: implementation_imports, deprecated_member_use, file_names, unnecessary_string_interpolations, avoid_bool_literals_in_conditional_expressions, type_annotate_public_apis, always_declare_return_types, unnecessary_statements, avoid_print
-
 import 'dart:convert';
 
 import 'package:back_button_interceptor/back_button_interceptor.dart';
@@ -285,15 +283,17 @@ class _ProductProfilState extends State<ProductProfil> {
                       ),
                     ),
                   ),
-                  RaisedButton(
+                  ElevatedButton(
                     onPressed: () {
                       controller.clear();
                       selectCount(widget.drugID, product.stockCount);
                     },
-                    color: Colors.grey[200],
-                    elevation: 0,
-                    padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 5),
-                    shape: const RoundedRectangleBorder(borderRadius: borderRadius5),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.grey[200],
+                      elevation: 0,
+                      padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 5),
+                      shape: const RoundedRectangleBorder(borderRadius: borderRadius5),
+                    ),
                     child: Text(
                       "$quantity",
                       overflow: TextOverflow.ellipsis,
@@ -318,22 +318,24 @@ class _ProductProfilState extends State<ProductProfil> {
                 ],
               ),
             )
-          : RaisedButton(
+          : ElevatedButton(
               onPressed: () {
                 setState(() {
                   if (icon == false) {
+                    showMessage("emptyStockMin".tr, context, Colors.red);
                   } else {
                     orderButtonChange = true;
                   }
                 });
-                icon ? null : habarEt2(widget.drugID, context);
               },
-              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-              shape: const RoundedRectangleBorder(
-                borderRadius: borderRadius15,
+              style: ElevatedButton.styleFrom(
+                padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                shape: const RoundedRectangleBorder(
+                  borderRadius: borderRadius15,
+                ),
+                backgroundColor: icon ? kPrimaryColor : Colors.red,
+                elevation: 5,
               ),
-              color: icon ? kPrimaryColor : Colors.red,
-              elevation: 5,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -476,11 +478,13 @@ class _ProductProfilState extends State<ProductProfil> {
             horizontal: 10,
           ),
           width: Get.size.width,
-          child: RaisedButton(
-              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-              color: kPrimaryColor,
-              elevation: 1,
-              shape: const RoundedRectangleBorder(borderRadius: borderRadius5),
+          child: ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                backgroundColor: kPrimaryColor,
+                elevation: 1,
+                shape: const RoundedRectangleBorder(borderRadius: borderRadius5),
+              ),
               onPressed: () {
                 currentValue = int.parse(controller.text);
                 setState(() {

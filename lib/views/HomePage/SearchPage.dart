@@ -1,5 +1,3 @@
-// ignore_for_file: type_annotate_public_apis, always_declare_return_types, file_names, deprecated_member_use, avoid_bool_literals_in_conditional_expressions, prefer_const_constructors, avoid_print, invariant_booleans
-
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -271,11 +269,13 @@ class _SearchState extends State<Search> {
             right: 15,
             child: SizedBox(
               width: size.width,
-              child: RaisedButton(
-                  padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-                  color: kPrimaryColor,
-                  elevation: 1,
-                  shape: const RoundedRectangleBorder(borderRadius: borderRadius5),
+              child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                    backgroundColor: kPrimaryColor,
+                    elevation: 1,
+                    shape: const RoundedRectangleBorder(borderRadius: borderRadius5),
+                  ),
                   onPressed: () {
                     list.clear();
                     final List countryId = [];

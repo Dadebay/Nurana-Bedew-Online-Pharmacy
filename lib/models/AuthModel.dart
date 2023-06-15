@@ -10,7 +10,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class Auth {
   Future loginUser({String phone, String password}) async {
-    final response = await http.post(Uri.http(authServerUrl, "/api/user/login"),
+    final response = await http.post(
+        Uri.parse(
+          'http://admin.nurana-bedew.online/api/user/login',
+        ),
         headers: <String, String>{
           HttpHeaders.contentTypeHeader: 'application/json; charset=UTF-8',
         },
@@ -22,11 +25,7 @@ class Auth {
       final responseJson = jsonDecode(response.body)["data"];
       Auth().setToken(jsonDecode(response.body)["access_token"]);
       Auth().setRefreshToken(jsonDecode(response.body)["refresh_token"]);
-      Auth().login(
-          name: responseJson["name"],
-          uid: responseJson["id"],
-          phone: responseJson["user"],
-          gmail: responseJson["email"]);
+      Auth().login(name: responseJson["name"], uid: responseJson["id"], phone: responseJson["user"], gmail: responseJson["email"]);
       return true;
     } else {
       return false;
@@ -35,23 +34,18 @@ class Auth {
 
   Future refreshToken() async {
     final refreshToken = await Auth().getRefreshToken();
-    final response =
-        await http.post(Uri.http(authServerUrl, "/api/user/refresh"),
-            headers: <String, String>{
-              HttpHeaders.contentTypeHeader: 'application/json; charset=UTF-8',
-            },
-            body: jsonEncode({
-              "refresh_token": refreshToken,
-            }));
+    final response = await http.post(Uri.parse("$serverImage/api/user/refresh"),
+        headers: <String, String>{
+          HttpHeaders.contentTypeHeader: 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode({
+          "refresh_token": refreshToken,
+        }));
     if (response.statusCode == 200) {
       final responseJson = jsonDecode(response.body)["data"];
       Auth().setToken(jsonDecode(response.body)["access_token"]);
       Auth().setRefreshToken(jsonDecode(response.body)["refresh_token"]);
-      Auth().login(
-          name: responseJson["name"],
-          uid: responseJson["id"],
-          phone: responseJson["user"],
-          gmail: responseJson["email"]);
+      Auth().login(name: responseJson["name"], uid: responseJson["id"], phone: responseJson["user"], gmail: responseJson["email"]);
       return true;
     } else {
       Future.delayed(const Duration(milliseconds: 200), () {

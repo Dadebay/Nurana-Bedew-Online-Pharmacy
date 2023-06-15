@@ -35,7 +35,7 @@ class MyTranslations extends Translations {
           "addCartTitle": "Sebede goş",
           "noProduct": "Haryt ýok",
           "noProductTitle": "Haryt ammara gelende sms arkaly ýatladylmak isleýarsiňizmi ?",
-          "notification": "Habar Et",
+          "notification": "Haryt Ýok",
           "descriptionTm": "Düzümi : ",
           "category": "Kategoriýa : ",
           "categoryName": "Kategoriýa",
@@ -74,7 +74,7 @@ class MyTranslations extends Translations {
           "maximum2": "Haryt möçberini giriziň",
           "error": "Ýalňyş",
           "error2": "Girizen sanyňyz harydyň ammardaky sanyndan köp",
-          "noHistoryOrder": "Sargyt ýok !"
+          "noHistoryOrder": "Sargyt ýok !",
         },
         'ru': {
           "select_language": "Выберите язык",
@@ -108,7 +108,7 @@ class MyTranslations extends Translations {
           "addCartTitle": "Добавить в корзину",
           "noProduct": "Товара нет",
           "noProductTitle": "Хотите получать SMS-уведомление о поступлении товара на склад?",
-          "notification": "Добавить в уведомления",
+          "notification": "Нет продукта",
           "descriptionTm": "Состав",
           "category": "Категория : ",
           "categoryName": "Категория",

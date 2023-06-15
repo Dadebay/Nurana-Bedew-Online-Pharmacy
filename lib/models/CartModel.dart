@@ -1,5 +1,3 @@
-// ignore_for_file: file_names, avoid_print
-
 import 'dart:convert';
 import 'dart:io';
 
@@ -21,13 +19,7 @@ class CartModel extends ChangeNotifier {
   });
 
   factory CartModel.fromJson(Map<String, dynamic> json) {
-    return CartModel(
-        id: json["id"],
-        productName: json["product_name"],
-        stockCount: json["stock_count"],
-        price: json["price"],
-        quantity: json["quantity"],
-        images: json["image"]);
+    return CartModel(id: json["id"], productName: json["product_name"], stockCount: json["stock_count"], price: json["price"], quantity: json["quantity"], images: json["image"]);
   }
 
   final int id;
@@ -40,16 +32,15 @@ class CartModel extends ChangeNotifier {
   Future<List<CartModel>> getCartProducts() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     final String encodedMap = prefs.getString('cart');
-    final List decodedMap = json.decode(encodedMap);
+    final List decodedMap = jsonDecode(encodedMap);
     final body = json.encode(decodedMap);
 
     final token = await Auth().getToken();
     final List<CartModel> products = [];
 
     final response = await http.post(
-        Uri.http(
-          serverURL,
-          "/api/user/get-cart-products",
+        Uri.parse(
+          "$serverURL/api/user/get-cart-products",
         ),
         headers: <String, String>{
           HttpHeaders.contentTypeHeader: 'application/json; charset=UTF-8',
@@ -72,12 +63,10 @@ class CartModel extends ChangeNotifier {
   Future addToCart({Map<String, String> parametrs, int id}) async {
     final token = await Auth().getToken();
 
-    final response = await http.post(
-        Uri.http(serverURL, "/api/user/add-to-cart/$id", parametrs),
-        headers: <String, String>{
-          HttpHeaders.contentTypeHeader: 'application/json; charset=UTF-8',
-          HttpHeaders.authorizationHeader: 'Bearer $token',
-        });
+    final response = await http.post(Uri.parse("$serverURL/api/user/add-to-cart/$id").replace(queryParameters: parametrs), headers: <String, String>{
+      HttpHeaders.contentTypeHeader: 'application/json; charset=UTF-8',
+      HttpHeaders.authorizationHeader: 'Bearer $token',
+    });
     if (response.statusCode == 200) {
       return true;
     } else {
@@ -88,20 +77,24 @@ class CartModel extends ChangeNotifier {
   Future order(int id) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     final String encodedMap = prefs.getString('cart');
-    final List decodedMap = json.decode(encodedMap);
+    final List decodedMap = jsonDecode(encodedMap);
     final body = json.encode(decodedMap);
-
+    print(id);
+    print(decodedMap);
     final token = await Auth().getToken();
+    print(token);
+
     final response = await http.post(
-        Uri.http(
-          serverURL,
-          "/api/user/create-order/$id",
+        Uri.parse(
+          "$serverURL/api/user/create-order/$id",
         ),
         headers: <String, String>{
           HttpHeaders.contentTypeHeader: 'application/json; charset=UTF-8',
           HttpHeaders.authorizationHeader: 'Bearer $token',
         },
         body: jsonEncode(<String, dynamic>{"qty": body}));
+    print(response.statusCode);
+    print(response.body);
     if (response.statusCode == 200) {
       return true;
     } else {
@@ -115,13 +108,10 @@ class CartModel extends ChangeNotifier {
     Map<String, String> parametrs,
   }) async {
     final token = await Auth().getToken();
-    final response = await http.post(
-        Uri.http(serverURL, "/api/user/update-cart-product/$cartID/$productId",
-            parametrs),
-        headers: <String, String>{
-          HttpHeaders.contentTypeHeader: 'application/json; charset=UTF-8',
-          HttpHeaders.authorizationHeader: 'Bearer $token',
-        });
+    final response = await http.post(Uri.parse("$serverURL/api/user/update-cart-product/$cartID/$productId").replace(queryParameters: parametrs), headers: <String, String>{
+      HttpHeaders.contentTypeHeader: 'application/json; charset=UTF-8',
+      HttpHeaders.authorizationHeader: 'Bearer $token',
+    });
     if (response.statusCode == 200) {
       return true;
     } else {
@@ -135,9 +125,8 @@ class CartModel extends ChangeNotifier {
   }) async {
     final token = await Auth().getToken();
     final response = await http.post(
-        Uri.http(
-          serverURL,
-          "/api/user/remove-cart-item/$cartID/$productId",
+        Uri.parse(
+          "$serverURL/api/user/remove-cart-item/$cartID/$productId",
         ),
         headers: <String, String>{
           HttpHeaders.contentTypeHeader: 'application/json; charset=UTF-8',

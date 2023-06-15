@@ -4,9 +4,8 @@ import 'package:get/get_utils/src/extensions/internacionalization.dart';
 List<Map<String, dynamic>> myList = [];
 
 int pageNumber = 0;
-const String serverURL = "45.93.136.141:7001";
-const String serverImage = "http://45.93.136.141";
-const String authServerUrl = "45.93.136.141:7001";
+const String serverURL = "http://admin.nurana-bedew.online";
+const String serverImage = "http://admin.nurana-bedew.online";
 const String langKey = "language";
 
 // const Color kPrimaryColor = Color(0xff6366f1);

@@ -149,32 +149,34 @@ class _OrderPageState extends State<OrderPage> {
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              RaisedButton(
+              ElevatedButton(
                   onPressed: () {
                     setState(() {
                       buttonColor = false;
                       nagt = 1;
                     });
                   },
-                  elevation: 0,
-                  disabledElevation: 0,
-                  color: buttonColor ? Colors.white : kPrimaryColor,
-                  shape: RoundedRectangleBorder(borderRadius: borderRadius5, side: BorderSide(color: buttonColor ? Colors.grey[400] : kPrimaryColor, width: 2)),
+                  style: ElevatedButton.styleFrom(
+                    elevation: 0,
+                    backgroundColor: buttonColor ? Colors.white : kPrimaryColor,
+                    shape: RoundedRectangleBorder(borderRadius: borderRadius5, side: BorderSide(color: buttonColor ? Colors.grey[400] : kPrimaryColor, width: 2)),
+                  ),
                   child: Text("Nagt", style: TextStyle(color: buttonColor ? Colors.black : Colors.white, fontFamily: popPinsMedium))),
               const SizedBox(
                 width: 10,
               ),
-              RaisedButton(
+              ElevatedButton(
                   onPressed: () {
                     setState(() {
                       buttonColor = true;
                       nagt = 2;
                     });
                   },
-                  elevation: 0,
-                  disabledElevation: 0,
-                  color: buttonColor ? kPrimaryColor : Colors.white,
-                  shape: RoundedRectangleBorder(borderRadius: borderRadius5, side: BorderSide(color: buttonColor ? kPrimaryColor : Colors.grey[400], width: 2)),
+                  style: ElevatedButton.styleFrom(
+                    elevation: 0,
+                    backgroundColor: buttonColor ? kPrimaryColor : Colors.white,
+                    shape: RoundedRectangleBorder(borderRadius: borderRadius5, side: BorderSide(color: buttonColor ? kPrimaryColor : Colors.grey[400], width: 2)),
+                  ),
                   child: Text("Hasapdan", style: TextStyle(color: buttonColor ? Colors.white : Colors.black, fontFamily: popPinsMedium))),
             ],
           ),

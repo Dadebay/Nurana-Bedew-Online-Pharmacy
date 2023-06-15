@@ -11,10 +11,15 @@ import 'package:medicine_app/controllers/LoginController.dart';
 import 'package:medicine_app/models/AuthModel.dart';
 import 'package:medicine_app/views/BottomNavBar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:vibration/vibration.dart';
 
 Future<bool> firsttimeSaveData(bool value) async {
   final SharedPreferences pref = await SharedPreferences.getInstance();
+  print(pref.setBool("firstTime", value));
+  await pref.setBool("firstTime", value);
+  pref.setBool("firstTime", value).then((value) {
+    print(value);
+    print('----------------------------------------------------------------------------------------');
+  });
   return pref.setBool("firstTime", value);
 }
 
@@ -48,11 +53,10 @@ class Login extends StatelessWidget {
                 controllerLogin2.clear();
                 loginController.changeStatus();
                 _form1Key.currentState.validate();
-                Vibration.vibrate();
               }
             });
           } else {
-            Vibration.vibrate();
+            /// Vibratioin bardy
           }
         },
         child: Center(

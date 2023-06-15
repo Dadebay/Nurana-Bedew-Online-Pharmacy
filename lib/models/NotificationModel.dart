@@ -37,9 +37,8 @@ class NotificationModel extends ChangeNotifier {
     final token = await Auth().getToken();
     final List<NotificationModel> products = [];
     final response = await http.get(
-        Uri.http(
-          serverURL,
-          "/api/user/get-notifications",
+        Uri.parse(
+          "$serverURL/api/user/get-notifications",
         ),
         headers: <String, String>{
           HttpHeaders.contentTypeHeader: 'application/json; charset=UTF-8',
@@ -62,9 +61,8 @@ class NotificationModel extends ChangeNotifier {
   Future addNotification(int id) async {
     final token = await Auth().getToken();
     final response = await http.post(
-        Uri.http(
-          serverURL,
-          "/api/user/add-to-notifications/$id",
+        Uri.parse(
+          "$serverURL/api/user/add-to-notifications/$id",
         ),
         headers: <String, String>{
           HttpHeaders.contentTypeHeader: 'application/json; charset=UTF-8',
@@ -80,9 +78,8 @@ class NotificationModel extends ChangeNotifier {
   Future removeNotification(int id) async {
     final token = await Auth().getToken();
     final response = await http.post(
-        Uri.http(
-          serverURL,
-          "/api/user/remove-from-notifications/$id",
+        Uri.parse(
+          "$serverURL/api/user/remove-from-notifications/$id",
         ),
         headers: <String, String>{
           HttpHeaders.contentTypeHeader: 'application/json; charset=UTF-8',

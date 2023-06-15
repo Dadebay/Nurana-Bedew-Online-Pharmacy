@@ -75,68 +75,6 @@ Widget textBlck({String text}) {
   return Text(text.tr, textAlign: TextAlign.start, overflow: TextOverflow.ellipsis, maxLines: 1, style: const TextStyle(color: Colors.black, fontFamily: popPinsRegular, fontSize: 18));
 }
 
-habarEt2(int productId, BuildContext context) {
-  Get.dialog(AlertDialog(
-    shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(12.0),
-    ),
-    clipBehavior: Clip.antiAliasWithSaveLayer,
-    backgroundColor: Colors.white,
-    titlePadding: const EdgeInsets.symmetric(vertical: 15, horizontal: 15),
-    actionsPadding: const EdgeInsets.fromLTRB(0, 0, 0, 5),
-    title: Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Text(
-          'noProduct'.tr,
-          textAlign: TextAlign.center,
-          style: const TextStyle(color: Colors.black, fontFamily: popPinsMedium),
-        ),
-        Padding(
-          padding: const EdgeInsets.only(top: 8),
-          child: Text(
-            'noProductTitle'.tr,
-            textAlign: TextAlign.center,
-            style: const TextStyle(color: Colors.black, fontFamily: popPinsRegular, fontSize: 16),
-          ),
-        ),
-      ],
-    ),
-    actions: <Widget>[
-      Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          RaisedButton(
-              elevation: 1,
-              shape: const RoundedRectangleBorder(borderRadius: borderRadius10, side: BorderSide(color: kPrimaryColor, width: 2)),
-              color: kPrimaryColor,
-              child: Text(
-                'yes'.tr,
-                style: const TextStyle(color: Colors.white, fontSize: 18, fontFamily: popPinsSemiBold),
-              ),
-              onPressed: () {
-                // NotificationModel().addNotification(productId);
-                showMessage("Ulgama giriň".tr, context, Colors.red);
-                Get.back();
-                // showMessage(
-                //     "notificationSend".tr, context, Colors.green.shade500);
-              }),
-          RaisedButton(
-              shape: const RoundedRectangleBorder(borderRadius: borderRadius10, side: BorderSide(color: kPrimaryColor, width: 2)),
-              color: kPrimaryColor,
-              child: Text(
-                'no'.tr,
-                style: const TextStyle(color: Colors.white, fontSize: 18, fontFamily: popPinsSemiBold),
-              ),
-              onPressed: () {
-                Get.back();
-              }),
-        ],
-      ),
-    ],
-  ));
-}
-
 Widget buttonProfile({String name, IconData icon, Function() onTap}) {
   return Column(
     children: [

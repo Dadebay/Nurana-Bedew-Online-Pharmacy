@@ -1,9 +1,9 @@
-// ignore_for_file: file_names, avoid_print, unnecessary_statements, missing_return, implementation_imports, type_annotate_public_apis, always_declare_return_types, invariant_booleans, deprecated_member_use
-
 import 'dart:convert';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_iconly/flutter_iconly.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:medicine_app/components/appBar.dart';
 import 'package:medicine_app/constants/constants.dart';
@@ -191,7 +191,33 @@ class _CartPageState extends State<CartPage> {
                 children: [
                   Expanded(
                     flex: 2,
-                    child: image("$serverImage/${cartPageController.list[index]["image"]}-mini.webp", size),
+                    child: Container(
+                      height: size.height,
+                      margin: const EdgeInsets.all(10),
+                      decoration: BoxDecoration(color: Colors.grey[200], borderRadius: borderRadius10),
+                      child: ClipRRect(
+                        borderRadius: borderRadius10,
+                        child: CachedNetworkImage(
+                            width: double.infinity,
+                            imageUrl: "$serverImage/${cartPageController.list[index]["image"]}-mini.webp",
+                            imageBuilder: (context, imageProvider) => Container(
+                                  decoration: BoxDecoration(
+                                    image: DecorationImage(
+                                      image: imageProvider,
+                                      fit: BoxFit.contain,
+                                    ),
+                                  ),
+                                ),
+                            placeholder: (context, url) => Center(child: spinKit()),
+                            errorWidget: (context, url, error) => Padding(
+                                  padding: const EdgeInsets.all(30.0),
+                                  child: SvgPicture.asset(
+                                    "assets/icons/logo.svg",
+                                    color: Colors.grey,
+                                  ),
+                                )),
+                      ),
+                    ),
                   ),
                   Expanded(
                     flex: 3,
@@ -281,15 +307,13 @@ class _CartPageState extends State<CartPage> {
                                   ),
                                 ),
                               ),
-                              RaisedButton(
+                              ElevatedButton(
                                 onPressed: () {
                                   controller.clear();
                                   selectCount(cartPageController.list[index]["id"], cartPageController.list[index]["stockMin"], index);
                                 },
-                                color: Colors.grey[200],
-                                elevation: 0,
-                                padding: EdgeInsets.zero,
-                                shape: const RoundedRectangleBorder(borderRadius: borderRadius5),
+                                style: ElevatedButton.styleFrom(
+                                    elevation: 0, padding: EdgeInsets.zero, shape: const RoundedRectangleBorder(borderRadius: borderRadius5), backgroundColor: Colors.grey.shade200),
                                 child: Text(
                                   "${cartPageController.list[index]["quantity"]}",
                                   overflow: TextOverflow.ellipsis,
@@ -375,11 +399,13 @@ class _CartPageState extends State<CartPage> {
             horizontal: 10,
           ),
           width: Get.size.width,
-          child: RaisedButton(
-              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-              color: kPrimaryColor,
-              elevation: 1,
-              shape: const RoundedRectangleBorder(borderRadius: borderRadius5),
+          child: ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                backgroundColor: kPrimaryColor,
+                elevation: 1,
+                shape: const RoundedRectangleBorder(borderRadius: borderRadius5),
+              ),
               onPressed: () {
                 currentValue = int.parse(controller.text);
                 if (currentValue < maxValue) {

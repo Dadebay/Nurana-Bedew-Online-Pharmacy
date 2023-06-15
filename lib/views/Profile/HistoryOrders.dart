@@ -46,12 +46,13 @@ class _HistoryOrderState extends State<HistoryOrder> {
                 itemBuilder: (BuildContext context, int index) {
                   return Padding(
                     padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 15),
-                    child: RaisedButton(
-                      shape: const RoundedRectangleBorder(borderRadius: borderRadius5),
-                      color: Colors.white,
-                      disabledColor: Colors.white,
-                      elevation: 2,
-                      padding: const EdgeInsets.all(10),
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        shape: const RoundedRectangleBorder(borderRadius: borderRadius5),
+                        backgroundColor: Colors.white,
+                        elevation: 2,
+                        padding: const EdgeInsets.all(10),
+                      ),
                       onPressed: () {
                         Get.to(() => OrderPage(
                               index: index + 1,
@@ -124,6 +125,7 @@ class _OrderPageState extends State<OrderPage> {
                 return Center(
                     child: Text(
                   "noHistoryOrder".tr,
+                  textAlign: TextAlign.center,
                   style: const TextStyle(fontFamily: popPinsSemiBold, color: Colors.black, fontSize: 18),
                 ));
               }
@@ -136,16 +138,14 @@ class _OrderPageState extends State<OrderPage> {
                     return Padding(
                       padding: const EdgeInsets.all(8.0),
                       // ignore: deprecated_member_use
-                      child: RaisedButton(
-                        shape: const RoundedRectangleBorder(borderRadius: borderRadius10),
-                        color: Colors.white,
-                        disabledColor: Colors.white,
-                        padding: const EdgeInsets.only(bottom: 10),
-                        elevation: 2,
-                        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                        focusElevation: 3,
-                        hoverElevation: 3,
-                        disabledElevation: 3,
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          shape: const RoundedRectangleBorder(borderRadius: borderRadius10),
+                          backgroundColor: Colors.white,
+                          disabledBackgroundColor: Colors.white,
+                          padding: const EdgeInsets.only(bottom: 10),
+                          elevation: 2,
+                        ),
                         onPressed: () {},
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,

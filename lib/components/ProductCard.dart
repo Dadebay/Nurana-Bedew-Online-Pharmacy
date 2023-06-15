@@ -1,5 +1,3 @@
-// ignore_for_file: file_names, implementation_imports, unnecessary_statements, always_declare_return_types, type_annotate_public_apis, avoid_print, deprecated_member_use, invariant_booleans
-
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -122,7 +120,7 @@ class _ProductCardState extends State<ProductCard> {
                   GestureDetector(
                     onTap: () {
                       if (widget.stockCount == 0) {
-                        habarEt2(widget.id, context);
+                        showMessage("emptyStockMin".tr, context, Colors.red);
                       } else {
                         setState(() {
                           if ((quantity + 1) <= widget.stockCount) {
@@ -172,13 +170,13 @@ class _ProductCardState extends State<ProductCard> {
                         textAlign: TextAlign.center,
                         style: const TextStyle(fontFamily: popPinsMedium, color: Colors.white),
                       ),
-                      RaisedButton(
+                      ElevatedButton(
                         onPressed: () {
                           setState(() {
                             redCard = false;
                           });
                         },
-                        color: kPrimaryColor,
+                        style: ElevatedButton.styleFrom(backgroundColor: kPrimaryColor),
                         child: const Text("Azalt", style: TextStyle(color: Colors.white, fontFamily: popPinsMedium)),
                       )
                     ],

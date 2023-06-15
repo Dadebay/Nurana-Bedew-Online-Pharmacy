@@ -43,11 +43,12 @@ class _ConnectionCheckState extends State<ConnectionCheck> {
   }
 
   void setData() {
-    setState(() {
-      loadDataFirstTime().then((value) {
-        firsttime = value ?? false;
-      });
+    loadDataFirstTime().then((value) {
+      firsttime = value ?? false;
     });
+    print('---------------------------------------------------------------------------------------------------------------------------------------------------------------------------');
+    print(firsttime);
+    setState(() {});
   }
 
   Future langSelect() => showGeneralDialog(
@@ -166,9 +167,11 @@ class _ConnectionCheckState extends State<ConnectionCheck> {
                               ),
                             ),
                           ),
-                          RaisedButton(
-                            color: kPrimaryColor,
-                            shape: RoundedRectangleBorder(borderRadius: borderRadius10),
+                          ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              shape: RoundedRectangleBorder(borderRadius: borderRadius10),
+                              backgroundColor: kPrimaryColor,
+                            ),
                             onPressed: () {
                               Navigator.of(context).pop();
                               Future.delayed(Duration(milliseconds: 1000), () {
