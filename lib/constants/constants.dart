@@ -1,17 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:get/get_utils/src/extensions/internacionalization.dart';
 
-List<Map<String, dynamic>> myList = [];
-
-int pageNumber = 0;
 const String serverURL = "http://admin.nurana-bedew.online";
-const String serverImage = "http://admin.nurana-bedew.online";
-const String langKey = "language";
-
-// const Color kPrimaryColor = Color(0xff6366f1);
 const Color kPrimaryColor = Color(0xff144dde);
-const Color kPrimaryGrey = Color(0xff737373);
-const Color kPrimaryStroke = Color(0xFFececec);
+const Color backgroundColor = Color(0xfff1f2f4);
 
 ///BorderRadius
 const BorderRadius borderRadius5 = BorderRadius.all(Radius.circular(5));
@@ -21,18 +12,10 @@ const BorderRadius borderRadius20 = BorderRadius.all(Radius.circular(20));
 const BorderRadius borderRadius30 = BorderRadius.all(Radius.circular(30));
 
 //Fonts
-const String popPinsRegular = "Poppins_Regular";
-const String popPinsBold = "Poppins_Bold";
-const String popPinsSemiBold = "Poppins_SemiBold";
-const String popPinsMedium = "Poppins_Medium";
-// text
-String hightolow = 'hightolow'.tr;
-String lowtohigh = 'lowtohigh'.tr;
+const String montserratRegular = "GilroyRegular";
+const String montserratMedium = "GilroyMedium";
+const String montserratSemiBold = "GilroySemiBold";
+const String montserratBold = "GilroyBold";
 
-String errorPassword = 'errorPassword'.tr;
-String removeCart = 'removeCart'.tr;
-String tryagain = 'tryagain'.tr;
-String search = 'search'.tr;
-String errorPhoneNumber = 'errorPhoneNumber'.tr;
-String loremImpsum =
-    "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.";
+const String ruIcon = 'assets/icons/ru.png';
+const String tkmIcon = 'assets/icons/tm.png';

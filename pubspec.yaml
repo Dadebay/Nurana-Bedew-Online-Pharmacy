@@ -1,30 +1,31 @@
 name: medicine_app
 description: A new Flutter project.
 publish_to: "none"
-version: 2.1.0+3
+version: 2.2.0+3
 
 environment:
-  sdk: ">=2.7.0 <3.0.0"
+  sdk: ">=2.16.2 <3.0.0"
 
 dependencies:
+  awesome_notifications: ^0.7.4+1
+  cached_network_image: null
+  cupertino_icons: ^1.0.2
+  firebase_core_platform_interface: ^4.5.1
+  firebase_messaging: ^14.6.3
   flutter:
     sdk: flutter
-  cached_network_image:
-  connectivity: ^3.0.6
-  cupertino_icons: ^1.0.2
   flutter_iconly: ^1.0.2
   flutter_spinkit: ^5.0.0
-  flutter_svg: null
+  get: null
+  get_storage:
   http: null
-  lint: ^1.7.2
   path_provider: null
-  photo_view: ^0.12.0
+  photo_view: ^0.14.0
   provider: null
   pull_to_refresh: ^2.0.0
-  shared_preferences: null
-  get:
-  back_button_interceptor: ^5.0.2
-
+  restart_app: ^1.1.0
+  share: ^2.0.4
+  shimmer: ^3.0.0
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -33,20 +34,18 @@ flutter:
   uses-material-design: true
   generate: true
   assets:
-    - assets/images/diller/
-    - assets/images/
     - assets/icons/
 
   fonts:
-    - family: Poppins_Bold
+    - family: GilroyBold
       fonts:
-        - asset: assets/fonts/Poppins-Bold.ttf
-    - family: Poppins_SemiBold
+        - asset: assets/fonts/Gilroy-Bold.ttf
+    - family: GilroySemiBold
       fonts:
-        - asset: assets/fonts/Poppins-SemiBold.ttf
-    - family: Poppins_Regular
+        - asset: assets/fonts/Gilroy-SemiBold.ttf
+    - family: GilroyMedium
       fonts:
-        - asset: assets/fonts/Poppins-Regular.ttf
-    - family: Poppins_Medium
+        - asset: assets/fonts/Gilroy-Medium.ttf
+    - family: GilroyRegular
       fonts:
-        - asset: assets/fonts/Poppins-Medium.ttf
+        - asset: assets/fonts/Gilroy-Regular.ttf

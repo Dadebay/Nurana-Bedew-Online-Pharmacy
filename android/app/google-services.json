@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "29740429637",
+    "project_id": "nurana-bedew-72f05",
+    "storage_bucket": "nurana-bedew-72f05.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:29740429637:android:9c8620ac28f0fd875ace2c",
+        "android_client_info": {
+          "package_name": "com.bilermennesil.medicalapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "29740429637-d12e36ms8jtn3aut5e2dgg8reidavb2m.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.bilermennesil.medicalapp",
+            "certificate_hash": "6d0d738f468c3d6cfa97ad5d010940a63ac36575"
+          }
+        },
+        {
+          "client_id": "29740429637-hvq255mvim0vt1eo0ov5j7mjeipqa58c.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDZrivAp49OjA3wxqMXg1aGpo_GTIbjlHU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "29740429637-hvq255mvim0vt1eo0ov5j7mjeipqa58c.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
